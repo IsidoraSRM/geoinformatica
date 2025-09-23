@@ -1,3 +1,17 @@
+# Carpetas excluidas del repositorio
+clases/
+bibliografia/
+Ejemplos resueltos-20250820T231620Z-1-001/
+calendario_clases*.md
+*.aux
+*.toc
+*.pdf
+*.png
+*.tfw
+*.prj
+Propuesta_proyecto_fabian_ibarra.pdf
+analizar_imagen_satelital.py
+
 # Python
 __pycache__/
 *.py[cod]

@@ -13,10 +13,6 @@ Repositorio oficial del curso de **Geoinformática** de la Universidad de Santia
 ```
 geoinformatica/
 │
-├── 📚 clases/                    # Material de clases
-│   ├── teoricas/                 # Presentaciones y material teórico
-│   └── practicas/                # Ejercicios y actividades prácticas
-│
 ├── 🔬 laboratorio_integrador/    # Proyecto integrador del curso
 │   ├── docs/                     # Documentación del laboratorio
 │   ├── data/                     # Datos para análisis
@@ -33,7 +29,6 @@ geoinformatica/
 ├── 🎯 proyectos/                 # Proyectos especiales
 │
 └── 📖 recursos/                  # Material complementario
-    ├── bibliografia/
     ├── tutoriales/
     └── datasets/
 ```
