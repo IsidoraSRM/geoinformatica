@@ -1,6 +1,0 @@
-\babel@toc {spanish}{}\relax 
-\beamer@sectionintoc {1}{Historia y evolución de la Geocomputación}{4}{0}{1}
-\beamer@sectionintoc {2}{Software para análisis geoespacial}{10}{0}{2}
-\beamer@sectionintoc {3}{Ecosistema Python y R para geodatos}{17}{0}{3}
-\beamer@sectionintoc {4}{Primeros ejemplos prácticos}{26}{0}{4}
-\beamer@sectionintoc {5}{Preparación para el laboratorio}{32}{0}{5}

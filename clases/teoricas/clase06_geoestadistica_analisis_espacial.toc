@@ -1,9 +1,0 @@
-\babel@toc {spanish}{}\relax 
-\beamer@sectionintoc {1}{Introducción: ¿Por qué Geoestadística?}{3}{0}{1}
-\beamer@sectionintoc {2}{Exploratory Spatial Data Analysis (ESDA)}{6}{0}{2}
-\beamer@sectionintoc {3}{Interpolación Espacial}{11}{0}{3}
-\beamer@sectionintoc {4}{Análisis de Patrones de Puntos}{16}{0}{4}
-\beamer@sectionintoc {5}{Regresión Espacial}{20}{0}{5}
-\beamer@sectionintoc {6}{Casos de Aplicación}{24}{0}{6}
-\beamer@sectionintoc {7}{Herramientas y Recursos}{27}{0}{7}
-\beamer@sectionintoc {8}{Conclusiones}{30}{0}{8}

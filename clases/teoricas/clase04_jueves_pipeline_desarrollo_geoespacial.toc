@@ -1,6 +1,0 @@
-\babel@toc {spanish}{}\relax 
-\beamer@sectionintoc {1}{Flujo de trabajo geoespacial}{3}{0}{1}
-\beamer@sectionintoc {2}{Conexión a fuentes de datos reales}{7}{0}{2}
-\beamer@sectionintoc {3}{Análisis espacial aplicado}{12}{0}{3}
-\beamer@sectionintoc {4}{Optimización y escalabilidad}{17}{0}{4}
-\beamer@sectionintoc {5}{Deployment de soluciones}{21}{0}{5}

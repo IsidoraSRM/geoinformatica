@@ -1,9 +1,0 @@
-\babel@toc {spanish}{}\relax 
-\beamer@sectionintoc {1}{Introducción al ML Geoespacial}{3}{0}{1}
-\beamer@sectionintoc {2}{Preparación de Datos Geoespaciales}{6}{0}{2}
-\beamer@sectionintoc {3}{Algoritmos de Machine Learning}{10}{0}{3}
-\beamer@sectionintoc {4}{Deep Learning para Análisis Territorial}{14}{0}{4}
-\beamer@sectionintoc {5}{Casos de Uso y Aplicaciones}{18}{0}{5}
-\beamer@sectionintoc {6}{Herramientas y Frameworks}{22}{0}{6}
-\beamer@sectionintoc {7}{Mejores Prácticas y Consideraciones}{25}{0}{7}
-\beamer@sectionintoc {8}{Tendencias y Futuro}{29}{0}{8}
