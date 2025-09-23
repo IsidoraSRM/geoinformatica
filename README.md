@@ -153,5 +153,5 @@ Este material educativo está disponible bajo licencia [MIT](LICENSE).
 ---
 
 **Universidad de Santiago de Chile - USACH**
-*Departamento de Ingeniería Geográfica*
-*2024*
+*Departamento de Ingeniería Informática*
+*2025*
