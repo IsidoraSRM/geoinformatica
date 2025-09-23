@@ -1,0 +1,38 @@
+\frametitle{Tu primer script geoespacial}
+\begin{lstlisting}[language=Python, basicstyle=\tiny\ttfamily]
+# archivo: mi_primer_mapa.py
+import geopandas as gpd
+import matplotlib.pyplot as plt
+
+# 1. Descargar datos de ejemplo
+world = gpd.read_file(gpd.datasets.get_path('naturalearth_lowres'))
+
+# 2. Filtrar América del Sur
+sudamerica = world[world['continent'] == 'South America']
+
+# 3. Calcular centroides
+sudamerica['centroid'] = sudamerica.geometry.centroid
+
+# 4. Crear figura con subplots
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 8))
+
+# 5. Mapa 1: Población
+sudamerica.plot(column='pop_est',
+                ax=ax1,
+                legend=True,
+                cmap='YlOrRd',
+                edgecolor='black')
+ax1.set_title('Población de Sudamérica')
+
+# 6. Mapa 2: PIB per cápita
+sudamerica.plot(column='gdp_md_est',
+                ax=ax2,
+                legend=True,
+                cmap='Greens',
+                edgecolor='black')
+ax2.set_title('PIB de países sudamericanos')
+
+plt.tight_layout()
+plt.savefig('sudamerica_analisis.png', dpi=300)
+plt.show()
+    \end{lstlisting}

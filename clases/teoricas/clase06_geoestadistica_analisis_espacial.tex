@@ -1,0 +1,1236 @@
+\documentclass[10pt,aspectratio=169]{beamer}
+\usetheme{metropolis}
+\usepackage{FiraSans}
+\usefonttheme{professionalfonts}
+
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage[spanish]{babel}
+\usepackage{tcolorbox}
+\usepackage{ragged2e}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{hyperref}
+\usepackage{fontawesome5}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usetikzlibrary{shapes,arrows,positioning,calc,backgrounds,fit,patterns}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\definecolor{usachblue}{rgb}{0,0.4,0.7}
+\definecolor{usachred}{rgb}{0.8,0,0}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\tiny,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=3pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\newcommand{\conceptbox}[2]{
+\begin{tcolorbox}[colframe=usachblue,colback=blue!5,title=#1,fonttitle=\bfseries]
+#2
+\end{tcolorbox}
+}
+
+\newcommand{\alertbox}[1]{
+\begin{tcolorbox}[colframe=red!70,colback=red!5]
+\centering\faExclamationTriangle\space #1
+\end{tcolorbox}
+}
+
+\newcommand{\tipbox}[1]{
+\begin{tcolorbox}[colframe=green!70,colback=green!5]
+\centering\faLightbulb\space #1
+\end{tcolorbox}
+}
+
+\setbeamertemplate{footline}{%
+  \begin{beamercolorbox}[wd=\paperwidth,sep=2ex]{footline}%
+    \usebeamerfont{structure}\textbf{Geoinformática - Clase 6} \hfill Profesor: Francisco Parra O. \hfill \textbf{Semestre 2, 2025}
+  \end{beamercolorbox}%
+}
+
+\title{Clase 06: Geoestadística y Análisis Espacial}
+\subtitle{Fundamentos estadísticos para el análisis de datos geoespaciales}
+\author{Profesor: Francisco Parra O.}
+\institute{USACH - Ingeniería Civil en Informática}
+\date{\today}
+
+\titlegraphic{%
+  \begin{tikzpicture}[overlay, remember picture]
+    \node[anchor=north east, yshift=0cm] at (current page.north east) {
+      \includegraphics[width=1.5cm]{../../logo.jpg}
+    };
+  \end{tikzpicture}
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{Agenda}
+    \tableofcontents[hideallsubsections]
+\end{frame}
+
+\section{Introducción: ¿Por qué Geoestadística?}
+
+\begin{frame}{La Primera Ley de la Geografía}
+    \begin{columns}[T]
+        \column{0.5\textwidth}
+        \conceptbox{Ley de Tobler (1970)}{
+            \textit{"Todo está relacionado con todo lo demás, pero las cosas cercanas están más relacionadas"}
+        }
+        
+        \vspace{0.3cm}
+        \textbf{Implicaciones:}
+        \begin{itemize}
+            \item Datos NO independientes
+            \item Proximidad importa
+            \item Métodos clásicos fallan
+            \item Herramientas especiales
+        \end{itemize}
+        
+        \column{0.5\textwidth}
+        \begin{tikzpicture}[scale=0.6]
+            % Puntos con valores
+            \node[circle, fill=red!80, minimum size=0.5cm] (p1) at (0,0) {\tiny 8};
+            \node[circle, fill=red!70, minimum size=0.5cm] (p2) at (1,0.5) {\tiny 7};
+            \node[circle, fill=red!60, minimum size=0.5cm] (p3) at (1.5,-0.5) {\tiny 6};
+            \node[circle, fill=yellow!50, minimum size=0.5cm] (p4) at (3,2) {\tiny 5};
+            \node[circle, fill=blue!40, minimum size=0.5cm] (p5) at (4.5,1) {\tiny 3};
+            \node[circle, fill=blue!50, minimum size=0.5cm] (p6) at (5,1.5) {\tiny 2};
+            \node[circle, fill=blue!60, minimum size=0.5cm] (p7) at (5.5,0.5) {\tiny 1};
+            
+            % Anotaciones
+            \draw[<->, thick, gray] (p1) -- (p2) node[midway, above] {\tiny cerca};
+            \draw[<->, thick, gray, dashed] (p1) -- (p5) node[midway, below] {\tiny lejos};
+            
+            \node[below=1cm of p3] {\small Valores similares se agrupan};
+        \end{tikzpicture}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{¿Qué es la Geoestadística?}
+    \begin{columns}[T]
+        \column{0.5\textwidth}
+        \textbf{Definición:}
+        \begin{itemize}
+            \item Rama de la estadística aplicada
+            \item Analiza fenómenos espacialmente correlacionados
+            \item Desarrollada inicialmente para minería (Krige, 1951)
+            \item Aplicable a cualquier dato georreferenciado
+        \end{itemize}
+        
+        \vspace{0.3cm}
+        \textbf{Objetivos principales:}
+        \begin{itemize}
+            \item \faChartLine\space Detectar patrones espaciales
+            \item \faMap\space Interpolar valores desconocidos
+            \item \faSearch\space Identificar clusters y outliers
+            \item \faCalculator\space Modelar relaciones espaciales
+        \end{itemize}
+        
+        \column{0.5\textwidth}
+        \textbf{Aplicaciones en el mundo real:}
+        \begin{itemize}
+            \item \textbf{Salud:} Mapeo de enfermedades
+            \item \textbf{Ambiente:} Contaminación del aire
+            \item \textbf{Inmobiliario:} Valoración de propiedades
+            \item \textbf{Crimen:} Hot spots delictuales
+            \item \textbf{Agricultura:} Rendimiento de cultivos
+            \item \textbf{Minería:} Estimación de reservas
+        \end{itemize}
+        
+        \vspace{0.3cm}
+        \alertbox{Sin geoestadística, ignoramos la estructura espacial de los datos}
+    \end{columns}
+\end{frame}
+
+\section{Exploratory Spatial Data Analysis (ESDA)}
+
+\begin{frame}{ESDA: Explorando Datos Espaciales}
+    \conceptbox{¿Qué es ESDA?}{
+        Conjunto de técnicas para describir y visualizar distribuciones espaciales, identificar localizaciones atípicas, descubrir patrones de asociación espacial y sugerir regímenes espaciales
+    }
+    
+    \begin{columns}[T]
+        \column{0.33\textwidth}
+        \textbf{1. Visualización}
+        \begin{itemize}
+            \item Mapas temáticos
+            \item Cartogramas
+            \item Mapas de calor
+            \item 3D surfaces
+        \end{itemize}
+        
+        \column{0.33\textwidth}
+        \textbf{2. Análisis Global}
+        \begin{itemize}
+            \item Autocorrelación global
+            \item Tendencias espaciales
+            \item Anisotropía
+            \item Heterogeneidad
+        \end{itemize}
+        
+        \column{0.34\textwidth}
+        \textbf{3. Análisis Local}
+        \begin{itemize}
+            \item LISA clusters
+            \item Hot/Cold spots
+            \item Outliers espaciales
+            \item Regímenes locales
+        \end{itemize}
+    \end{columns}
+    
+    \vspace{0.3cm}
+    \tipbox{ESDA es el primer paso: entender los datos antes de modelar}
+\end{frame}
+
+\begin{frame}{Matrices de Pesos Espaciales}
+    \begin{columns}[T]
+        \column{0.5\textwidth}
+        \conceptbox{¿Qué son?}{
+            Matrices $W$ que definen las relaciones de vecindad entre observaciones espaciales. Elemento $w_{ij}$ = peso de la relación entre $i$ y $j$
+        }
+        
+        \textbf{Tipos principales:}
+        \begin{itemize}
+            \item \textbf{Contigüidad:} Queen, Rook
+            \item \textbf{Distancia:} K-vecinos, umbral
+            \item \textbf{Kernel:} Gaussiano, triangular
+            \item \textbf{Custom:} Redes, flujos
+        \end{itemize}
+        
+        \column{0.5\textwidth}
+        \begin{tikzpicture}[scale=0.7]
+            % Grid para Queen y Rook
+            \draw[step=1cm,gray,very thin] (0,0) grid (3,3);
+            
+            % Centro
+            \fill[blue!30] (1,1) rectangle (2,2);
+            \node at (1.5,1.5) {i};
+            
+            % Queen (8 vecinos)
+            \fill[red!20] (0,0) rectangle (1,1);
+            \fill[red!20] (1,0) rectangle (2,1);
+            \fill[red!20] (2,0) rectangle (3,1);
+            \fill[red!20] (0,1) rectangle (1,2);
+            \fill[red!20] (2,1) rectangle (3,2);
+            \fill[red!20] (0,2) rectangle (1,3);
+            \fill[red!20] (1,2) rectangle (2,3);
+            \fill[red!20] (2,2) rectangle (3,3);
+            
+            \node[below=0.5cm] at (1.5,0) {\small Queen: 8 vecinos};
+            
+            % Rook
+            \begin{scope}[xshift=4cm]
+                \draw[step=1cm,gray,very thin] (0,0) grid (3,3);
+                \fill[blue!30] (1,1) rectangle (2,2);
+                \node at (1.5,1.5) {i};
+                
+                % Rook (4 vecinos)
+                \fill[green!30] (1,0) rectangle (2,1);
+                \fill[green!30] (0,1) rectangle (1,2);
+                \fill[green!30] (2,1) rectangle (3,2);
+                \fill[green!30] (1,2) rectangle (2,3);
+                
+                \node[below=0.5cm] at (1.5,0) {\small Rook: 4 vecinos};
+            \end{scope}
+        \end{tikzpicture}
+        
+        \vspace{0.3cm}
+        \textbf{Normalización:}
+        Por filas para que $\sum_j w_{ij} = 1$
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Autocorrelación Espacial Global}
+    \begin{columns}[T]
+        \column{0.5\textwidth}
+        \textbf{Índice de Moran (I)}
+        \small
+        $$I = \frac{n}{\sum_{ij}w_{ij}} \frac{\sum_{ij}w_{ij}(x_i - \bar{x})(x_j - \bar{x})}{\sum_{i}(x_i - \bar{x})^2}$$
+        \normalsize
+        
+        \textbf{Interpretación:}
+        \begin{itemize}
+            \item $I > 0$: Clustering
+            \item $I = 0$: Aleatorio
+            \item $I < 0$: Dispersión
+        \end{itemize}
+        
+        \textbf{Rango:} $[-1, 1]$ aproximadamente
+        
+        \column{0.5\textwidth}
+        \begin{tikzpicture}[scale=0.8]
+            \begin{axis}[
+                xlabel={Valores vecinos (Lag X)},
+                ylabel={Valores observados (X)},
+                title={Moran Scatterplot},
+                grid=major,
+                width=6cm,
+                height=4.5cm,
+                xmin=-2, xmax=2,
+                ymin=-2, ymax=2
+            ]
+            
+            % Cuadrantes
+            \fill[red!10] (0,0) rectangle (2,2);
+            \fill[blue!10] (0,0) rectangle (-2,-2);
+            \fill[gray!10] (-2,0) rectangle (0,2);
+            \fill[gray!10] (0,-2) rectangle (2,0);
+            
+            % Puntos
+            \addplot[only marks, mark=*, mark size=1pt, blue] 
+                coordinates {(1.2,1.1) (1.3,1.4) (0.9,1.0) (1.1,0.8) 
+                            (-1.2,-1.1) (-1.3,-0.9) (-0.9,-1.2) (-1.1,-1.3)};
+            
+            % Línea de regresión
+            \addplot[red, thick, domain=-2:2] {0.8*x};
+            
+            % Etiquetas
+            \node at (1,1.5) {\tiny HH};
+            \node at (-1,-1.5) {\tiny LL};
+            \node at (-1,1.5) {\tiny LH};
+            \node at (1,-1.5) {\tiny HL};
+            
+            \end{axis}
+        \end{tikzpicture}
+    \end{columns}
+    
+    \vspace{0.3cm}
+    \alertbox{Siempre probar significancia estadística con permutaciones}
+\end{frame}
+
+\begin{frame}{Autocorrelación Espacial Local (LISA)}
+    \conceptbox{LISA}{
+        Descomponen el índice global en contribuciones locales para identificar clusters
+    }
+    
+    \begin{columns}[T]
+        \column{0.5\textwidth}
+        \textbf{Moran Local:}
+        $$I_i = \frac{(x_i - \bar{x})}{s^2} \sum_j w_{ij}(x_j - \bar{x})$$
+        
+        \textbf{Tipos:}
+        \begin{itemize}
+            \item \textbf{HH:} Hot spot
+            \item \textbf{LL:} Cold spot
+            \item \textbf{HL:} Outlier alto
+            \item \textbf{LH:} Outlier bajo
+        \end{itemize}
+        
+        \column{0.5\textwidth}
+        \begin{tikzpicture}[scale=0.5]
+            % Mapa LISA
+            \foreach \x in {0,1,2,3,4} {
+                \foreach \y in {0,1,2,3} {
+                    \pgfmathtruncatemacro{\rand}{random(0,3)}
+                    \ifnum\rand=0
+                        \fill[red!60] (\x,\y) rectangle (\x+1,\y+1);
+                    \fi
+                    \ifnum\rand=1
+                        \fill[blue!60] (\x,\y) rectangle (\x+1,\y+1);
+                    \fi
+                    \ifnum\rand=2
+                        \fill[yellow!40] (\x,\y) rectangle (\x+1,\y+1);
+                    \fi
+                    \ifnum\rand=3
+                        \fill[green!40] (\x,\y) rectangle (\x+1,\y+1);
+                    \fi
+                }
+            }
+            
+            % Hot spot cluster
+            \fill[red!80] (1,2) rectangle (3,3);
+            \fill[red!80] (2,1) rectangle (3,2);
+            
+            % Cold spot cluster
+            \fill[blue!80] (3,0) rectangle (5,1);
+            
+            % Leyenda
+            \node[right] at (5.5,3) {\tiny \textcolor{red!80}{$\blacksquare$} HH cluster};
+            \node[right] at (5.5,2.5) {\tiny \textcolor{blue!80}{$\blacksquare$} LL cluster};
+            \node[right] at (5.5,2) {\tiny \textcolor{yellow!60}{$\blacksquare$} HL outlier};
+            \node[right] at (5.5,1.5) {\tiny \textcolor{green!60}{$\blacksquare$} LH outlier};
+            \node[right] at (5.5,1) {\tiny \textcolor{gray!40}{$\blacksquare$} No sig.};
+            
+            \node[below] at (2.5,-0.5) {\small Mapa de clusters LISA};
+        \end{tikzpicture}
+    \end{columns}
+\end{frame}
+
+\section{Interpolación Espacial}
+
+\begin{frame}{El Problema de la Interpolación}
+    \begin{columns}[T]
+        \column{0.5\textwidth}
+        \conceptbox{Objetivo}{
+            Estimar valores en ubicaciones no muestreadas
+        }
+        
+        \textbf{Aplicaciones:}
+        \begin{itemize}
+            \item Puntos → Superficie
+            \item Llenar gaps
+            \item Cambiar resolución
+            \item Mapas de predicción
+        \end{itemize}
+        
+        \column{0.5\textwidth}
+        \begin{tikzpicture}[scale=0.7]
+            % Puntos conocidos
+            \foreach \point/\val/\x/\y in {A/15/0/0, B/18/2/1, C/22/3/3, D/12/1/2.5, E/20/4/0.5} {
+                \node[circle, fill=blue!60, minimum size=0.5cm] (\point) at (\x,\y) {};
+                \node[above] at (\x,\y) {\tiny \val};
+            }
+            
+            % Punto a interpolar
+            \node[circle, draw=red, thick, fill=white, minimum size=0.5cm] at (2,2) {?};
+            
+            % Superficie interpolada (representación)
+            \fill[blue!20, opacity=0.3] plot[smooth, tension=0.7] 
+                coordinates {(0,0) (2,1) (3,3) (4,0.5) (1,2.5) (0,0)};
+            
+            % Grid
+            \draw[step=0.5cm,gray,very thin,opacity=0.3] (-0.5,-0.5) grid (4.5,3.5);
+            
+            \node[below] at (2,-1) {\small Interpolación};
+        \end{tikzpicture}
+    \end{columns}
+    
+    \vspace{0.3cm}
+    \alertbox{Base: Ley de Tobler}
+\end{frame}
+
+\begin{frame}{Métodos Determinísticos}
+    \begin{columns}[T]
+        \column{0.33\textwidth}
+        \textbf{IDW}
+        $$\hat{z} = \frac{\sum w_i z_i}{\sum w_i}$$
+        $w_i = 1/d_i^p$
+        
+        \textbf{Pros:}
+        \begin{itemize}
+            \item Simple
+            \item Rápido
+        \end{itemize}
+        
+        \textbf{Contras:}
+        \begin{itemize}
+            \item Sin incertidumbre
+            \item "Bull's eyes"
+        \end{itemize}
+        
+        \column{0.33\textwidth}
+        \textbf{Splines}
+        \begin{itemize}
+            \item Suave
+            \item Min. curvatura
+            \item Exacto
+        \end{itemize}
+        
+        \textbf{Voronoi}
+        \begin{itemize}
+            \item Polígonos
+            \item Constante
+            \item Discontinuo
+        \end{itemize}
+        
+        \textbf{Trend}
+        \begin{itemize}
+            \item Polinomio
+            \item Tendencia
+            \item Inexacto
+        \end{itemize}
+        
+        \column{0.34\textwidth}
+        \begin{tikzpicture}[scale=0.5]
+            % IDW
+            \begin{axis}[
+                width=5cm,
+                height=4cm,
+                title={\tiny IDW},
+                xlabel={\tiny X},
+                ylabel={\tiny Y},
+                zlabel={\tiny Z},
+                view={30}{30},
+                grid=major,
+                ticks=none
+            ]
+            \addplot3[
+                surf,
+                shader=flat,
+                samples=10,
+                domain=0:4
+            ] {15 + 5*exp(-((x-2)^2+(y-2)^2))};
+            \end{axis}
+            
+            % Voronoi
+            \begin{scope}[yshift=-3.5cm]
+            \draw[thick] (0,0) -- (2,0.5) -- (2,2) -- (0,2) -- cycle;
+            \draw[thick] (2,0.5) -- (4,0) -- (4,2) -- (2,2);
+            \draw[thick] (0,2) -- (2,2) -- (1,3);
+            \draw[thick] (2,2) -- (4,2) -- (3,3);
+            \fill[blue!30] (0,0) -- (2,0.5) -- (2,2) -- (0,2) -- cycle;
+            \fill[red!30] (2,0.5) -- (4,0) -- (4,2) -- (2,2) -- cycle;
+            \node at (2,-0.5) {\tiny Voronoi};
+            \end{scope}
+        \end{tikzpicture}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Semivariogramas: La Base del Kriging}
+    \begin{columns}[T]
+        \column{0.5\textwidth}
+        \conceptbox{Semivariograma}{
+            Variabilidad vs distancia
+        }
+        
+        $$\gamma(h) = \frac{1}{2N(h)} \sum [z_i - z_{i+h}]^2$$
+        
+        \textbf{Componentes:}
+        \begin{itemize}
+            \item \textbf{Nugget:} Var. en h=0
+            \item \textbf{Sill:} Var. total
+            \item \textbf{Range:} Alcance
+        \end{itemize}
+        
+        \column{0.5\textwidth}
+        \begin{tikzpicture}[scale=0.8]
+            \begin{axis}[
+                xlabel={Distancia (h)},
+                ylabel={Semivarianza $\gamma(h)$},
+                grid=major,
+                width=8cm,
+                height=5cm,
+                xmin=0, xmax=100,
+                ymin=0, ymax=12,
+                legend pos=south east
+            ]
+            
+            % Puntos empíricos
+            \addplot[only marks, mark=*, blue] coordinates {
+                (5,1.5) (10,2.8) (15,4.2) (20,5.5) (25,6.8) 
+                (30,7.9) (35,8.8) (40,9.5) (45,10.0) (50,10.3)
+                (55,10.5) (60,10.6) (70,10.7) (80,10.8) (90,10.8)
+            };
+            
+            % Modelo teórico
+            \addplot[red, thick, smooth, domain=0:100] 
+                {1 + 9*(1-exp(-x/20))};
+            
+            % Líneas de referencia
+            \draw[dashed, gray] (0,1) -- (100,1) node[right] {\tiny Nugget};
+            \draw[dashed, gray] (0,10) -- (100,10) node[right] {\tiny Sill};
+            \draw[dashed, gray] (60,0) -- (60,12) node[above] {\tiny Range};
+            
+            \legend{Empírico, Modelo}
+            
+            \end{axis}
+        \end{tikzpicture}
+        
+        \textbf{Modelos teóricos:}
+        Esférico, Exponencial, Gaussiano, Matérn
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Kriging: El Mejor Estimador Lineal Insesgado (BLUE)}
+    \begin{columns}[T]
+        \column{0.5\textwidth}
+        \textbf{Tipos de Kriging:}
+        \begin{itemize}
+            \item \textbf{Simple:} Media conocida y constante
+            \item \textbf{Ordinario:} Media desconocida constante
+            \item \textbf{Universal:} Con tendencia (drift)
+            \item \textbf{Co-Kriging:} Múltiples variables
+            \item \textbf{Indicator:} Variables categóricas
+        \end{itemize}
+        
+        \vspace{0.3cm}
+        \textbf{Ecuación de Kriging Ordinario:}
+        $$\hat{Z}(s_0) = \sum_{i=1}^n \lambda_i Z(s_i)$$
+        
+        con $\sum_{i=1}^n \lambda_i = 1$ (insesgado)
+        
+        \column{0.5\textwidth}
+        \textbf{Ventajas:}
+        \begin{itemize}
+            \item[\faCheckCircle] BLUE
+            \item[\faCheckCircle] Con varianza
+            \item[\faCheckCircle] Anisotropía
+            \item[\faCheckCircle] Óptimo
+        \end{itemize}
+        
+        \vspace{0.3cm}
+        \textbf{Mapa de incertidumbre:}
+        \begin{tikzpicture}[scale=0.6]
+            \foreach \x in {0,1,2,3,4} {
+                \foreach \y in {0,1,2,3} {
+                    \pgfmathsetmacro{\dist}{min(90, max(10, sqrt((\x-2)^2+(\y-1.5)^2)*20))}
+                    \pgfmathtruncatemacro{\distint}{\dist}
+                    \fill[gray!\distint] (\x,\y) rectangle (\x+1,\y+1);
+                }
+            }
+            % Puntos de muestreo
+            \node[circle, fill=red, minimum size=0.3cm] at (1,1) {};
+            \node[circle, fill=red, minimum size=0.3cm] at (3,2) {};
+            \node[circle, fill=red, minimum size=0.3cm] at (2,3) {};
+            
+            \node[below] at (2.5,-0.5) {\small Varianza de Kriging};
+        \end{tikzpicture}
+    \end{columns}
+\end{frame}
+
+\section{Análisis de Patrones de Puntos}
+
+\begin{frame}{Patrones Espaciales de Puntos}
+    \conceptbox{Point Pattern Analysis}{
+        Análisis de distribución: aleatorio, agrupado o regular
+    }
+    
+    \begin{columns}[T]
+        \column{0.33\textwidth}
+        \textbf{Aleatorio (CSR)}
+        \begin{tikzpicture}[scale=0.5]
+            \draw[thick] (0,0) rectangle (4,4);
+            \foreach \i in {1,...,15} {
+                \pgfmathsetmacro{\x}{random()*3.5+0.25}
+                \pgfmathsetmacro{\y}{random()*3.5+0.25}
+                \fill[blue] (\x,\y) circle (0.1);
+            }
+            \node[below] at (2,-0.5) {\small Poisson};
+        \end{tikzpicture}
+        
+        Complete Spatial Randomness
+        
+        \column{0.33\textwidth}
+        \textbf{Agrupado}
+        \begin{tikzpicture}[scale=0.5]
+            \draw[thick] (0,0) rectangle (4,4);
+            % Cluster 1
+            \foreach \i in {1,...,6} {
+                \pgfmathsetmacro{\x}{random()*0.8+0.5}
+                \pgfmathsetmacro{\y}{random()*0.8+2.5}
+                \fill[red] (\x,\y) circle (0.1);
+            }
+            % Cluster 2
+            \foreach \i in {1,...,5} {
+                \pgfmathsetmacro{\x}{random()*0.8+2.5}
+                \pgfmathsetmacro{\y}{random()*0.8+0.5}
+                \fill[red] (\x,\y) circle (0.1);
+            }
+            \node[below] at (2,-0.5) {\small Clustering};
+        \end{tikzpicture}
+        
+        Atracción entre puntos
+        
+        \column{0.34\textwidth}
+        \textbf{Regular}
+        \begin{tikzpicture}[scale=0.5]
+            \draw[thick] (0,0) rectangle (4,4);
+            \foreach \x in {0.8,1.6,2.4,3.2} {
+                \foreach \y in {0.8,1.6,2.4,3.2} {
+                    \fill[green!70!black] (\x,\y) circle (0.1);
+                }
+            }
+            \node[below] at (2,-0.5) {\small Uniforme};
+        \end{tikzpicture}
+        
+        Repulsión entre puntos
+    \end{columns}
+    
+    \vspace{0.3cm}
+    \alertbox{Patrón varía con escala}
+\end{frame}
+
+\begin{frame}{Función K de Ripley}
+    \begin{columns}[T]
+        \column{0.5\textwidth}
+        \conceptbox{Función K}{
+            Puntos esperados dentro de radio $r$
+        }
+        
+        $$K(r) = \lambda^{-1} E[N(r)]$$
+        
+        \textbf{Interpretación:}
+        \begin{itemize}
+            \item $K(r) = \pi r^2$: CSR
+            \item $K(r) > \pi r^2$: Clustering
+            \item $K(r) < \pi r^2$: Regularidad
+        \end{itemize}
+        
+        \textbf{Función L (normalizada):}
+        $$L(r) = \sqrt{\frac{K(r)}{\pi}} - r$$
+        
+        \column{0.5\textwidth}
+        \begin{tikzpicture}[scale=0.8]
+            \begin{axis}[
+                xlabel={Distancia (r)},
+                ylabel={L(r)},
+                grid=major,
+                width=8cm,
+                height=5cm,
+                xmin=0, xmax=50,
+                ymin=-2, ymax=3,
+                legend pos=north west
+            ]
+            
+            % CSR (línea en 0)
+            \draw[black, thick, dashed] (0,0) -- (50,0);
+            
+            % Clustering
+            \addplot[red, thick, smooth] coordinates {
+                (0,0) (5,0.5) (10,1.2) (15,1.8) (20,2.2) 
+                (25,2.0) (30,1.5) (35,1.0) (40,0.5) (45,0.2) (50,0)
+            };
+            
+            % Regular
+            \addplot[blue, thick, smooth] coordinates {
+                (0,0) (5,-0.8) (10,-1.2) (15,-1.0) (20,-0.5) 
+                (25,0) (30,0.2) (35,0.1) (40,0) (45,0) (50,0)
+            };
+            
+            % Bandas de confianza
+            \fill[gray, opacity=0.2] (0,-0.3) -- (50,-0.3) -- (50,0.3) -- (0,0.3) -- cycle;
+            
+            \legend{CSR, Clustering, Regular}
+            
+            \end{axis}
+        \end{tikzpicture}
+        
+        \tipbox{Usar simulaciones Monte Carlo para bandas de confianza}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Hot Spot Analysis: Getis-Ord $G_i^*$}
+    \begin{columns}[T]
+        \column{0.5\textwidth}
+        \conceptbox{Estadístico $G_i^*$}{
+            Detecta hot spots y cold spots significativos
+        }
+        
+        \small
+        $$G_i^* = \frac{\sum_j w_{ij}x_j - \bar{X}\sum_j w_{ij}}{S\sqrt{\frac{n\sum_j w_{ij}^2 - (\sum_j w_{ij})^2}{n-1}}}$$
+        \normalsize
+        
+        \textbf{Z-scores:}
+        \begin{itemize}
+            \item $>2.58$: Hot 99\%
+            \item $>1.96$: Hot 95\%
+            \item $<-1.96$: Cold 95\%
+            \item $<-2.58$: Cold 99\%
+        \end{itemize}
+        
+        \column{0.5\textwidth}
+        \textbf{Aplicación: Análisis de criminalidad}
+        \begin{tikzpicture}[scale=0.6]
+            % Mapa base
+            \draw[thick] (0,0) rectangle (5,4);
+            
+            % Hot spots (rojos)
+            \fill[red!80, opacity=0.7] (1,2.5) circle (0.8);
+            \fill[red!60, opacity=0.7] (1.5,3) circle (0.6);
+            \fill[red!40, opacity=0.7] (0.5,2) circle (0.5);
+            
+            % Cold spots (azules)
+            \fill[blue!80, opacity=0.7] (4,1) circle (0.7);
+            \fill[blue!60, opacity=0.7] (3.5,0.5) circle (0.5);
+            
+            % Puntos de crimen
+            \foreach \i in {1,...,8} {
+                \pgfmathsetmacro{\x}{random()*0.8+0.6}
+                \pgfmathsetmacro{\y}{random()*0.8+2.2}
+                \node[circle, fill=black, minimum size=0.1cm] at (\x,\y) {};
+            }
+            
+            \foreach \i in {1,...,3} {
+                \pgfmathsetmacro{\x}{random()*0.6+3.5}
+                \pgfmathsetmacro{\y}{random()*0.6+0.5}
+                \node[circle, fill=black, minimum size=0.1cm] at (\x,\y) {};
+            }
+            
+            % Leyenda
+            \node[below] at (2.5,-0.5) {\small Hot/Cold Spots de Crimen};
+        \end{tikzpicture}
+        
+        \vspace{0.3cm}
+        \tipbox{Políticas focalizadas}
+    \end{columns}
+\end{frame}
+
+\section{Regresión Espacial}
+
+\begin{frame}{El Problema con OLS en Datos Espaciales}
+    \begin{columns}[T]
+        \column{0.5\textwidth}
+        \textbf{OLS:} $y = X\beta + \varepsilon$
+        
+        \textbf{Violaciones:}
+        \begin{itemize}
+            \item[\faTimesCircle] Independencia
+            \item[\faTimesCircle] Homoscedasticidad
+            \item[\faTimesCircle] Estacionariedad
+        \end{itemize}
+        
+        \textbf{Consecuencias:}
+        \begin{itemize}
+            \item Sesgo
+            \item Inferencia errónea
+            \item Mal ajuste
+            \item SE subestimados
+        \end{itemize}
+        
+        \column{0.5\textwidth}
+        \textbf{Diagnósticos espaciales:}
+        
+        \begin{tikzpicture}[scale=0.7]
+            \begin{axis}[
+                xlabel={\small Valores ajustados},
+                ylabel={\small Residuos},
+                title={\small Patrón espacial en residuos},
+                grid=major,
+                width=7cm,
+                height=5cm
+            ]
+            
+            % Residuos con patrón espacial
+            \addplot[only marks, mark=*, blue, mark size=1pt] 
+                coordinates {
+                    (10,2) (11,1.8) (12,2.2) (13,1.9)
+                    (20,-2) (21,-1.8) (22,-2.1) (23,-1.9)
+                    (30,0.5) (31,-0.3) (32,0.2) (33,-0.1)
+                    (15,1.5) (16,1.7) (25,-1.5) (26,-1.7)
+                };
+            
+            % Clusters evidentes
+            \draw[red, thick, dashed] (10,1.5) ellipse (0.5 and 0.8);
+            \draw[red, thick, dashed] (21,-2.3) ellipse (0.5 and 0.6);
+            
+            \end{axis}
+        \end{tikzpicture}
+        
+        \alertbox{Moran's I detecta autocorrelación}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Modelos de Regresión Espacial}
+    \begin{columns}[T]
+        \column{0.5\textwidth}
+        \textbf{SAR:}
+        $$y = \rho Wy + X\beta + \varepsilon$$
+        
+        \begin{itemize}
+            \item $\rho$: Autocorrelación
+            \item $Wy$: Lag espacial
+            \item Spillovers
+        \end{itemize}
+        
+        \vspace{0.3cm}
+        \textbf{SEM:}
+        $$y = X\beta + u$$
+        $$u = \lambda Wu + \varepsilon$$
+        
+        \begin{itemize}
+            \item $\lambda$: Error AC
+            \item Var. omitidas
+        \end{itemize}
+        
+        \column{0.5\textwidth}
+        \textbf{SDM:}
+        $$y = \rho Wy + X\beta + WX\theta + \varepsilon$$
+        
+        \begin{itemize}
+            \item Lags de $X$ y $y$
+            \item Flexible
+            \item Efectos dir/indir
+        \end{itemize}
+        
+        \vspace{0.3cm}
+        \textbf{Selección:}
+        \begin{enumerate}
+            \item Moran's I
+            \item Tests LM
+            \item AIC/BIC
+            \item Especificación
+        \end{enumerate}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Geographically Weighted Regression (GWR)}
+    \conceptbox{GWR}{
+        Coeficientes locales que varían espacialmente
+    }
+    
+    \begin{columns}[T]
+        \column{0.5\textwidth}
+        \textbf{Modelo GWR:}
+        $$y_i = \beta_0(u_i,v_i) + \sum_k \beta_k(u_i,v_i)x_{ik} + \varepsilon_i$$
+        
+        \textbf{Ventajas:}
+        \begin{itemize}
+            \item Captura heterogeneidad espacial
+            \item Coeficientes locales interpretables
+            \item Identifica regímenes espaciales
+            \item Flexible y visual
+        \end{itemize}
+        
+        \textbf{Consideraciones:}
+        \begin{itemize}
+            \item Ancho de banda crítico
+            \item Multicolinealidad local
+            \item Sobreajuste posible
+        \end{itemize}
+        
+        \column{0.5\textwidth}
+        \textbf{Mapa de coeficientes locales:}
+        \begin{tikzpicture}[scale=0.6]
+            % Gradiente de coeficientes
+            \foreach \x in {0,1,2,3,4} {
+                \foreach \y in {0,1,2,3} {
+                    \pgfmathsetmacro{\val}{min(90, max(10, 20+\x*15+\y*10))}
+                    \pgfmathtruncatemacro{\valint}{\val}
+                    \fill[red!\valint!blue] (\x,\y) rectangle (\x+1,\y+1);
+                }
+            }
+            
+            % Anotaciones
+            \node[white] at (0.5,0.5) {\tiny -0.5};
+            \node[white] at (4.5,3.5) {\tiny +0.8};
+            \node[white] at (2.5,2) {\tiny 0.2};
+            
+            \node[below] at (2.5,-0.5) {\small $\beta_k$ para educación};
+            
+            % Barra de color
+            \foreach \i in {0,...,9} {
+                \pgfmathsetmacro{\col}{min(90, \i*10)}
+                \pgfmathtruncatemacro{\colint}{\col}
+                \fill[red!\colint!blue] (6,\i*0.3) rectangle (6.3,\i*0.3+0.3);
+            }
+            \node[right] at (6.3,3) {\tiny +};
+            \node[right] at (6.3,0) {\tiny -};
+        \end{tikzpicture}
+        
+        \tipbox{Los coeficientes varían suavemente en el espacio}
+    \end{columns}
+\end{frame}
+
+\section{Casos de Aplicación}
+
+\begin{frame}{Caso 1: Análisis de Precios Inmobiliarios}
+    \begin{columns}[T]
+        \column{0.5\textwidth}
+        \textbf{Problema:}
+        \begin{itemize}
+            \item Valoración de propiedades en Santiago
+            \item Efectos de vecindario
+            \item Amenidades y des-amenidades
+        \end{itemize}
+        
+        \textbf{Metodología:}
+        \begin{enumerate}
+            \item ESDA: Moran's I, LISA clusters
+            \item Kriging de precios/m²
+            \item GWR con variables:
+            \begin{itemize}
+                \item Distancia a metro
+                \item Áreas verdes
+                \item Seguridad
+                \item Educación
+            \end{itemize}
+        \end{enumerate}
+        
+        \column{0.5\textwidth}
+        \textbf{Resultados esperados:}
+        \begin{tikzpicture}[scale=0.6]
+            % LISA map de precios
+            \fill[red!80] (1,3) rectangle (2,4);
+            \fill[red!60] (2,3) rectangle (3,4);
+            \fill[red!60] (1,2) rectangle (2,3);
+            \fill[blue!60] (3,0) rectangle (4,1);
+            \fill[blue!80] (4,0) rectangle (5,1);
+            \fill[gray!30] (0,0) rectangle (1,1);
+            \fill[gray!30] (2,1) rectangle (3,2);
+            
+            \draw[step=1cm,gray,thin] (0,0) grid (5,4);
+            
+            % Metro stations
+            \node[circle, fill=green!80, minimum size=0.3cm] at (1.5,3.5) {};
+            \node[circle, fill=green!80, minimum size=0.3cm] at (2.5,2.5) {};
+            
+            \node[below] at (2.5,-0.5) {\small Clusters de precio};
+        \end{tikzpicture}
+        
+        \textbf{Insights:}
+        \begin{itemize}
+            \item Premium del 15\% cerca del metro
+            \item Efectos spillover entre comunas
+            \item Heterogeneidad en valoración de amenidades
+        \end{itemize}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Caso 2: Epidemiología Espacial}
+    \begin{columns}[T]
+        \column{0.5\textwidth}
+        \textbf{Análisis COVID-19 en Chile:}
+        
+        \textbf{Datos:}
+        \begin{itemize}
+            \item Casos por comuna
+            \item Movilidad (Google Mobility)
+            \item Densidad poblacional
+            \item Nivel socioeconómico
+        \end{itemize}
+        
+        \textbf{Análisis realizado:}
+        \begin{itemize}
+            \item Hot spots temporales (Gi*)
+            \item Difusión espacial (Moran's I)
+            \item Modelo SIR espacial
+            \item Predicción con Kriging espacio-temporal
+        \end{itemize}
+        
+        \column{0.5\textwidth}
+        \begin{tikzpicture}[scale=0.7]
+            \begin{axis}[
+                xlabel={\tiny Semana},
+                ylabel={\tiny Moran's I},
+                title={\small Autocorrelación temporal},
+                grid=major,
+                width=7cm,
+                height=4cm,
+                xmin=0, xmax=20,
+                ymin=0, ymax=0.8
+            ]
+            
+            \addplot[blue, thick, mark=*] coordinates {
+                (1,0.2) (2,0.25) (3,0.3) (4,0.35) (5,0.45)
+                (6,0.55) (7,0.65) (8,0.7) (9,0.72) (10,0.73)
+                (11,0.7) (12,0.65) (13,0.6) (14,0.55) (15,0.5)
+                (16,0.45) (17,0.4) (18,0.35) (19,0.3) (20,0.25)
+            };
+            
+            \end{axis}
+        \end{tikzpicture}
+        
+        \textbf{Hallazgos:}
+        \begin{itemize}
+            \item Clustering inicial en comunas ABC1
+            \item Difusión jerárquica y por contagio
+            \item Persistencia en zonas vulnerables
+        \end{itemize}
+    \end{columns}
+\end{frame}
+
+\section{Herramientas y Recursos}
+
+\begin{frame}{Herramientas para Geoestadística}
+    \begin{columns}[T]
+        \column{0.33\textwidth}
+        \textbf{Python:}
+        \begin{itemize}
+            \item \textbf{PySAL:} Suite completa
+            \item \textbf{GeoPandas:} DataFrames espaciales
+            \item \textbf{scikit-gstat:} Variogramas
+            \item \textbf{PyKrige:} Kriging
+            \item \textbf{pointpats:} Patrones de puntos
+            \item \textbf{mgwr:} GWR
+        \end{itemize}
+        
+        \column{0.33\textwidth}
+        \textbf{R:}
+        \begin{itemize}
+            \item \textbf{sp/sf:} Objetos espaciales
+            \item \textbf{gstat:} Geoestadística
+            \item \textbf{spdep:} Dependencia espacial
+            \item \textbf{spatstat:} Point patterns
+            \item \textbf{GWmodel:} GWR
+            \item \textbf{tmap:} Visualización
+        \end{itemize}
+        
+        \column{0.34\textwidth}
+        \textbf{Software especializado:}
+        \begin{itemize}
+            \item \textbf{GeoDa:} ESDA visual
+            \item \textbf{SAGA GIS:} Geoestadística
+            \item \textbf{ArcGIS:} Spatial Analyst
+            \item \textbf{QGIS:} Processing toolbox
+            \item \textbf{GS+:} Variogramas
+        \end{itemize}
+    \end{columns}
+    
+    \vspace{0.5cm}
+    \tipbox{Python + PySAL es la combinación más versátil para investigación}
+\end{frame}
+
+\begin{frame}{Mejores Prácticas}
+    \begin{columns}[T]
+        \column{0.5\textwidth}
+        \textbf{\faCheckCircle\space Do's:}
+        \begin{itemize}
+            \item Siempre hacer ESDA primero
+            \item Verificar estacionariedad
+            \item Validar modelos con datos independientes
+            \item Considerar múltiples escalas
+            \item Reportar incertidumbre
+            \item Usar múltiples métodos
+            \item Documentar decisiones
+        \end{itemize}
+        
+        \column{0.5\textwidth}
+        \textbf{\faTimesCircle\space Don'ts:}
+        \begin{itemize}
+            \item Ignorar autocorrelación espacial
+            \item Usar OLS sin diagnósticos
+            \item Interpolar sin validación
+            \item Asumir isotropía siempre
+            \item Extrapolar más allá del rango
+            \item P-hacking espacial
+            \item Olvidar el MAUP
+        \end{itemize}
+    \end{columns}
+    
+    \vspace{0.5cm}
+    \alertbox{MAUP: Modifiable Areal Unit Problem - los resultados pueden cambiar con la agregación}
+\end{frame}
+
+\section{Conclusiones}
+
+\begin{frame}{Resumen de la Clase}
+    \begin{columns}[T]
+        \column{0.5\textwidth}
+        \textbf{Conceptos clave aprendidos:}
+        \begin{itemize}
+            \item[\faCheckCircle] Primera Ley de Tobler
+            \item[\faCheckCircle] Autocorrelación espacial (Moran, LISA)
+            \item[\faCheckCircle] Matrices de pesos espaciales
+            \item[\faCheckCircle] Interpolación (IDW, Kriging)
+            \item[\faCheckCircle] Semivariogramas
+            \item[\faCheckCircle] Análisis de patrones de puntos
+            \item[\faCheckCircle] Hot spots (Getis-Ord)
+            \item[\faCheckCircle] Regresión espacial (SAR, SEM, GWR)
+        \end{itemize}
+        
+        \column{0.5\textwidth}
+        \textbf{Habilidades desarrolladas:}
+        \begin{itemize}
+            \item Detectar dependencia espacial
+            \item Crear superficies interpoladas
+            \item Identificar clusters y outliers
+            \item Modelar con conciencia espacial
+            \item Generar mapas de incertidumbre
+            \item Validar modelos espaciales
+        \end{itemize}
+        
+        \vspace{0.3cm}
+        \conceptbox{Mensaje clave}{
+            Datos espaciales = métodos especiales
+        }
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Próximos Pasos: Recursos}
+    \textbf{\faBook\space Libros recomendados:}
+    \begin{itemize}
+        \item "Applied Spatial Data Analysis with R" - Bivand et al.
+        \item "Geographic Data Science with Python" - Rey et al.
+        \item "Geostatistics for Natural Resources" - Isaaks \& Srivastava
+    \end{itemize}
+    
+    \vspace{0.5cm}
+    \textbf{\faCode\space Práctica con notebooks:}
+    \begin{itemize}
+        \item ESDA de datos chilenos
+        \item Kriging de contaminación en Santiago
+        \item Hot spots de criminalidad
+        \item GWR de precios inmobiliarios
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Próximos Pasos: Proyecto}
+    \textbf{\faRocket\space Proyecto sugerido:}
+    \begin{itemize}
+        \item Análisis geoestadístico completo de un fenómeno local
+        \item Comparar métodos de interpolación
+        \item Implementar modelo de regresión espacial
+        \item Desarrollar dashboard interactivo con resultados
+    \end{itemize}
+    
+    \vspace{1cm}
+    \alertbox{Próxima clase: Machine Learning Geoespacial}
+\end{frame}
+
+\begin{frame}{Entregables del Proyecto}
+    \begin{center}
+    \conceptbox{Entregables esperados}{
+        \begin{itemize}
+            \item[\faChartArea] \textbf{Análisis ESDA completo}
+                \begin{itemize}
+                    \item Autocorrelación global y local
+                    \item Clusters y outliers espaciales
+                \end{itemize}
+            
+            \vspace{0.3cm}
+            \item[\faLayerGroup] \textbf{Comparación de métodos}
+                \begin{itemize}
+                    \item Mínimo 3 métodos de interpolación
+                    \item Validación cruzada y métricas
+                \end{itemize}
+            
+            \vspace{0.3cm}
+            \item[\faChartLine] \textbf{Visualizaciones interactivas}
+                \begin{itemize}
+                    \item Mapas con Folium/Plotly
+                    \item Dashboard integrado
+                \end{itemize}
+            
+            \vspace{0.3cm}
+            \item[\faFile] \textbf{Reporte final}
+                \begin{itemize}
+                    \item Metodología e interpretación
+                    \item Recomendaciones aplicadas
+                \end{itemize}
+        \end{itemize}
+    }
+    \end{center}
+\end{frame}
+
+\begin{frame}[standout]
+    \Huge ¿Preguntas?
+    
+    \vspace{1cm}
+    \Large
+    \faEnvelope\space francisco.parra.o@usach.cl
+    
+    \faGithub\space github.com/franciscoparrao
+    
+    \vspace{1cm}
+    \normalsize
+    Material y notebooks disponibles en el repositorio del curso
+\end{frame}
+
+\end{document}

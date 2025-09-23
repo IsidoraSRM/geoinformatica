@@ -1,0 +1,46 @@
+\frametitle{Polígonos: Áreas y Regiones}
+\begin{columns}
+        \column{0.5\textwidth}
+        \textbf{Características:}
+        \begin{itemize}
+            \item Anillo exterior cerrado
+            \item Posibles huecos internos
+            \item Área y perímetro
+            \item Relaciones topológicas
+        \end{itemize}
+
+        \textbf{Aplicaciones:}
+        \begin{itemize}
+            \item Límites administrativos
+            \item Parcelas/predios
+            \item Zonas de cobertura
+            \item Áreas de influencia
+        \end{itemize}
+
+        \column{0.5\textwidth}
+        \begin{lstlisting}[language=Python, caption=Polígonos y análisis]
+from shapely.geometry import Polygon
+
+# Crear polígono
+manzana = Polygon([
+    (-70.650, -33.440),
+    (-70.648, -33.440),
+    (-70.648, -33.438),
+    (-70.650, -33.438),
+    (-70.650, -33.440)
+])
+
+# Propiedades geométricas
+print(f"Area: {manzana.area}")
+print(f"Perimetro: {manzana.length}")
+
+# Operaciones espaciales
+edificio = Point(-70.649, -33.439)
+print(manzana.contains(edificio))  # True
+
+# Overlay de polígonos
+interseccion = poligono1.intersection(poligono2)
+union = poligono1.union(poligono2)
+diferencia = poligono1.difference(poligono2)
+        \end{lstlisting}
+    \end{columns}

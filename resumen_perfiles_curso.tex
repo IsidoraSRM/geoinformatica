@@ -1,0 +1,258 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{fontawesome5}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{tikz}
+\usepackage{array}
+\usepackage{multicol}
+
+% Colores personalizados
+\definecolor{usachblue}{RGB}{0,121,192}
+\definecolor{usachred}{RGB}{239,51,64}
+\definecolor{darkgreen}{RGB}{0,100,0}
+\definecolor{darkorange}{RGB}{255,140,0}
+
+% Configuración de página
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Geoinformática 2025-2}
+\fancyhead[R]{\small USACH}
+\fancyfoot[C]{\thepage}
+
+\title{{\Huge \textbf{Análisis de Perfiles del Curso}}\\[0.5cm]
+{\Large Geoinformática - Semestre 2, 2025}\\[0.3cm]
+{\large Resumen de Encuesta Diagnóstica}}
+\author{Prof. Francisco Parra O.\\Geólogo, PhD en Informática}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Resumen Ejecutivo}
+
+\begin{tcolorbox}[colback=blue!5,colframe=usachblue,title=Datos Generales del Curso]
+\begin{itemize}
+    \item \textbf{Total de estudiantes:} 17
+    \item \textbf{Con experiencia en programación espacial:} 8 (47\%)
+    \item \textbf{Sin experiencia previa:} 1 (6\%)
+    \item \textbf{Con ideas de proyecto definidas:} 10 (59\%)
+    \item \textbf{Lenguaje más dominado:} Python y SQL (100\%)
+\end{itemize}
+\end{tcolorbox}
+
+\section{Análisis de Experiencia}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    ybar,
+    width=12cm,
+    height=6cm,
+    ylabel={Número de estudiantes},
+    symbolic x coords={Nunca, Google Maps, PostGIS, Programado, SIG},
+    xtick=data,
+    nodes near coords,
+    ymin=0,
+    ymax=12,
+    bar width=0.7cm,
+    title={Nivel de Experiencia con Datos Espaciales}
+]
+\addplot[fill=usachblue] coordinates {
+    (Nunca,1) 
+    (Google Maps,8) 
+    (PostGIS,2) 
+    (Programado,7) 
+    (SIG,2)
+};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\section{Lenguajes de Programación}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    ybar,
+    width=12cm,
+    height=6cm,
+    ylabel={Número de estudiantes},
+    symbolic x coords={Python, SQL, Javascript, R},
+    xtick=data,
+    nodes near coords,
+    ymin=0,
+    ymax=18,
+    bar width=0.8cm,
+    title={Dominio de Lenguajes de Programación}
+]
+\addplot[fill=darkgreen] coordinates {
+    (Python,17) 
+    (SQL,17) 
+    (Javascript,14) 
+    (R,7)
+};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\section{Áreas de Interés}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    ybar,
+    width=14cm,
+    height=7cm,
+    ylabel={Número de estudiantes},
+    symbolic x coords={Medio Ambiente, Transporte, Negocios, Urbanismo, Salud},
+    xtick=data,
+    x tick label style={rotate=45, anchor=east},
+    nodes near coords,
+    ymin=0,
+    ymax=12,
+    bar width=0.7cm,
+    title={Áreas de Interés para Proyectos}
+]
+\addplot[fill=darkorange] coordinates {
+    (Medio Ambiente,10) 
+    (Transporte,9) 
+    (Negocios,8) 
+    (Urbanismo,5) 
+    (Salud,2)
+};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\section{Detalle de Estudiantes}
+
+\subsection{Estudiantes con Experiencia Avanzada}
+\begin{multicols}{2}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Branco García:} PostGIS, todos los lenguajes
+    \item \textbf{Aracely Castro:} SIG + programación
+    \item \textbf{Anael Guzmán:} PostGIS con rutas
+    \item \textbf{Diego Hernández:} PostGIS
+    \item \textbf{Lucas Contador:} SIG + programación
+    \item \textbf{Felipe Baeza:} Programación espacial
+    \item \textbf{Isidora Reveco:} Programación espacial
+    \item \textbf{Roberto Galleguillos:} Programación espacial
+\end{itemize}
+\end{multicols}
+
+\subsection{Ideas de Proyecto Destacadas}
+
+\begin{enumerate}
+    \item \textbf{Branco García:} Análisis de densidad poblacional y transporte público
+    \item \textbf{Aracely Castro:} Tracking de animales en zonas rurales
+    \item \textbf{Catalina López:} Sistema de reforestación inteligente
+    \item \textbf{Diego Hernández:} Análisis de suelos para minería
+    \item \textbf{Matías Vejar:} App de micros rurales
+    \item \textbf{John Fernández:} Mapa del crimen para ubicación de comisarías
+\end{enumerate}
+
+\section{Recomendaciones para el Curso}
+
+\begin{tcolorbox}[colback=green!5,colframe=darkgreen,title=Fortalezas del Grupo]
+\begin{itemize}
+    \item Dominio universal de Python y SQL facilita estandarización
+    \item Alta proporción con experiencia previa en programación
+    \item Interés fuerte en temas ambientales (oportunidad para proyectos de impacto)
+    \item Varios estudiantes con ideas concretas de proyecto
+\end{itemize}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=yellow!5,colframe=darkorange,title=Áreas de Atención]
+\begin{itemize}
+    \item Solo 41\% conoce R - considerar tutoriales adicionales
+    \item Un estudiante sin experiencia previa - necesita apoyo extra
+    \item 41\% sin idea de proyecto - requieren más orientación
+    \item Poca experiencia con SIG desktop - enfocarse en programación
+\end{itemize}
+\end{tcolorbox}
+
+\section{Propuesta de Grupos de Trabajo}
+
+Basándome en los perfiles, sugiero formar grupos equilibrados:
+
+\subsection{Grupos Sugeridos (por afinidad y complementariedad)}
+
+\begin{enumerate}
+    \item \textbf{Grupo Transporte Urbano:}
+    \begin{itemize}
+        \item Branco García (líder técnico)
+        \item Matías Vejar
+        \item Isidora Reveco
+    \end{itemize}
+    
+    \item \textbf{Grupo Medio Ambiente:}
+    \begin{itemize}
+        \item Aracely Castro (líder técnico)
+        \item Catalina López
+        \item Valentina Barría
+    \end{itemize}
+    
+    \item \textbf{Grupo Business Intelligence:}
+    \begin{itemize}
+        \item Felipe Baeza (líder técnico)
+        \item Fabián Ibarra
+        \item Diego Hernández
+    \end{itemize}
+    
+    \item \textbf{Grupo Smart Cities:}
+    \begin{itemize}
+        \item Lucas Contador (líder técnico)
+        \item Byron Gracia
+        \item John Fernández
+    \end{itemize}
+    
+    \item \textbf{Grupo Análisis Multimodal:}
+    \begin{itemize}
+        \item Anael Guzmán (líder técnico)
+        \item Roberto Galleguillos
+        \item Bastián Guerrero
+    \end{itemize}
+    
+    \item \textbf{Grupo Salud:}
+    \begin{itemize}
+        \item Valentina Campos
+        \item Jaime Riquelme
+    \end{itemize}
+\end{enumerate}
+
+
+\section{Recursos Adicionales Recomendados}
+
+\subsection{Para el grupo mayoritario (Python + SQL)}
+\begin{itemize}
+    \item Crear repositorio con notebooks de ejemplo
+    \item Datasets chilenos pre-procesados
+    \item Template de proyecto en GeoPandas
+\end{itemize}
+
+\subsection{Para interesados en medio ambiente}
+\begin{itemize}
+    \item Acceso a Google Earth Engine
+    \item Datos de estaciones SINCA
+    \item Imágenes Sentinel-2 de Chile
+\end{itemize}
+
+\subsection{Para principiantes}
+\begin{itemize}
+    \item Tutorías con ayudantes
+    \item Material de autoaprendizaje gradual
+    \item Pair programming con compañeros avanzados
+\end{itemize}
+
+\end{document}

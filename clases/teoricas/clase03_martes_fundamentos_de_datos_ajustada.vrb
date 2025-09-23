@@ -1,0 +1,49 @@
+\frametitle{Ejercicio Práctico Integrador}
+\textbf{Tarea:} Analizar ubicación óptima para nuevo colegio
+
+    \vspace{0.2cm}
+
+    \begin{columns}[T]
+        \column{0.45\textwidth}
+        \footnotesize
+        \textbf{Datos disponibles:}
+        \begin{itemize}
+            \item Manzanas censales (vector)
+            \item Colegios existentes (puntos)
+            \item Red vial (líneas)
+            \item Población por edad (raster)
+            \item Elevación (DEM)
+        \end{itemize}
+
+        \textbf{Criterios:}
+        \begin{enumerate}
+            \item Max población 5-18 años
+            \item Min 500m de otro colegio
+            \item Max 100m de vía principal
+            \item Pendiente < 5 grados
+        \end{enumerate}
+
+        \column{0.55\textwidth}
+        \begin{lstlisting}[language=Python]
+# 1. Preparar datos
+manzanas = gpd.read_file('manzanas.shp')
+colegios = gpd.read_file('colegios.geojson')
+vias = gpd.read_file('vias.shp')
+
+# 2. Crear buffers
+buffer_colegios = colegios.buffer(500)
+buffer_vias = vias.buffer(100)
+
+# 3. Areas candidatas
+candidatas = manzanas.copy()
+candidatas = candidatas[
+    ~candidatas.intersects(
+        buffer_colegios.unary_union)]
+candidatas = candidatas[
+    candidatas.intersects(
+        buffer_vias.unary_union)]
+
+# 4. Score por poblacion
+# (continua...)
+        \end{lstlisting}
+    \end{columns}

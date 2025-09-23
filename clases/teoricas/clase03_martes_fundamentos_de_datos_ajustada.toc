@@ -1,0 +1,5 @@
+\babel@toc {spanish}{}\relax 
+\beamer@sectionintoc {1}{Datos vectoriales: puntos, líneas, polígonos}{3}{0}{1}
+\beamer@sectionintoc {2}{Datos raster: grillas y resolución}{8}{0}{2}
+\beamer@sectionintoc {3}{Formatos de archivos comunes}{13}{0}{3}
+\beamer@sectionintoc {4}{Atributos y geometrías}{19}{0}{4}

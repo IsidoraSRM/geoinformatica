@@ -1,0 +1,124 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{fontawesome5}
+\usepackage{multicol}
+
+% Colores personalizados
+\definecolor{usachblue}{RGB}{0,121,192}
+\definecolor{usachred}{RGB}{239,51,64}
+\definecolor{darkgreen}{RGB}{0,100,0}
+\definecolor{darkorange}{RGB}{255,140,0}
+
+% Configuración de página
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Geoinformática 2025-2}
+\fancyhead[R]{\small USACH}
+\fancyfoot[C]{\thepage}
+
+\begin{document}
+
+\begin{center}
+    {\Huge \textbf{Recomendaciones de Proyecto}}\\[0.5cm]
+    {\Large \textcolor{usachblue}{Geoinformática - Semestre 2, 2025}}\\[0.3cm]
+    \rule{\textwidth}{0.5pt}\\[0.3cm]
+    {\LARGE \textbf{Byron Caices}}\\[0.2cm]
+    {\large Fecha: \today}
+\end{center}
+
+\vspace{0.5cm}
+
+\section*{\faIcon{user-circle} Perfil del Estudiante}
+
+\begin{tcolorbox}[colback=blue!5,colframe=usachblue,title=Resumen de tu Perfil]
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Nivel de experiencia:} Intermedio
+    \item \textbf{Lenguajes dominados:} Python (avanzado), SQL (intermedio), JavaScript, R
+    \item \textbf{Áreas de interés:} Negocios y Urbanismo (Análisis inmobiliario y plusvalía)
+    \item \textbf{Stack tecnológico recomendado:} GeoPandas, Folium, PostGIS, Scikit-learn, XGBoost
+\end{itemize}
+\end{tcolorbox}
+
+
+\section*{\faIcon{flask} Proyectos Científicos Recomendados}
+
+Basándome en tus intereses y experiencia, estos proyectos científicos serían ideales para ti:
+
+
+\begin{tcolorbox}[colback=green!5,colframe=darkgreen,title={\small Proyecto Científico \#1}]
+\textbf{Modelado de Plusvalía Urbana}\\[0.2cm]
+\textcolor{gray}{\small Área: Urbanismo}\\[0.2cm]
+Analizar factores que influyen en la valorización inmobiliaria usando machine learning espacial
+\end{tcolorbox}
+
+
+\begin{tcolorbox}[colback=green!5,colframe=darkgreen,title={\small Proyecto Científico \#2}]
+\textbf{Predicción de Gentrificación}\\[0.2cm]
+\textcolor{gray}{\small Área: Urbanismo}\\[0.2cm]
+Identificar zonas con potencial de gentrificación usando indicadores socioeconómicos y urbanos
+\end{tcolorbox}
+
+
+\begin{tcolorbox}[colback=green!5,colframe=darkgreen,title={\small Proyecto Científico \#3}]
+\textbf{Análisis de Accesibilidad y Precio}\\[0.2cm]
+\textcolor{gray}{\small Área: Urbanismo}\\[0.2cm]
+Correlacionar accesibilidad a servicios con valores inmobiliarios usando análisis de redes
+\end{tcolorbox}
+
+
+\section*{\faIcon{building} Proyectos Comerciales Recomendados}
+
+Si te interesa un enfoque más aplicado a la industria, considera estos proyectos:
+
+
+\begin{tcolorbox}[colback=orange!5,colframe=darkorange,title={\small Proyecto Comercial \#1}]
+\textbf{Sistema de Valoración Inmobiliaria}\\[0.2cm]
+\textcolor{gray}{\small Área: Negocios}\\[0.2cm]
+Plataforma ML para predecir precios de propiedades considerando múltiples variables urbanas
+\end{tcolorbox}
+
+
+\begin{tcolorbox}[colback=orange!5,colframe=darkorange,title={\small Proyecto Comercial \#2}]
+\textbf{Optimizador de Inversiones Inmobiliarias}\\[0.2cm]
+\textcolor{gray}{\small Área: Negocios}\\[0.2cm]
+Identificar zonas con mayor potencial de retorno de inversión usando análisis predictivo
+\end{tcolorbox}
+
+
+\begin{tcolorbox}[colback=orange!5,colframe=darkorange,title={\small Proyecto Comercial \#3}]
+\textbf{Plataforma de Inteligencia Locacional}\\[0.2cm]
+\textcolor{gray}{\small Área: Negocios}\\[0.2cm]
+Sistema para determinar ubicaciones óptimas de nuevos desarrollos comerciales o residenciales
+\end{tcolorbox}
+
+
+\section*{\faIcon{graduation-cap} Recursos Recomendados}
+
+\subsection*{Recursos según tu nivel}
+
+\begin{itemize}[leftmargin=*]
+    \item Libro: Property Value Modeling with GIS
+    \item Tutorial: GeoPandas para análisis inmobiliario
+    \item Dataset: Portal Inmobiliario + datos OSM
+    \item Framework: Streamlit para dashboards interactivos
+\end{itemize}
+
+
+\vspace{0.5cm}
+
+\begin{tcolorbox}[colback=gray!10,colframe=gray!50]
+\centering
+\textbf{Contacto}\\[0.2cm]
+\faIcon{envelope} francisco.parra.o@usach.cl
+\end{tcolorbox}
+
+\end{document}

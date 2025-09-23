@@ -1,0 +1,584 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{array}
+\usepackage{tikz}
+\usepackage{dirtytalk}
+\usepackage{booktabs}
+\usepackage{multicol}
+
+% Colores personalizados
+\definecolor{usachblue}{RGB}{0,121,192}
+\definecolor{usachred}{RGB}{239,51,64}
+\definecolor{verde}{RGB}{0,150,0}
+\definecolor{amarillo}{RGB}{255,200,0}
+\definecolor{rojo}{RGB}{220,0,0}
+
+% Configuración de secciones
+\titleformat{\section}[block]{\normalfont\Large\bfseries\color{usachblue}}{\thesection}{1em}{}
+\titleformat{\subsection}[block]{\normalfont\large\bfseries\color{usachred}}{\thesubsection}{1em}{}
+
+% Encabezado y pie
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Análisis de Proyectos}
+\fancyhead[R]{\small Geoinformática 2025}
+\fancyfoot[C]{\thepage}
+
+% Comandos para evaluación
+\newcommand{\alto}[1]{\textcolor{verde}{\textbf{#1}}}
+\newcommand{\medio}[1]{\textcolor{amarillo}{\textbf{#1}}}
+\newcommand{\bajo}[1]{\textcolor{rojo}{\textbf{#1}}}
+
+\title{{\Huge \textbf{Análisis de Ideas de Proyecto}}\\[0.5cm]
+{\Large Evaluación de Componente Geoespacial}\\[0.3cm]
+{\large Curso: Geoinformática}}
+\author{Profesor: Francisco Parra O.}
+\date{Agosto 2025}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+\begin{tcolorbox}[colframe=usachblue,colback=blue!5]
+\centering
+\textbf{CRITERIO DE EVALUACIÓN}\\[0.3cm]
+Este análisis evalúa cada proyecto según su potencial para incorporar\\
+análisis geoespacial significativo, considerando que es un curso de Geoinformática.\\[0.2cm]
+\alto{Alto}: Componente espacial esencial (70-100\%)\\
+\medio{Medio}: Componente espacial relevante (30-70\%)\\
+\bajo{Bajo}: Componente espacial marginal (<30\%)
+\end{tcolorbox}
+
+\newpage
+
+\section{Resumen Ejecutivo}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{clcc}
+\toprule
+\textbf{\#} & \textbf{Proyecto} & \textbf{Potencial Geo} & \textbf{Recomendación} \\
+\midrule
+1 & Postulación a empleos & \medio{Medio} & Con ajustes \\
+2 & Monitoreo de stock & \medio{Medio} & Con ajustes \\
+3 & Reclutamiento & \bajo{Bajo} & No recomendado \\
+4 & Comunicación interna & \bajo{Bajo} & No recomendado \\
+5 & Análisis publicitario & \medio{Medio} & Con ajustes \\
+6 & Entregas a domicilio & \alto{Alto} & Recomendado \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Análisis Detallado}
+
+\subsection{Proyecto 1: Postulación a Empleos según Destrezas}
+
+\begin{tcolorbox}[colframe=amarillo,colback=yellow!10]
+\textbf{Potencial Geoespacial:} \medio{MEDIO (40-50\%)}
+\end{tcolorbox}
+
+\subsubsection{Componente Espacial Posible}
+
+\begin{itemize}
+    \item \textbf{Matching geográfico}: Conectar candidatos con empleos cercanos
+    \item \textbf{Análisis de commute}: Tiempo de viaje, rutas óptimas, transporte público
+    \item \textbf{Mapas de calor}: Demanda laboral por zona y especialidad
+    \item \textbf{Movilidad laboral}: Patrones de desplazamiento trabajo-hogar
+    \item \textbf{Clusters de industrias}: Identificar polos de desarrollo por sector
+\end{itemize}
+
+\subsubsection{Propuesta de Mejora Geoespacial}
+
+\say{Sistema de Matching Laboral Geointeligente para Santiago}
+
+\begin{lstlisting}[language=Python,basicstyle=\tiny]
+# Ejemplo: Score de match considerando distancia y transporte
+def calcular_score_match(candidato, empleo):
+    # Factor distancia
+    dist_km = calcular_distancia(candidato.ubicacion, empleo.ubicacion)
+    score_dist = 1 / (1 + dist_km/10)  # Decae con distancia
+    
+    # Factor transporte público
+    tiempo_metro = calcular_tiempo_metro(candidato.ubicacion, empleo.ubicacion)
+    score_transporte = 1 / (1 + tiempo_metro/30)  # Decae con tiempo
+    
+    # Factor habilidades
+    score_skills = calcular_match_habilidades(candidato.skills, empleo.requerimientos)
+    
+    # Score ponderado
+    score_final = (score_skills * 0.5 + 
+                   score_dist * 0.3 + 
+                   score_transporte * 0.2)
+    
+    return score_final
+\end{lstlisting}
+
+\subsubsection{Datos Geoespaciales Necesarios}
+\begin{itemize}
+    \item Red de transporte público (Metro, Transantiago)
+    \item Ubicación de empresas por rubro
+    \item Datos censales de población activa
+    \item Tiempos de viaje reales (Google Maps API)
+\end{itemize}
+
+\subsubsection{Limitaciones}
+\begin{itemize}
+    \item El matching de habilidades no es inherentemente espacial
+    \item Muchos trabajos son remotos/híbridos post-pandemia
+    \item Privacidad de datos de candidatos
+\end{itemize}
+
+\newpage
+
+\subsection{Proyecto 2: Monitoreo de Stock}
+
+\begin{tcolorbox}[colframe=amarillo,colback=yellow!10]
+\textbf{Potencial Geoespacial:} \medio{MEDIO (45-55\%)}
+\end{tcolorbox}
+
+\subsubsection{Componente Espacial Posible}
+
+\begin{itemize}
+    \item \textbf{Gestión multi-sucursal}: Optimización de inventario distribuido
+    \item \textbf{Predicción espacial de demanda}: Por zona geográfica
+    \item \textbf{Reabastecimiento inteligente}: Desde bodega más cercana
+    \item \textbf{Análisis de competencia}: Stock según densidad de competidores
+    \item \textbf{Logística de distribución}: Rutas óptimas de reposición
+\end{itemize}
+
+\subsubsection{Propuesta de Mejora Geoespacial}
+
+\say{Sistema de Inventario Distribuido Geoptimizado}
+
+\begin{lstlisting}[language=Python,basicstyle=\tiny]
+# Ejemplo: Predicción de demanda por zona
+import geopandas as gpd
+from sklearn.ensemble import RandomForestRegressor
+
+def predecir_demanda_espacial(producto, zona_gdf):
+    features = []
+    
+    # Features espaciales
+    features.append(zona_gdf['poblacion'])
+    features.append(zona_gdf['ingreso_promedio'])
+    features.append(zona_gdf['densidad_comercial'])
+    features.append(calcular_distancia_competidor_cercano(zona_gdf))
+    features.append(obtener_demanda_historica_vecinos(zona_gdf))
+    
+    # Features temporales
+    features.append(dia_semana)
+    features.append(es_quincena)
+    features.append(temperatura_promedio)
+    
+    # Modelo predictivo
+    modelo = RandomForestRegressor()
+    demanda_predicha = modelo.predict(features)
+    
+    return demanda_predicha
+
+def optimizar_reabastecimiento(sucursales_gdf, bodegas_gdf, demanda_predicha):
+    # Problema de transporte con restricciones espaciales
+    # Minimizar: costo_transporte + costo_stockout
+    # Sujeto a: capacidad_bodegas, tiempos_entrega
+    pass
+\end{lstlisting}
+
+\subsubsection{Valor Agregado Geoespacial}
+\begin{itemize}
+    \item Reducción de quiebres de stock por zona
+    \item Optimización de rutas de distribución
+    \item Predicción de demanda localizada
+    \item Balanceo de inventario entre sucursales
+\end{itemize}
+
+\subsubsection{Limitaciones}
+\begin{itemize}
+    \item Requiere múltiples ubicaciones físicas
+    \item El core del problema es más de optimización que espacial
+    \item Necesita integración con sistemas ERP existentes
+\end{itemize}
+
+\newpage
+
+\subsection{Proyecto 3: Automatización de Reclutamiento}
+
+\begin{tcolorbox}[colframe=rojo,colback=red!10]
+\textbf{Potencial Geoespacial:} \bajo{BAJO (10-20\%)}
+\end{tcolorbox}
+
+\subsubsection{Componente Espacial Limitado}
+
+\begin{itemize}
+    \item Filtro por ubicación de candidatos (muy básico)
+    \item Programación de entrevistas considerando zonas horarias
+    \item Análisis de procedencia de candidatos
+\end{itemize}
+
+\subsubsection{Por Qué No es Adecuado para Geoinformática}
+
+\begin{enumerate}
+    \item \textbf{Core no espacial}: El problema principal es procesamiento de texto y automatización
+    \item \textbf{Geografía marginal}: La ubicación es solo un filtro, no análisis
+    \item \textbf{Sin análisis espacial}: No requiere operaciones GIS complejas
+    \item \textbf{Mejor como proyecto de NLP/ML}: Parsing de CVs, matching de skills
+\end{enumerate}
+
+\subsubsection{Alternativa Sugerida}
+Si el grupo está interesado en RRHH, podrían pivotear a:
+\begin{itemize}
+    \item \say{Análisis espacial de talento tech en Santiago}: Mapear dónde viven los desarrolladores, diseñadores, etc.
+    \item \say{Optimización de oficinas satélite}: Dónde ubicar oficinas para minimizar commute
+\end{itemize}
+
+\newpage
+
+\subsection{Proyecto 4: Comunicación Interna Empresarial}
+
+\begin{tcolorbox}[colframe=rojo,colback=red!10]
+\textbf{Potencial Geoespacial:} \bajo{BAJO (5-15\%)}
+\end{tcolorbox}
+
+\subsubsection{Componente Espacial Muy Limitado}
+
+\begin{itemize}
+    \item Visualización de estructura organizacional por ubicación (si hay múltiples oficinas)
+    \item Dashboard de métricas por región
+    \item Coordinación entre oficinas en diferentes zonas horarias
+\end{itemize}
+
+\subsubsection{Por Qué No es Adecuado}
+
+\begin{enumerate}
+    \item \textbf{Problema organizacional}: No geográfico
+    \item \textbf{Sin datos espaciales}: La comunicación es digital, no física
+    \item \textbf{Herramientas existentes}: Slack, Teams, etc. ya resuelven esto
+    \item \textbf{Fuera del scope}: Más apropiado para gestión de proyectos
+\end{enumerate}
+
+\subsubsection{Recomendación}
+\textbf{NO recomendado} para este curso. El grupo debería considerar otros problemas con componente espacial real.
+
+\newpage
+
+\subsection{Proyecto 5: Análisis de Métricas Publicitarias}
+
+\begin{tcolorbox}[colframe=amarillo,colback=yellow!10]
+\textbf{Potencial Geoespacial:} \medio{MEDIO (35-45\%)}
+\end{tcolorbox}
+
+\subsubsection{Componente Espacial Posible}
+
+\begin{itemize}
+    \item \textbf{Geomarketing}: Análisis de efectividad por zona geográfica
+    \item \textbf{Publicidad exterior}: Optimización de ubicación de vallas/pantallas
+    \item \textbf{Segmentación geográfica}: Personalización de campañas por barrio
+    \item \textbf{Attribution espacial}: Relacionar ventas físicas con ads digitales
+    \item \textbf{Footfall analysis}: Medir tráfico en tiendas post-campaña
+\end{itemize}
+
+\subsubsection{Propuesta de Mejora Geoespacial}
+
+\say{Sistema de Geomarketing y Attribution Espacial}
+
+\begin{lstlisting}[language=Python,basicstyle=\tiny]
+# Ejemplo: Attribution de campaña digital a ventas físicas
+def analizar_impacto_espacial_campana(campana_data, ventas_data, tiendas_gdf):
+    # Crear zonas de influencia por tienda
+    for tienda in tiendas_gdf.iterrows():
+        zona_influencia = tienda.geometry.buffer(2000)  # 2km radio
+        
+        # Usuarios impactados en la zona
+        usuarios_zona = campana_data[
+            campana_data.within(zona_influencia)
+        ]
+        
+        # Correlacionar con ventas
+        ventas_pre = ventas_data[
+            (ventas_data.tienda_id == tienda.id) & 
+            (ventas_data.fecha < campana.fecha_inicio)
+        ].mean()
+        
+        ventas_post = ventas_data[
+            (ventas_data.tienda_id == tienda.id) & 
+            (ventas_data.fecha > campana.fecha_inicio)
+        ].mean()
+        
+        lift = (ventas_post - ventas_pre) / ventas_pre
+        
+        # Modelo de attribution
+        attribution_score = calcular_attribution(
+            usuarios_impactados=len(usuarios_zona),
+            lift_ventas=lift,
+            distancia_promedio=usuarios_zona.distance(tienda.geometry).mean()
+        )
+    
+    return attribution_scores
+\end{lstlisting}
+
+\subsubsection{Datos Necesarios}
+\begin{itemize}
+    \item Ubicación de usuarios (anonimizada)
+    \item Puntos de venta físicos
+    \item Datos de campañas digitales con geotargeting
+    \item Ventas por ubicación y tiempo
+\end{itemize}
+
+\subsubsection{Limitaciones}
+\begin{itemize}
+    \item Privacidad de datos de usuarios
+    \item Muchas métricas son puramente digitales (CTR, conversiones online)
+    \item Requiere empresa con presencia física y digital
+\end{itemize}
+
+\newpage
+
+\subsection{Proyecto 6: Optimización de Entregas a Domicilio}
+
+\begin{tcolorbox}[colframe=verde,colback=green!10]
+\textbf{Potencial Geoespacial:} \alto{ALTO (80-90\%)}
+\end{tcolorbox}
+
+\subsubsection{Componente Espacial Core}
+
+\begin{itemize}
+    \item \textbf{Ruteo optimizado}: VRP (Vehicle Routing Problem) con restricciones
+    \item \textbf{Predicción de tiempos}: Basado en tráfico real-time
+    \item \textbf{Zonificación dinámica}: Asignación de repartidores por zona
+    \item \textbf{Last-mile optimization}: Rutas peatonales/ciclistas
+    \item \textbf{Hub location}: Ubicación óptima de centros de distribución
+    \item \textbf{Tracking en tiempo real}: Seguimiento GPS de entregas
+\end{itemize}
+
+\subsubsection{Propuesta Completa}
+
+\say{Sistema Inteligente de Logística Última Milla con IA Espacial}
+
+\begin{lstlisting}[language=Python,basicstyle=\tiny]
+import osmnx as ox
+import networkx as nx
+from ortools.constraint_solver import pywrapcp
+
+class SistemaEntregasGeoptimizado:
+    def __init__(self, area_servicio):
+        self.graph = ox.graph_from_place(area_servicio, network_type='drive')
+        self.delivery_points = []
+        self.vehicles = []
+        
+    def optimizar_rutas_dia(self, pedidos_gdf, vehiculos_disponibles):
+        # 1. Clustering espacial de pedidos
+        clusters = self.clusterizar_pedidos(pedidos_gdf)
+        
+        # 2. Asignación vehículo-cluster
+        asignaciones = self.asignar_vehiculos(clusters, vehiculos_disponibles)
+        
+        # 3. Optimización de ruta por vehículo
+        rutas = {}
+        for vehiculo, pedidos in asignaciones.items():
+            ruta_optima = self.resolver_vrp(vehiculo, pedidos)
+            rutas[vehiculo] = ruta_optima
+            
+        # 4. Balanceo dinámico
+        rutas_balanceadas = self.balancear_cargas(rutas)
+        
+        return rutas_balanceadas
+    
+    def predecir_tiempo_entrega(self, origen, destino, hora_salida):
+        # Considerar tráfico histórico y en tiempo real
+        trafico_historico = self.get_trafico_historico(hora_salida)
+        trafico_actual = self.get_trafico_realtime()
+        
+        # Ruta más rápida con pesos dinámicos
+        ruta = nx.shortest_path(self.graph, origen, destino, 
+                               weight=lambda u,v,d: d['length'] * trafico_actual[u,v])
+        
+        tiempo_estimado = self.calcular_tiempo_ruta(ruta, trafico_actual)
+        
+        # Factor de incertidumbre
+        buffer = self.calcular_buffer_tiempo(hora_salida, destino)
+        
+        return tiempo_estimado + buffer
+    
+    def monitorear_entregas_realtime(self):
+        # Dashboard con mapa en vivo
+        for vehiculo in self.vehicles:
+            posicion_actual = vehiculo.get_gps_position()
+            proxima_entrega = vehiculo.proxima_parada
+            tiempo_restante = self.predecir_tiempo_entrega(
+                posicion_actual, proxima_entrega, now()
+            )
+            
+            # Alertar si hay retraso previsto
+            if tiempo_restante > vehiculo.ventana_tiempo:
+                self.notificar_cliente(proxima_entrega, nuevo_estimado)
+                self.reasignar_si_necesario(vehiculo, proxima_entrega)
+\end{lstlisting}
+
+\subsubsection{Tecnologías y Datos}
+
+\begin{itemize}
+    \item \textbf{Routing}: OSRM, GraphHopper, OR-Tools
+    \item \textbf{Tráfico real-time}: Google Maps API, Waze API
+    \item \textbf{Optimización}: Algoritmos genéticos, Simulated Annealing
+    \item \textbf{Tracking}: GPS/GNSS, WebSockets para real-time
+    \item \textbf{Predicción}: ML con features espaciotemporales
+\end{itemize}
+
+\subsubsection{Métricas de Éxito}
+
+\begin{itemize}
+    \item Reducción tiempo promedio de entrega: 20-30\%
+    \item Aumento entregas por ruta: 15-25\%
+    \item Reducción km recorridos: 15-20\%
+    \item Satisfacción cliente (entregas a tiempo): >95\%
+    \item ROI: 6-12 meses
+\end{itemize}
+
+\subsubsection{Por Qué es Ideal para Geoinformática}
+
+\begin{enumerate}
+    \item \textbf{100\% espacial}: Todo el problema es geográfico
+    \item \textbf{Datos reales disponibles}: OSM, APIs de tráfico
+    \item \textbf{Impacto medible}: Métricas claras de mejora
+    \item \textbf{Tecnologías GIS}: Routing, geocoding, spatial analysis
+    \item \textbf{ML espacial}: Predicción con features geográficas
+    \item \textbf{Visualización}: Mapas, dashboards, tracking
+\end{enumerate}
+
+\newpage
+
+\section{Recomendaciones por Potencial}
+
+\subsection{Proyectos Recomendados}
+
+\begin{tcolorbox}[colframe=verde,colback=green!10,title=\alto{ALTO POTENCIAL}]
+\textbf{Proyecto 6: Sistema de Entregas}
+\begin{itemize}
+    \item Problema 100\% espacial
+    \item Datos disponibles y accesibles
+    \item Alto impacto comercial
+    \item Múltiples técnicas GIS aplicables
+    \item Excelente para portfolio
+\end{itemize}
+\end{tcolorbox}
+
+\subsection{Proyectos con Potencial (Requieren Ajustes)}
+
+\begin{tcolorbox}[colframe=amarillo,colback=yellow!10,title=\medio{POTENCIAL MEDIO}]
+\textbf{Proyecto 1: Matching Laboral}
+\begin{itemize}
+    \item Agregar análisis de movilidad urbana
+    \item Incorporar factores de transporte público
+    \item Mapeo de clusters industriales
+\end{itemize}
+
+\textbf{Proyecto 2: Gestión de Inventario}
+\begin{itemize}
+    \item Enfocar en cadena de suministro multi-local
+    \item Predicción de demanda geolocalizada
+    \item Optimización de rutas de reabastecimiento
+\end{itemize}
+
+\textbf{Proyecto 5: Geomarketing}
+\begin{itemize}
+    \item Centrarse en attribution offline-online
+    \item Optimización de publicidad exterior
+    \item Análisis de footfall y conversión
+\end{itemize}
+\end{tcolorbox}
+
+\subsection{Proyectos No Recomendados}
+
+\begin{tcolorbox}[colframe=rojo,colback=red!10,title=\bajo{BAJO POTENCIAL}]
+\textbf{Proyecto 3: Reclutamiento}\\
+\textbf{Proyecto 4: Comunicación Interna}
+\begin{itemize}
+    \item Componente espacial marginal o inexistente
+    \item Mejor para otros cursos (IA, Sistemas de Información)
+    \item No aprovechan las herramientas GIS del curso
+\end{itemize}
+\end{tcolorbox}
+
+\newpage
+
+\section{Guía para Fortalecer Componente Espacial}
+
+\subsection{Preguntas Clave}
+
+Para evaluar si un proyecto tiene suficiente componente espacial:
+
+\begin{enumerate}
+    \item ¿El \textbf{dónde} es fundamental para resolver el problema?
+    \item ¿Se requieren operaciones espaciales (buffer, overlay, routing)?
+    \item ¿Los datos principales tienen coordenadas o direcciones?
+    \item ¿El análisis espacial agrega valor significativo a la solución?
+    \item ¿Se pueden aplicar técnicas de GIS/Remote Sensing?
+\end{enumerate}
+
+\subsection{Cómo Agregar Componente Espacial}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{ll}
+\toprule
+\textbf{Componente Débil} & \textbf{Fortalecimiento} \\
+\midrule
+Filtro por ubicación & Análisis de accesibilidad multimodal \\
+Lista de direcciones & Geocoding + análisis de patrones espaciales \\
+Distancia simple & Routing con restricciones + tráfico \\
+Mapa estático & Dashboard interactivo con análisis \\
+Datos puntuales & Series espaciotemporales \\
+Zonas fijas & Zonificación dinámica optimizada \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Stack Tecnológico Recomendado}
+
+\begin{multicols}{2}
+\textbf{Backend:}
+\begin{itemize}
+    \item Python: GeoPandas, Shapely, Folium
+    \item PostGIS para base de datos espacial
+    \item QGIS para análisis exploratorio
+    \item OR-Tools para optimización
+\end{itemize}
+
+\columnbreak
+
+\textbf{Frontend:}
+\begin{itemize}
+    \item Leaflet/Mapbox para mapas web
+    \item Streamlit para dashboards rápidos
+    \item D3.js para visualizaciones custom
+    \item WebSockets para real-time
+\end{itemize}
+\end{multicols}
+
+\section{Conclusiones}
+
+\begin{tcolorbox}[colframe=usachblue,colback=blue!5]
+\textbf{Recomendación Final:}
+\begin{enumerate}
+    \item \textbf{Primera opción}: Proyecto 6 (Entregas) - Usar tal cual
+    \item \textbf{Segunda opción}: Proyecto 1 (Empleo) - Con enfoque en movilidad urbana
+    \item \textbf{Tercera opción}: Proyecto 2 (Inventario) - Como sistema multi-sucursal
+    \item \textbf{Evitar}: Proyectos 3 y 4 - No tienen componente espacial significativo
+\end{enumerate}
+
+\vspace{0.3cm}
+\textbf{Recordar}: Este es un curso de \textbf{Geoinformática}. El componente espacial debe ser central, no periférico. Si pueden resolver el problema sin mapas o análisis espacial, probablemente no es adecuado para este curso.
+\end{tcolorbox}
+
+\end{document}

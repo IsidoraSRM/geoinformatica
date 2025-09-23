@@ -1,0 +1,35 @@
+\babel@toc {spanish}{}\relax 
+\contentsline {section}{\numberline {1}Introducción}{3}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Objetivos de Aprendizaje}{3}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Preparación del Ambiente}{3}{subsection.1.2}%
+\contentsline {section}{\numberline {2}Parte 1: Datos Vectoriales}{4}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Conceptos Fundamentales}{4}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Puntos: Tu Primera Geometría}{4}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Líneas: Conectando Puntos}{5}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}Polígonos: Definiendo Áreas}{5}{subsection.2.4}%
+\contentsline {section}{\numberline {3}Parte 2: Operaciones Espaciales}{7}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Operaciones Geométricas Básicas}{7}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Predicados Espaciales}{8}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Spatial Joins}{8}{subsection.3.3}%
+\contentsline {section}{\numberline {4}Parte 3: Datos Raster}{10}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Conceptos Fundamentales}{10}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Creando y Manipulando Rasters}{10}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Resolución y Remuestreo}{11}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Índices Espectrales: NDVI}{11}{subsection.4.4}%
+\contentsline {section}{\numberline {5}Parte 4: Sistemas de Coordenadas (CRS)}{14}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Por Qué Importa el CRS}{14}{subsection.5.1}%
+\contentsline {section}{\numberline {6}Parte 5: Machine Learning Espacial}{16}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Feature Engineering Espacial}{16}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Modelo con Validación Espacial}{17}{subsection.6.2}%
+\contentsline {section}{\numberline {7}Parte 6: Integración Vector-Raster}{20}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Estadísticas Zonales}{20}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Extracción de Valores en Puntos}{21}{subsection.7.2}%
+\contentsline {section}{\numberline {8}Ejercicios Integradores}{23}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Proyecto 1: Análisis de Accesibilidad a Servicios}{23}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Proyecto 2: Monitoreo de Cambios en Cobertura Vegetal}{24}{subsection.8.2}%
+\contentsline {subsection}{\numberline {8.3}Proyecto 3: Optimización de Rutas de Recolección}{25}{subsection.8.3}%
+\contentsline {section}{\numberline {9}Recursos y Referencias}{26}{section.9}%
+\contentsline {subsection}{\numberline {9.1}Documentación Oficial}{26}{subsection.9.1}%
+\contentsline {subsection}{\numberline {9.2}Datos para Practicar}{26}{subsection.9.2}%
+\contentsline {subsection}{\numberline {9.3}Tutoriales Recomendados}{26}{subsection.9.3}%
+\contentsline {subsection}{\numberline {9.4}Cheat Sheet: Operaciones Comunes}{26}{subsection.9.4}%

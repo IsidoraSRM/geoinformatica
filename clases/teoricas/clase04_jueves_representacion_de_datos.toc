@@ -1,0 +1,5 @@
+\babel@toc {spanish}{}\relax 
+\beamer@sectionintoc {1}{Paquete sf en R}{3}{0}{1}
+\beamer@sectionintoc {2}{GeoPandas en Python}{9}{0}{2}
+\beamer@sectionintoc {3}{Importación y exportación de datos}{15}{0}{3}
+\beamer@sectionintoc {4}{Estructuras de datos espaciales}{19}{0}{4}

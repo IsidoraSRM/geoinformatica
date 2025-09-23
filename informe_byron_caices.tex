@@ -1,0 +1,903 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\usepackage{fancyhdr}
+
+\geometry{left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
+
+% Colores institucionales USACH
+\definecolor{usachblue}{RGB}{0,54,99}
+\definecolor{usachorange}{RGB}{255,102,0}
+\definecolor{darkgreen}{RGB}{0,128,0}
+\definecolor{codebg}{RGB}{245,245,245}
+\definecolor{goldstar}{RGB}{255,215,0}
+
+% Configuración de listings para código
+\lstset{
+    backgroundcolor=\color{codebg},
+    basicstyle=\footnotesize\ttfamily,
+    breaklines=true,
+    captionpos=b,
+    commentstyle=\color{darkgreen},
+    keywordstyle=\color{usachblue}\bfseries,
+    stringstyle=\color{usachorange},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    stepnumber=1,
+    numbersep=10pt,
+    showspaces=false,
+    showstringspaces=false,
+    frame=single,
+    rulecolor=\color{gray},
+    xleftmargin=1cm,
+    xrightmargin=1cm
+}
+
+% Configuración de hyperref
+\hypersetup{
+    colorlinks=true,
+    linkcolor=usachblue,
+    urlcolor=usachorange,
+    citecolor=darkgreen
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Geoinformática 2025}
+\lhead{Informe Personalizado}
+\cfoot{\thepage}
+
+\title{
+    \Large{\textbf{INFORME DE EVALUACIÓN Y PROPUESTAS}}\\
+    \vspace{0.5cm}
+    \huge{\textbf{Proyecto Semestral de Geoinformática}}\\
+    \vspace{0.5cm}
+    \large{Análisis Personalizado y Recomendaciones}\\
+    \large{Universidad de Santiago de Chile}
+}
+
+\author{
+    \textbf{Estudiante:} Byron Caices\\
+    \textbf{Profesor:} Dr. Francisco Parra O.\\
+    \textbf{Área de Interés:} Negocios y Urbanismo\\
+    \textbf{Enfoque:} Análisis Inmobiliario y Plusvalía
+}
+
+\date{Agosto 2025}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+\newpage
+
+\tableofcontents
+\newpage
+
+\section{Resumen Ejecutivo}
+
+\begin{tcolorbox}[colback=blue!5!white,colframe=usachblue,title=\textbf{ANÁLISIS DEL PERFIL}]
+Byron presenta un \textbf{perfil ideal} para proyectos de geoinformática aplicada al sector inmobiliario:
+
+\begin{itemize}
+    \item \textbf{Fortaleza técnica:} Dominio de Python y SQL, fundamentales para análisis geoespacial
+    \item \textbf{Sin experiencia previa en GIS:} Oportunidad de aprendizaje significativo
+    \item \textbf{Interés comercial claro:} Enfoque en negocios y urbanismo con aplicación práctica
+    \item \textbf{Visión específica:} Análisis de plusvalía y factores urbanos
+\end{itemize}
+
+\textbf{Recomendación:} Desarrollar un proyecto que combine machine learning espacial con análisis del mercado inmobiliario chileno, aprovechando su experiencia en Python para crear una solución innovadora y comercialmente viable.
+\end{tcolorbox}
+
+\section{Análisis del Perfil del Estudiante}
+
+\subsection{Competencias Técnicas}
+
+\begin{center}
+\begin{tabular}{|l|c|l|}
+\hline
+\textbf{Habilidad} & \textbf{Nivel} & \textbf{Aplicación en Geoinformática} \\
+\hline
+Python & Avanzado & GeoPandas, Rasterio, Scikit-learn para ML espacial \\
+SQL & Intermedio & PostGIS para consultas espaciales complejas \\
+JavaScript & Básico & Google Earth Engine, Leaflet para visualización \\
+R & Básico & Análisis estadístico espacial complementario \\
+Datos Geográficos & Principiante & Curva de aprendizaje acelerada esperada \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Áreas de Interés y Potencial}
+
+\subsubsection{Negocios y Geomarketing}
+\begin{itemize}
+    \item Análisis de localización óptima para retail
+    \item Predicción de éxito comercial basado en variables espaciales
+    \item Segmentación de mercado geográfica
+    \item Optimización de rutas de distribución
+\end{itemize}
+
+\subsubsection{Urbanismo y Plusvalía}
+\begin{itemize}
+    \item Modelado de precios inmobiliarios
+    \item Análisis de factores de valorización
+    \item Predicción de desarrollo urbano
+    \item Evaluación de impacto de infraestructura
+\end{itemize}
+
+\section{Propuesta de Proyecto 1: Sistema Inteligente de Valoración Inmobiliaria}
+
+\subsection{Descripción General}
+
+Desarrollo de una plataforma que utiliza machine learning espacial para predecir y analizar el valor de propiedades en el Gran Santiago, considerando múltiples variables urbanas y su evolución temporal.
+
+\subsection{Arquitectura Técnica}
+
+\begin{lstlisting}[language=Python, caption=Pipeline principal del sistema]
+import geopandas as gpd
+import pandas as pd
+from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.model_selection import train_test_split
+import folium
+from shapely.geometry import Point
+import osmnx as ox
+
+class RealEstateValuationSystem:
+    def __init__(self, study_area):
+        self.study_area = study_area
+        self.properties = gpd.GeoDataFrame()
+        self.urban_features = {}
+        self.model = None
+        
+    def collect_property_data(self):
+        """Recolecta datos de portales inmobiliarios"""
+        # Web scraping de portalinmobiliario.com
+        # Geocodificación de direcciones
+        # Estructuración en GeoDataFrame
+        pass
+        
+    def extract_urban_features(self):
+        """Extrae características urbanas relevantes"""
+        features = {}
+        
+        # 1. Accesibilidad a metro
+        metro_stations = gpd.read_file('metro_santiago.geojson')
+        features['dist_metro'] = self.calculate_nearest_distance(
+            self.properties, metro_stations
+        )
+        
+        # 2. Áreas verdes (NDVI desde Sentinel-2)
+        features['green_index'] = self.calculate_ndvi_buffer(
+            self.properties, radius=500
+        )
+        
+        # 3. Densidad comercial (POIs desde OSM)
+        features['commercial_density'] = self.calculate_poi_density(
+            categories=['shop', 'restaurant', 'bank']
+        )
+        
+        # 4. Calidad del aire (datos SINCA)
+        features['air_quality'] = self.interpolate_air_quality()
+        
+        # 5. Índice de seguridad (datos de delitos)
+        features['safety_index'] = self.calculate_safety_score()
+        
+        # 6. Conectividad vial
+        G = ox.graph_from_place('Santiago, Chile', network_type='drive')
+        features['street_connectivity'] = self.calculate_connectivity(G)
+        
+        return features
+    
+    def train_valuation_model(self):
+        """Entrena modelo de valoración con validación espacial"""
+        X = pd.DataFrame(self.urban_features)
+        y = self.properties['price_per_m2']
+        
+        # Agregar coordenadas para autocorrelación espacial
+        X['lat'] = self.properties.geometry.y
+        X['lon'] = self.properties.geometry.x
+        
+        # Split con consideración espacial
+        X_train, X_test, y_train, y_test = self.spatial_train_test_split(
+            X, y, test_size=0.2
+        )
+        
+        # Modelo con regularización espacial
+        self.model = GradientBoostingRegressor(
+            n_estimators=500,
+            max_depth=8,
+            learning_rate=0.01,
+            subsample=0.8,
+            min_samples_split=10,
+            random_state=42
+        )
+        
+        self.model.fit(X_train, y_train)
+        
+        # Feature importance
+        self.analyze_feature_importance()
+        
+        return self.model
+    
+    def predict_property_value(self, address):
+        """Predice valor de propiedad nueva"""
+        location = self.geocode_address(address)
+        features = self.extract_features_for_point(location)
+        
+        prediction = self.model.predict([features])[0]
+        confidence_interval = self.calculate_confidence_interval(features)
+        
+        return {
+            'predicted_value': prediction,
+            'confidence_interval': confidence_interval,
+            'main_factors': self.explain_prediction(features)
+        }
+    
+    def generate_heatmap(self):
+        """Genera mapa de calor de valores"""
+        # Crear grid hexagonal
+        hexagons = self.create_hexgrid(self.study_area)
+        
+        # Predecir valor para cada hexágono
+        for hex in hexagons:
+            centroid = hex.centroid
+            features = self.extract_features_for_point(centroid)
+            hex['predicted_value'] = self.model.predict([features])[0]
+        
+        # Visualizar con Folium
+        return self.create_interactive_map(hexagons)
+\end{lstlisting}
+
+\subsection{Fuentes de Datos}
+
+\begin{longtable}{|p{4cm}|p{4cm}|p{4cm}|p{3cm}|}
+\hline
+\textbf{Dato} & \textbf{Fuente} & \textbf{Procesamiento} & \textbf{Frecuencia} \\
+\hline
+\endfirsthead
+\multicolumn{4}{c}{\textit{Continuación de la tabla anterior}} \\
+\hline
+\textbf{Dato} & \textbf{Fuente} & \textbf{Procesamiento} & \textbf{Frecuencia} \\
+\hline
+\endhead
+
+Precios inmobiliarios & PortalInmobiliario.com & Web scraping + geocoding & Diaria \\
+\hline
+Transporte público & DTPM / Metro Santiago & API REST + GTFS & Mensual \\
+\hline
+Áreas verdes & Sentinel-2 (GEE) & Cálculo NDVI & Quincenal \\
+\hline
+POIs comerciales & OpenStreetMap & Overpass API & Semanal \\
+\hline
+Demografía & Censo 2017 (INE) & Agregación por manzana & Estático \\
+\hline
+Delitos & Subsecretaría Prevención & Geocodificación + KDE & Trimestral \\
+\hline
+Calidad del aire & SINCA & Interpolación IDW & Horaria \\
+\hline
+Permisos construcción & DOM municipales & Scraping + análisis & Mensual \\
+\hline
+\end{longtable}
+
+\subsection{Indicadores de Éxito}
+
+\begin{itemize}
+    \item MAPE < 12\% en predicción de precios
+    \item R² > 0.85 en validación cruzada espacial
+    \item Tiempo de respuesta < 2 segundos por consulta
+    \item Cobertura > 90\% del Gran Santiago
+\end{itemize}
+
+\section{Propuesta de Proyecto 2: Plataforma de Inteligencia Locacional para Retail}
+
+\subsection{Descripción General}
+
+Sistema de análisis espacial avanzado para determinar ubicaciones óptimas de nuevos locales comerciales, prediciendo su rendimiento basado en variables demográficas, de competencia y accesibilidad.
+
+\subsection{Componentes del Sistema}
+
+\begin{lstlisting}[language=Python, caption=Motor de análisis locacional]
+import geopandas as gpd
+import networkx as nx
+from scipy.spatial import Voronoi
+from sklearn.cluster import DBSCAN
+import h3
+
+class RetailLocationIntelligence:
+    def __init__(self, city_bounds):
+        self.city = city_bounds
+        self.competitors = gpd.GeoDataFrame()
+        self.demographics = gpd.GeoDataFrame()
+        self.foot_traffic = {}
+        
+    def analyze_market_saturation(self, business_type):
+        """Analiza saturación del mercado por tipo de negocio"""
+        # Obtener competidores
+        competitors = self.get_competitors_osm(business_type)
+        
+        # Crear áreas de influencia (Voronoi)
+        vor = Voronoi(competitors[['x', 'y']])
+        market_areas = self.voronoi_to_geodataframe(vor)
+        
+        # Calcular índice de saturación
+        for area in market_areas:
+            population = self.get_population_in_area(area)
+            n_competitors = len(competitors.within(area))
+            area['saturation_index'] = n_competitors / population * 1000
+            
+        return market_areas
+    
+    def calculate_accessibility_score(self, location):
+        """Calcula score de accesibilidad multimodal"""
+        scores = {}
+        
+        # 1. Accesibilidad peatonal (isócronas)
+        walking_iso = self.calculate_isochrone(
+            location, mode='walk', time=10
+        )
+        scores['walking'] = self.population_in_polygon(walking_iso)
+        
+        # 2. Accesibilidad en auto
+        driving_iso = self.calculate_isochrone(
+            location, mode='drive', time=15
+        )
+        scores['driving'] = self.population_in_polygon(driving_iso)
+        
+        # 3. Transporte público
+        transit_iso = self.calculate_isochrone(
+            location, mode='transit', time=20
+        )
+        scores['transit'] = self.population_in_polygon(transit_iso)
+        
+        # 4. Estacionamientos cercanos
+        parking = self.count_parking_spots(location, radius=300)
+        scores['parking'] = parking
+        
+        # Score ponderado
+        weights = {'walking': 0.4, 'driving': 0.2, 
+                  'transit': 0.3, 'parking': 0.1}
+        total_score = sum(scores[k] * weights[k] for k in scores)
+        
+        return total_score, scores
+    
+    def predict_foot_traffic(self, location, datetime):
+        """Predice tráfico peatonal usando datos móviles"""
+        # Usar hexágonos H3 para agregación
+        h3_index = h3.geo_to_h3(
+            location.y, location.x, resolution=9
+        )
+        
+        # Features temporales
+        hour = datetime.hour
+        day_of_week = datetime.dayofweek
+        is_weekend = day_of_week >= 5
+        
+        # Features espaciales
+        nearby_pois = self.count_pois_by_category(location, radius=200)
+        
+        # Modelo de predicción (pre-entrenado)
+        features = [hour, day_of_week, is_weekend] + list(nearby_pois.values())
+        predicted_traffic = self.traffic_model.predict([features])[0]
+        
+        return predicted_traffic
+    
+    def optimize_location_portfolio(self, n_locations, constraints):
+        """Optimiza portfolio de ubicaciones"""
+        from scipy.optimize import differential_evolution
+        
+        def objective(locations):
+            # Reshape a coordenadas
+            locs = locations.reshape(n_locations, 2)
+            
+            total_coverage = 0
+            overlap_penalty = 0
+            
+            for i, loc in enumerate(locs):
+                # Cobertura de mercado
+                coverage = self.calculate_market_coverage(loc)
+                total_coverage += coverage
+                
+                # Penalización por solapamiento
+                for j in range(i+1, len(locs)):
+                    distance = np.linalg.norm(loc - locs[j])
+                    if distance < constraints['min_distance']:
+                        overlap_penalty += 1000 / distance
+            
+            return -(total_coverage - overlap_penalty)
+        
+        # Optimización
+        bounds = [(self.city.bounds[0], self.city.bounds[2])] * (n_locations * 2)
+        result = differential_evolution(objective, bounds)
+        
+        optimal_locations = result.x.reshape(n_locations, 2)
+        return self.create_location_report(optimal_locations)
+    
+    def generate_opportunity_map(self):
+        """Genera mapa de oportunidades comerciales"""
+        # Crear grid de análisis
+        grid = self.create_analysis_grid(resolution=100)
+        
+        for cell in grid:
+            centroid = cell.centroid
+            
+            # Calcular métricas
+            cell['population_density'] = self.get_population_density(centroid)
+            cell['competition_index'] = self.calculate_competition(centroid)
+            cell['accessibility'] = self.calculate_accessibility_score(centroid)[0]
+            cell['income_level'] = self.get_average_income(centroid)
+            
+            # Score de oportunidad
+            cell['opportunity_score'] = (
+                cell['population_density'] * 0.3 +
+                (1 - cell['competition_index']) * 0.3 +
+                cell['accessibility'] * 0.2 +
+                cell['income_level'] * 0.2
+            )
+        
+        return self.visualize_opportunity_grid(grid)
+\end{lstlisting}
+
+\subsection{Análisis de Competencia Espacial}
+
+\begin{lstlisting}[language=Python, caption=Análisis avanzado de competencia]
+def spatial_competition_analysis(self, business_location, competitor_locations):
+    """Análisis de competencia usando modelos de gravitación"""
+    import numpy as np
+    from scipy.spatial.distance import cdist
+    
+    # Modelo de Huff para probabilidad de visita
+    def huff_model(target, competitors, alpha=1, beta=2):
+        # Atractivo de cada tienda (tamaño, calidad, etc.)
+        attractiveness = np.array([store['rating'] * store['size'] 
+                                   for store in competitors])
+        
+        # Distancias
+        distances = cdist([target], competitor_locations)[0]
+        
+        # Utilidad de cada tienda
+        utilities = attractiveness / (distances ** beta)
+        
+        # Probabilidad de visitar tienda objetivo
+        prob_target = utilities[0] / np.sum(utilities)
+        
+        return prob_target
+    
+    # Análisis de canibalización
+    def cannibalization_risk(new_location, existing_locations):
+        overlap_areas = []
+        for existing in existing_locations:
+            # Área de influencia compartida
+            overlap = self.calculate_overlap_area(new_location, existing)
+            overlap_areas.append(overlap)
+        
+        total_cannibalization = sum(overlap_areas)
+        return total_cannibalization / self.total_market_area
+    
+    return {
+        'market_share': huff_model(business_location, competitor_locations),
+        'cannibalization': cannibalization_risk(business_location, existing_stores),
+        'competitive_advantage': self.calculate_competitive_metrics(business_location)
+    }
+\end{lstlisting}
+
+\section{Propuesta de Proyecto 3: Monitor de Desarrollo Urbano y Plusvalía}
+
+\subsection{Descripción General}
+
+Sistema de monitoreo continuo que detecta cambios urbanos usando imágenes satelitales y predice su impacto en la plusvalía inmobiliaria, generando alertas tempranas de oportunidades de inversión.
+
+\subsection{Tecnologías Clave}
+
+\begin{itemize}
+    \item \textbf{Detección de cambios:} Análisis multitemporal con Sentinel-2
+    \item \textbf{Deep Learning:} CNN para clasificación de uso de suelo
+    \item \textbf{Series temporales:} Prophet para proyección de plusvalía
+    \item \textbf{Visualización:} Dashboard interactivo con Streamlit
+\end{itemize}
+
+\subsection{Pipeline de Procesamiento}
+
+\begin{lstlisting}[language=Python, caption=Detección de cambios urbanos y predicción de plusvalía]
+import ee
+import tensorflow as tf
+from prophet import Prophet
+import streamlit as st
+
+class UrbanDevelopmentMonitor:
+    def __init__(self):
+        ee.Initialize()
+        self.model = self.load_pretrained_model()
+        
+    def detect_urban_changes(self, aoi, date_start, date_end):
+        """Detecta cambios urbanos usando Sentinel-2"""
+        # Obtener imágenes
+        col_before = ee.ImageCollection('COPERNICUS/S2_SR')\
+            .filterBounds(aoi)\
+            .filterDate(date_start, ee.Date(date_start).advance(3, 'month'))\
+            .median()
+            
+        col_after = ee.ImageCollection('COPERNICUS/S2_SR')\
+            .filterBounds(aoi)\
+            .filterDate(date_end, ee.Date(date_end).advance(3, 'month'))\
+            .median()
+        
+        # Índices espectrales
+        ndbi_before = self.calculate_ndbi(col_before)
+        ndbi_after = self.calculate_ndbi(col_after)
+        
+        # Detección de cambios
+        change = ndbi_after.subtract(ndbi_before)
+        
+        # Clasificar tipos de cambio
+        new_construction = change.gt(0.15)
+        demolition = change.lt(-0.15)
+        
+        return {
+            'new_construction': new_construction,
+            'demolition': demolition,
+            'change_magnitude': change
+        }
+    
+    def classify_development_type(self, change_area):
+        """Clasifica tipo de desarrollo usando CNN"""
+        # Extraer chip de imagen
+        image_chip = self.extract_image_chip(change_area, size=224)
+        
+        # Predicción con modelo pre-entrenado
+        predictions = self.model.predict(image_chip)
+        
+        classes = ['residential', 'commercial', 'industrial', 
+                  'infrastructure', 'park', 'mixed_use']
+        
+        return {
+            'type': classes[np.argmax(predictions)],
+            'confidence': float(np.max(predictions))
+        }
+    
+    def predict_plusvalue_impact(self, location, development_type):
+        """Predice impacto en plusvalía"""
+        # Datos históricos de proyectos similares
+        historical_data = self.get_historical_impacts(
+            development_type, 
+            radius=2000
+        )
+        
+        # Preparar serie temporal
+        df = pd.DataFrame({
+            'ds': historical_data['date'],
+            'y': historical_data['price_change_pct']
+        })
+        
+        # Agregar regresores
+        df['distance'] = self.calculate_distance_to_development(location)
+        df['size'] = self.get_development_size()
+        df['type_commercial'] = int(development_type == 'commercial')
+        df['type_infrastructure'] = int(development_type == 'infrastructure')
+        
+        # Modelo Prophet con regresores
+        model = Prophet(
+            changepoint_prior_scale=0.05,
+            seasonality_mode='additive'
+        )
+        model.add_regressor('distance')
+        model.add_regressor('size')
+        model.add_regressor('type_commercial')
+        model.add_regressor('type_infrastructure')
+        
+        model.fit(df)
+        
+        # Predicción a 24 meses
+        future = model.make_future_dataframe(periods=24, freq='M')
+        future['distance'] = df['distance'].iloc[-1]
+        future['size'] = df['size'].iloc[-1]
+        future['type_commercial'] = df['type_commercial'].iloc[-1]
+        future['type_infrastructure'] = df['type_infrastructure'].iloc[-1]
+        
+        forecast = model.predict(future)
+        
+        return {
+            'expected_appreciation': forecast['yhat'].iloc[-1],
+            'confidence_interval': (forecast['yhat_lower'].iloc[-1], 
+                                   forecast['yhat_upper'].iloc[-1]),
+            'time_to_peak': self.find_peak_time(forecast)
+        }
+    
+    def create_investment_alert(self, opportunity):
+        """Genera alerta de oportunidad de inversión"""
+        score = self.calculate_opportunity_score(opportunity)
+        
+        if score > 0.8:
+            alert = {
+                'level': 'HIGH',
+                'message': f"Oportunidad de inversión detectada en {opportunity['location']}",
+                'expected_roi': opportunity['expected_appreciation'],
+                'risk_level': self.assess_risk(opportunity),
+                'recommended_action': self.generate_recommendation(opportunity)
+            }
+            
+            # Enviar notificación
+            self.send_alert(alert)
+            
+        return alert
+\end{lstlisting}
+
+\section{Recomendaciones de Implementación}
+
+\subsection{Plan de Desarrollo Sugerido}
+
+\begin{center}
+\begin{tabular}{|c|l|p{6cm}|c|}
+\hline
+\textbf{Semana} & \textbf{Fase} & \textbf{Actividades} & \textbf{Entregable} \\
+\hline
+1-2 & Fundamentos & Aprender GeoPandas, PostGIS básico & Notebook tutorial \\
+\hline
+3-4 & Datos & Recolección y limpieza de datos inmobiliarios & Dataset limpio \\
+\hline
+5-6 & Análisis & Exploración espacial, correlaciones & EDA completo \\
+\hline
+7-8 & Modelado & Desarrollo de modelos ML & Modelos entrenados \\
+\hline
+9-10 & Validación & Testing y ajuste de parámetros & Métricas finales \\
+\hline
+11-12 & Visualización & Dashboard interactivo & App Streamlit \\
+\hline
+13-14 & Documentación & Manual técnico y de usuario & Documentación \\
+\hline
+15 & Presentación & Preparación presentación final & Demo en vivo \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Stack Tecnológico Recomendado}
+
+\begin{tcolorbox}[colback=green!5!white,colframe=darkgreen,title=\textbf{TECNOLOGÍAS ESENCIALES}]
+\begin{itemize}
+    \item \textbf{Python:} GeoPandas, Shapely, Rasterio, Folium
+    \item \textbf{Base de datos:} PostgreSQL + PostGIS
+    \item \textbf{Machine Learning:} Scikit-learn, XGBoost, Prophet
+    \item \textbf{Visualización:} Streamlit, Plotly, Kepler.gl
+    \item \textbf{Cloud:} Google Earth Engine para procesamiento satelital
+    \item \textbf{APIs:} OpenStreetMap Overpass, Transporte público GTFS
+\end{itemize}
+\end{tcolorbox}
+
+\subsection{Recursos de Aprendizaje Prioritarios}
+
+\begin{enumerate}
+    \item \textbf{GeoPandas fundamentals:} 
+    \begin{itemize}
+        \item Curso: "Spatial Analysis with Python" (2 semanas)
+        \item Documentación oficial de GeoPandas
+    \end{itemize}
+    
+    \item \textbf{Machine Learning Espacial:}
+    \begin{itemize}
+        \item Paper: "Machine Learning for Spatial Environmental Data"
+        \item Tutorial: Spatial Cross-Validation techniques
+    \end{itemize}
+    
+    \item \textbf{Mercado Inmobiliario:}
+    \begin{itemize}
+        \item Informes trimestrales CCHC
+        \item Portal de datos abiertos del SII
+    \end{itemize}
+\end{enumerate}
+
+\section{Métricas de Evaluación del Proyecto}
+
+\subsection{Criterios Técnicos (50\%)}
+
+\begin{itemize}
+    \item Correcta implementación de análisis espacial
+    \item Calidad del código y documentación
+    \item Performance de modelos ML (MAPE, R²)
+    \item Manejo eficiente de datos geoespaciales
+\end{itemize}
+
+\subsection{Criterios de Negocio (30\%)}
+
+\begin{itemize}
+    \item Viabilidad comercial de la solución
+    \item Claridad del modelo de negocio
+    \item Potencial de escalabilidad
+    \item Diferenciación de competencia
+\end{itemize}
+
+\subsection{Criterios de Innovación (20\%)}
+
+\begin{itemize}
+    \item Originalidad del enfoque
+    \item Uso creativo de datos alternativos
+    \item Integración de múltiples fuentes
+    \item Potencial de publicación académica
+\end{itemize}
+
+\section{Riesgos y Mitigaciones}
+
+\begin{center}
+\begin{tabular}{|p{3.5cm}|p{3.5cm}|p{3.5cm}|p{3.5cm}|}
+\hline
+\textbf{Riesgo} & \textbf{Probabilidad} & \textbf{Impacto} & \textbf{Mitigación} \\
+\hline
+Disponibilidad de datos inmobiliarios & Alta & Alto & Web scraping + múltiples fuentes \\
+\hline
+Complejidad de GeoPandas & Media & Medio & Tutoriales + office hours \\
+\hline
+Overfitting en modelos & Media & Alto & Cross-validation espacial rigurosa \\
+\hline
+Performance con big data & Baja & Medio & Uso de Dask + optimización \\
+\hline
+\end{tabular}
+\end{center}
+
+\section{Conclusiones y Siguientes Pasos}
+
+\subsection{Fortalezas Identificadas}
+
+\begin{itemize}
+    \item \textbf{Base técnica sólida:} Python y SQL facilitan la curva de aprendizaje
+    \item \textbf{Visión clara:} Interés específico en inmobiliario reduce ambigüedad
+    \item \textbf{Mercado atractivo:} Sector inmobiliario chileno en crecimiento
+    \item \textbf{Aplicabilidad inmediata:} Proyectos con potencial comercial real
+\end{itemize}
+
+\subsection{Recomendación Final}
+
+\begin{tcolorbox}[colback=goldstar!10!white,colframe=goldstar!75!black,title=\textbf{RECOMENDACIÓN DEL PROFESOR}]
+\textbf{Byron debe enfocarse en el Proyecto 1: Sistema Inteligente de Valoración Inmobiliaria}
+
+Razones:
+\begin{enumerate}
+    \item Alinea perfectamente con sus intereses en negocios y plusvalía
+    \item Aprovecha su fortaleza en Python para ML
+    \item Tiene aplicación comercial inmediata
+    \item Permite aprendizaje gradual de conceptos GIS
+    \item Potencial para convertirse en startup
+\end{enumerate}
+
+\textbf{Primeros pasos sugeridos:}
+\begin{enumerate}
+    \item Instalar ambiente: conda install geopandas folium scikit-learn
+    \item Tutorial GeoPandas: 2-3 días de práctica intensiva
+    \item Comenzar con dataset de 100 propiedades para prototipo
+    \item Implementar modelo básico con 5 variables urbanas
+    \item Iterar agregando complejidad gradualmente
+\end{enumerate}
+
+\textbf{Meta: Tener MVP funcional en 4 semanas}
+\end{tcolorbox}
+
+\subsection{Cronograma Inicial Detallado}
+
+\textbf{Semana 1: Inmersión en Geoinformática}
+\begin{itemize}
+    \item Lunes-Martes: Tutorial completo de GeoPandas
+    \item Miércoles-Jueves: Ejercicios con datos de Santiago
+    \item Viernes: Configurar PostgreSQL + PostGIS
+\end{itemize}
+
+\textbf{Semana 2: Recolección de Datos}
+\begin{itemize}
+    \item Lunes-Martes: Web scraping Portal Inmobiliario
+    \item Miércoles: Geocodificación de direcciones
+    \item Jueves-Viernes: Descarga datos OSM y censo
+\end{itemize}
+
+\textbf{Semana 3: Análisis Exploratorio}
+\begin{itemize}
+    \item Lunes-Martes: Cálculo de variables urbanas
+    \item Miércoles-Jueves: Visualizaciones y correlaciones
+    \item Viernes: Identificar patrones espaciales
+\end{itemize}
+
+\textbf{Semana 4: Primer Modelo}
+\begin{itemize}
+    \item Lunes-Martes: Implementar regresión baseline
+    \item Miércoles-Jueves: Agregar XGBoost con tuning
+    \item Viernes: Evaluación y presentación de avance
+\end{itemize}
+
+\section{Material de Apoyo Adicional}
+
+\subsection{Código de Inicio Rápido}
+
+\begin{lstlisting}[language=Python, caption=Script inicial para Byron]
+# Instalar librerías necesarias
+# pip install geopandas folium scikit-learn beautifulsoup4 requests
+
+import geopandas as gpd
+import pandas as pd
+import folium
+from shapely.geometry import Point
+import requests
+from bs4 import BeautifulSoup
+
+# 1. Crear primer GeoDataFrame
+data = {
+    'direccion': ['Providencia 123', 'Las Condes 456', 'Ñuñoa 789'],
+    'precio': [150000000, 280000000, 95000000],
+    'm2': [65, 110, 45],
+    'lat': [-33.4489, -33.4089, -33.4589],
+    'lon': [-70.6693, -70.5693, -70.6093]
+}
+
+df = pd.DataFrame(data)
+geometry = [Point(xy) for xy in zip(df.lon, df.lat)]
+gdf = gpd.GeoDataFrame(df, geometry=geometry, crs='EPSG:4326')
+
+# 2. Calcular precio por m2
+gdf['precio_m2'] = gdf['precio'] / gdf['m2']
+
+# 3. Crear buffer de 500m alrededor de cada propiedad
+gdf_utm = gdf.to_crs('EPSG:32719')  # Proyectar a UTM para Chile
+gdf_utm['buffer'] = gdf_utm.geometry.buffer(500)
+
+# 4. Visualizar en mapa interactivo
+m = folium.Map(location=[-33.45, -70.65], zoom_start=12)
+
+for idx, row in gdf.iterrows():
+    folium.CircleMarker(
+        [row.geometry.y, row.geometry.x],
+        radius=5,
+        popup=f"Precio: ${row['precio']:,.0f}<br>m²: {row['m2']}<br>$/m²: ${row['precio_m2']:,.0f}",
+        color='red',
+        fill=True
+    ).add_to(m)
+
+m.save('mi_primer_mapa_inmobiliario.html')
+print("Mapa creado exitosamente!")
+
+# 5. Analisis espacial basico
+from sklearn.neighbors import NearestNeighbors
+
+# Encontrar 3 propiedades más cercanas a cada una
+coords = gdf_utm[['geometry']].apply(lambda x: [x.geometry.x, x.geometry.y], axis=1).tolist()
+nbrs = NearestNeighbors(n_neighbors=3, algorithm='ball_tree').fit(coords)
+distances, indices = nbrs.kneighbors(coords)
+
+print("\nDistancias a vecinos más cercanos (metros):")
+for i, dist in enumerate(distances):
+    print(f"Propiedad {i}: {dist[1]:.0f}m y {dist[2]:.0f}m")
+
+# Este es tu punto de partida, Byron. ¡Ahora a construir algo increíble!
+\end{lstlisting}
+
+\subsection{Enlaces Útiles}
+
+\begin{itemize}
+    \item \textbf{Datos Santiago:} \url{https://datos.gob.cl/dataset?q=santiago}
+    \item \textbf{IDE Chile:} \url{http://www.ide.cl/}
+    \item \textbf{GeoPandas Docs:} \url{https://geopandas.org/}
+    \item \textbf{Ejemplos ML Espacial:} \url{https://github.com/giswqs/geospatial-machine-learning}
+\end{itemize}
+
+\vspace{2cm}
+
+\begin{flushright}
+\textbf{Dr. Francisco Parra O.}\\
+Profesor Curso Geoinformática\\
+Universidad de Santiago de Chile\\
+\texttt{francisco.parra.o@usach.cl}\\
+\vspace{0.5cm}
+\textbf{¡Éxito en tu proyecto, Byron!}\\
+Agosto 2025
+\end{flushright}
+
+\end{document}

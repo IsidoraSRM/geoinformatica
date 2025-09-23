@@ -1,0 +1,26 @@
+\frametitle{Ejercicio integrado}
+\textbf{Análisis de accesibilidad a servicios:}
+    \begin{lstlisting}[language=Python]
+# 1. Cargar datos
+comunas = gpd.read_file('comunas_rm.geojson')
+hospitales = gpd.read_file('hospitales.geojson')
+poblacion = pd.read_csv('poblacion_comunas.csv')
+
+# 2. Unir datos de población
+comunas = comunas.merge(poblacion, on='cod_comuna')
+
+# 3. Calcular distancia al hospital más cercano
+from shapely.ops import nearest_points
+def distancia_minima(geom, puntos):
+    punto_cercano = nearest_points(geom, puntos.unary_union)[1]
+    return geom.distance(punto_cercano)
+
+comunas['dist_hospital'] = comunas.geometry.apply(
+    lambda x: distancia_minima(x.centroid, hospitales.geometry)
+)
+
+# 4. Clasificar accesibilidad y visualizar
+comunas['accesibilidad'] = pd.cut(comunas['dist_hospital'],
+                                  bins=[0, 2000, 5000, 10000, float('inf')],
+                                  labels=['Muy Alta', 'Alta', 'Media', 'Baja'])
+    \end{lstlisting}

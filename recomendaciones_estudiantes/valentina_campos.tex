@@ -1,0 +1,124 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{fontawesome5}
+\usepackage{multicol}
+
+% Colores personalizados
+\definecolor{usachblue}{RGB}{0,121,192}
+\definecolor{usachred}{RGB}{239,51,64}
+\definecolor{darkgreen}{RGB}{0,100,0}
+\definecolor{darkorange}{RGB}{255,140,0}
+
+% Configuración de página
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Geoinformática 2025-2}
+\fancyhead[R]{\small USACH}
+\fancyfoot[C]{\thepage}
+
+\begin{document}
+
+\begin{center}
+    {\Huge \textbf{Recomendaciones de Proyecto}}\\[0.5cm]
+    {\Large \textcolor{usachblue}{Geoinformática - Semestre 2, 2025}}\\[0.3cm]
+    \rule{\textwidth}{0.5pt}\\[0.3cm]
+    {\LARGE \textbf{Valentina Campos}}\\[0.2cm]
+    {\large Fecha: \today}
+\end{center}
+
+\vspace{0.5cm}
+
+\section*{\faIcon{user-circle} Perfil del Estudiante}
+
+\begin{tcolorbox}[colback=blue!5,colframe=usachblue,title=Resumen de tu Perfil]
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Nivel de experiencia:} Principiante
+    \item \textbf{Lenguajes dominados:} SQL
+    \item \textbf{Áreas de interés:} Salud, transporte, medioambiente
+    \item \textbf{Stack tecnológico recomendado:} PostGIS
+\end{itemize}
+\end{tcolorbox}
+
+
+\section*{\faIcon{flask} Proyectos Científicos Recomendados}
+
+Basándome en tus intereses y experiencia, estos proyectos científicos serían ideales para ti:
+
+
+\begin{tcolorbox}[colback=green!5,colframe=darkgreen,title={\small Proyecto Científico \#1}]
+\textbf{Accesibilidad a Centros de Salud}\\[0.2cm]
+\textcolor{gray}{\small Área: Salud}\\[0.2cm]
+Analizar tiempos de viaje y cobertura de servicios de salud por comuna
+\end{tcolorbox}
+
+
+\begin{tcolorbox}[colback=green!5,colframe=darkgreen,title={\small Proyecto Científico \#2}]
+\textbf{Epidemiología Espacial de Enfermedades}\\[0.2cm]
+\textcolor{gray}{\small Área: Salud}\\[0.2cm]
+Detectar clusters de enfermedades usando estadística espacial (Moran's I, Getis-Ord)
+\end{tcolorbox}
+
+
+\begin{tcolorbox}[colback=green!5,colframe=darkgreen,title={\small Proyecto Científico \#3}]
+\textbf{Optimización de Ambulancias}\\[0.2cm]
+\textcolor{gray}{\small Área: Salud}\\[0.2cm]
+Ubicación óptima de ambulancias usando análisis de demanda y tiempos de respuesta
+\end{tcolorbox}
+
+
+\begin{tcolorbox}[colback=green!5,colframe=darkgreen,title={\small Proyecto Científico \#4}]
+\textbf{Optimización de Rutas de Transporte Público}\\[0.2cm]
+\textcolor{gray}{\small Área: Transporte}\\[0.2cm]
+Mejorar recorridos usando datos de demanda y análisis de redes
+\end{tcolorbox}
+
+
+\section*{\faIcon{building} Proyectos Comerciales Recomendados}
+
+Si te interesa un enfoque más aplicado a la industria, considera estos proyectos:
+
+
+\begin{tcolorbox}[colback=orange!5,colframe=darkorange,title={\small Proyecto Comercial \#1}]
+\textbf{Agricultura de Precisión}\\[0.2cm]
+\textcolor{gray}{\small Área: Agricultura}\\[0.2cm]
+Optimizar uso de recursos usando índices de vegetación y datos de suelo
+\end{tcolorbox}
+
+
+\begin{tcolorbox}[colback=orange!5,colframe=darkorange,title={\small Proyecto Comercial \#2}]
+\textbf{Predicción de Rendimientos}\\[0.2cm]
+\textcolor{gray}{\small Área: Agricultura}\\[0.2cm]
+Estimar producción usando datos climáticos y satelitales
+\end{tcolorbox}
+
+
+\section*{\faIcon{graduation-cap} Recursos Recomendados}
+
+\subsection*{Recursos según tu nivel}
+
+\begin{itemize}[leftmargin=*]
+    \item Tutorial QGIS básico
+    \item Curso Python GeoPandas (Codecademy)
+    \item Documentación oficial de Folium
+    \item Videos de GeoDelta Labs
+\end{itemize}
+
+
+\vspace{0.5cm}
+
+\begin{tcolorbox}[colback=gray!10,colframe=gray!50]
+\centering
+\textbf{Contacto}\\[0.2cm]
+\faIcon{envelope} francisco.parra.o@usach.cl
+\end{tcolorbox}
+
+\end{document}

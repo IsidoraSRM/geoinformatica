@@ -1,0 +1,1127 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{array}
+\usepackage{tikz}
+\usepackage{dirtytalk}
+\usepackage{booktabs}
+
+% Colores personalizados
+\definecolor{usachblue}{RGB}{0,121,192}
+\definecolor{usachred}{RGB}{239,51,64}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+% Configuración de listings
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    frame=single
+}
+\lstset{style=mystyle}
+
+% Configuración de secciones
+\titleformat{\section}[block]{\normalfont\Large\bfseries\color{usachblue}}{\thesection}{1em}{}
+\titleformat{\subsection}[block]{\normalfont\large\bfseries\color{usachred}}{\thesubsection}{1em}{}
+
+% Encabezado y pie
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Proyecto: Valoración Inmobiliaria}
+\fancyhead[R]{\small Geoinformática 2025}
+\fancyfoot[C]{\thepage}
+
+\title{{\Huge \textbf{Guía de Proyecto}}\\[0.5cm]
+{\Large Sistema de Valoración Inmobiliaria Geoespacial}\\[0.3cm]
+{\large Documento de Orientación y Recursos}}
+\author{Para: Jaime Riquelme, Felipe Baeza, Valentina Barria,\\
+Catalina López, Byron Caices\\[0.3cm]
+Profesor: Francisco Parra O.}
+\date{Agosto 2025}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+\begin{tcolorbox}[colframe=usachblue,colback=blue!5]
+\centering
+\textbf{OBJETIVO DEL DOCUMENTO}\\[0.3cm]
+Este documento proporciona una guía detallada para desarrollar un Sistema de Valoración Inmobiliaria\\
+con componente geoespacial, incluyendo problemática específica, fuentes de datos,\\
+metodología sugerida y código de ejemplo.
+\end{tcolorbox}
+
+\newpage
+
+\tableofcontents
+\newpage
+
+\section{Definición de la Problemática}
+
+\subsection{Contexto del Problema}
+
+La valoración inmobiliaria en Chile presenta múltiples desafíos:
+
+\begin{itemize}
+    \item \textbf{Asimetría de información}: Compradores y vendedores no tienen acceso a la misma información
+    \item \textbf{Valoración subjetiva}: Los tasadores pueden tener sesgos o información incompleta
+    \item \textbf{Factores espaciales ignorados}: Muchos modelos no consideran adecuadamente la ubicación
+    \item \textbf{Cambios temporales}: El mercado inmobiliario es dinámico y los valores cambian constantemente
+    \item \textbf{Externalidades no capturadas}: Contaminación, ruido, proyectos futuros no se reflejan en el precio
+\end{itemize}
+
+\subsection{Problema Específico Propuesto}
+
+\begin{tcolorbox}[colframe=usachred,colback=red!5,title=Problemática Central]
+\textbf{¿Cómo desarrollar un modelo de valoración inmobiliaria que integre eficientemente factores espaciales, temporales y de entorno para predecir con precisión el valor de propiedades en el Gran Santiago?}
+
+Sub-problemas:
+\begin{enumerate}
+    \item ¿Cuáles son los factores espaciales más relevantes para el precio?
+    \item ¿Cómo cuantificar el impacto de amenidades y des-amenidades urbanas?
+    \item ¿Cómo incorporar la autocorrelación espacial en el modelo?
+    \item ¿Cómo hacer el modelo interpretable para usuarios no técnicos?
+\end{enumerate}
+\end{tcolorbox}
+
+\subsection{Alcance Sugerido}
+
+Para hacer el proyecto manejable, sugiero enfocarse en:
+
+\begin{enumerate}
+    \item \textbf{Área geográfica}: 3-4 comunas contiguas del Gran Santiago (ej: Providencia, Las Condes, Vitacura, Ñuñoa)
+    \item \textbf{Tipo de propiedad}: Departamentos (más homogéneos que casas)
+    \item \textbf{Período}: Últimos 2-3 años de datos
+    \item \textbf{Producto final}: 
+    \begin{itemize}
+        \item Modelo predictivo con R² > 0.75
+        \item Dashboard interactivo con mapa
+        \item API REST para consultas
+        \item Reporte de factores más influyentes
+    \end{itemize}
+\end{enumerate}
+
+\newpage
+
+\section{Fuentes de Datos}
+
+\subsection{Datos Primarios de Propiedades}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lll}
+\toprule
+\textbf{Fuente} & \textbf{Tipo de Datos} & \textbf{Acceso} \\
+\midrule
+Portal Inmobiliario & Precios, características & Web scraping (legal) \\
+Yapo.cl & Arriendos y ventas & API no oficial \\
+TocToc.com & Proyectos nuevos & Web scraping \\
+Conservador Bienes Raíces & Transacciones reales & Pago/presencial \\
+SII (Avalúo fiscal) & Valores fiscales & Portal SII \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Datos Geoespaciales}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{p{4cm}p{5cm}p{4cm}}
+\toprule
+\textbf{Dato} & \textbf{Fuente} & \textbf{Formato} \\
+\midrule
+Límites comunales & IDE Chile / INE & Shapefile/GeoJSON \\
+Red de Metro & DTPM / Metro de Santiago & KML/Shapefile \\
+Paraderos de bus & DTPM & CSV con coordenadas \\
+Áreas verdes & MINVU / Municipalidades & Shapefile \\
+Colegios & MINEDUC & CSV con direcciones \\
+Centros de salud & MINSAL / DEIS & Shapefile/Excel \\
+Centros comerciales & OpenStreetMap & GeoJSON vía Overpass API \\
+Delitos & Subsecretaría Prevención & CSV por cuadrante \\
+Ruido ambiental & MMA / Municipalidades & Raster/puntos \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Datos Socioeconómicos}
+
+\begin{itemize}
+    \item \textbf{Censo 2017}: Datos demográficos por manzana censal
+    \begin{itemize}
+        \item Fuente: \url{https://www.ine.cl/estadisticas/sociales/censos-de-poblacion-y-vivienda}
+        \item Incluye: Población, educación, ocupación, vivienda
+    \end{itemize}
+    
+    \item \textbf{Casen}: Encuesta de caracterización socioeconómica
+    \begin{itemize}
+        \item Fuente: \url{http://observatorio.ministeriodesarrollosocial.gob.cl}
+        \item Incluye: Ingresos, pobreza, educación por comuna
+    \end{itemize}
+    
+    \item \textbf{IDE Observatorio de Ciudades UC}:
+    \begin{itemize}
+        \item Fuente: \url{https://ideocuc-ocuc.hub.arcgis.com/}
+        \item Incluye: Múltiples indicadores urbanos georreferenciados
+    \end{itemize}
+\end{itemize}
+
+\subsection{Código para Obtener Datos}
+
+\subsubsection{Web Scraping de Portal Inmobiliario}
+
+\begin{lstlisting}[language=Python]
+import requests
+from bs4 import BeautifulSoup
+import pandas as pd
+import time
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+
+def scrape_portal_inmobiliario(comuna, tipo='departamento'):
+    """
+    Scraping responsable de Portal Inmobiliario
+    IMPORTANTE: Respetar robots.txt y no sobrecargar el servidor
+    """
+    
+    # URL base
+    base_url = f"https://www.portalinmobiliario.com/venta/departamento/{comuna}"
+    
+    # Configurar Selenium (necesario para sitios con JS)
+    options = webdriver.ChromeOptions()
+    options.add_argument('--headless')
+    driver = webdriver.Chrome(options=options)
+    
+    propiedades = []
+    
+    try:
+        driver.get(base_url)
+        time.sleep(3)  # Esperar carga de página
+        
+        # Obtener listado de propiedades
+        listings = driver.find_elements(By.CLASS_NAME, "ui-search-result")
+        
+        for listing in listings[:10]:  # Limitar para ejemplo
+            try:
+                # Extraer información
+                precio = listing.find_element(By.CLASS_NAME, "price-tag-fraction").text
+                ubicacion = listing.find_element(By.CLASS_NAME, "ui-search-item__location").text
+                atributos = listing.find_elements(By.CLASS_NAME, "ui-search-card-attributes__attribute")
+                
+                # Parsear atributos
+                attrs = {}
+                for attr in atributos:
+                    texto = attr.text
+                    if 'm²' in texto:
+                        attrs['superficie'] = texto
+                    elif 'dormitorio' in texto:
+                        attrs['dormitorios'] = texto
+                    elif 'baño' in texto:
+                        attrs['banos'] = texto
+                
+                propiedades.append({
+                    'precio': precio,
+                    'ubicacion': ubicacion,
+                    **attrs
+                })
+                
+            except Exception as e:
+                continue
+        
+    finally:
+        driver.quit()
+    
+    return pd.DataFrame(propiedades)
+
+# Uso
+# df_props = scrape_portal_inmobiliario('providencia')
+# print(df_props.head())
+\end{lstlisting}
+
+\subsubsection{Datos de OpenStreetMap}
+
+\begin{lstlisting}[language=Python]
+import osmnx as ox
+import geopandas as gpd
+
+def obtener_amenidades_osm(comuna, tipo_amenidad):
+    """
+    Obtener amenidades desde OpenStreetMap
+    """
+    # Definir área de búsqueda
+    place = f"{comuna}, Santiago, Chile"
+    
+    # Obtener amenidades
+    amenidades = ox.geometries_from_place(
+        place, 
+        tags={'amenity': tipo_amenidad}
+    )
+    
+    # Convertir a GeoDataFrame
+    gdf = gpd.GeoDataFrame(amenidades)
+    
+    # Filtrar solo puntos (algunos pueden ser polígonos)
+    gdf_puntos = gdf[gdf.geometry.type == 'Point']
+    
+    return gdf_puntos[['name', 'amenity', 'geometry']]
+
+# Obtener diferentes amenidades
+restaurantes = obtener_amenidades_osm('Providencia', 'restaurant')
+colegios = obtener_amenidades_osm('Providencia', 'school')
+parques = obtener_amenidades_osm('Providencia', 'park')
+hospitales = obtener_amenidades_osm('Providencia', 'hospital')
+
+print(f"Restaurantes: {len(restaurantes)}")
+print(f"Colegios: {len(colegios)}")
+print(f"Parques: {len(parques)}")
+print(f"Hospitales: {len(hospitales)}")
+\end{lstlisting}
+
+\newpage
+
+\section{Metodología Propuesta}
+
+\subsection{Pipeline de Procesamiento}
+
+\begin{enumerate}
+    \item \textbf{Recolección de Datos}
+    \begin{itemize}
+        \item Web scraping de portales inmobiliarios
+        \item Descarga de datos geoespaciales oficiales
+        \item Geocodificación de direcciones
+    \end{itemize}
+    
+    \item \textbf{Limpieza y Preparación}
+    \begin{itemize}
+        \item Eliminar duplicados y outliers
+        \item Imputación de valores faltantes
+        \item Estandarización de formatos
+        \item Validación de geometrías
+    \end{itemize}
+    
+    \item \textbf{Feature Engineering Espacial}
+    \begin{itemize}
+        \item Distancias a puntos de interés
+        \item Densidad de amenidades en buffers
+        \item Índices de accesibilidad
+        \item Variables de entorno (ruido, contaminación)
+        \item Lag espacial de precios
+    \end{itemize}
+    
+    \item \textbf{Modelamiento}
+    \begin{itemize}
+        \item Modelos base: Random Forest, XGBoost
+        \item Modelos espaciales: GWR, Spatial Lag
+        \item Ensemble de modelos
+        \item Validación espacial (no aleatoria)
+    \end{itemize}
+    
+    \item \textbf{Visualización y Deployment}
+    \begin{itemize}
+        \item Dashboard interactivo con Streamlit
+        \item Mapa de calor de precios
+        \item API REST con FastAPI
+        \item Documentación completa
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Feature Engineering Detallado}
+
+\begin{lstlisting}[language=Python]
+import geopandas as gpd
+import numpy as np
+from shapely.geometry import Point
+from sklearn.neighbors import NearestNeighbors
+
+class FeatureEngineerEspacial:
+    """
+    Clase para generar features espaciales para valoración inmobiliaria
+    """
+    
+    def __init__(self, propiedades_gdf, amenidades_dict):
+        """
+        propiedades_gdf: GeoDataFrame con propiedades
+        amenidades_dict: Dict con GeoDataFrames de amenidades
+        """
+        self.propiedades = propiedades_gdf
+        self.amenidades = amenidades_dict
+        
+    def distancia_mas_cercana(self, tipo_amenidad):
+        """Distancia a la amenidad más cercana"""
+        amenidad_gdf = self.amenidades[tipo_amenidad]
+        
+        distancias = []
+        for idx, prop in self.propiedades.iterrows():
+            dist_min = amenidad_gdf.geometry.distance(prop.geometry).min()
+            distancias.append(dist_min * 111000)  # Convertir a metros
+            
+        return np.array(distancias)
+    
+    def densidad_en_radio(self, tipo_amenidad, radio_metros):
+        """Cantidad de amenidades en un radio dado"""
+        amenidad_gdf = self.amenidades[tipo_amenidad]
+        radio_grados = radio_metros / 111000
+        
+        densidades = []
+        for idx, prop in self.propiedades.iterrows():
+            buffer = prop.geometry.buffer(radio_grados)
+            dentro = amenidad_gdf[amenidad_gdf.geometry.within(buffer)]
+            densidades.append(len(dentro))
+            
+        return np.array(densidades)
+    
+    def indice_accesibilidad(self, pesos=None):
+        """Índice compuesto de accesibilidad"""
+        if pesos is None:
+            pesos = {
+                'metro': 0.3,
+                'bus': 0.2,
+                'colegio': 0.2,
+                'hospital': 0.15,
+                'parque': 0.15
+            }
+        
+        indice = np.zeros(len(self.propiedades))
+        
+        for amenidad, peso in pesos.items():
+            if amenidad in self.amenidades:
+                # Normalizar distancia (inversa)
+                dist = self.distancia_mas_cercana(amenidad)
+                dist_norm = 1 / (1 + dist/1000)  # Decaimiento con distancia
+                indice += peso * dist_norm
+                
+        return indice
+    
+    def lag_espacial_precio(self, k_vecinos=5):
+        """Precio promedio de los k vecinos más cercanos"""
+        coords = np.array([[p.x, p.y] for p in self.propiedades.geometry])
+        
+        # KNN para encontrar vecinos
+        nbrs = NearestNeighbors(n_neighbors=k_vecinos+1)
+        nbrs.fit(coords)
+        distances, indices = nbrs.kneighbors(coords)
+        
+        # Calcular lag (excluyendo la propiedad misma)
+        lag_prices = []
+        for idx_list in indices:
+            vecinos = idx_list[1:]  # Excluir el primero (sí mismo)
+            precio_promedio = self.propiedades.iloc[vecinos]['precio'].mean()
+            lag_prices.append(precio_promedio)
+            
+        return np.array(lag_prices)
+    
+    def crear_features(self):
+        """Generar todas las features espaciales"""
+        features = pd.DataFrame()
+        
+        # Distancias
+        features['dist_metro'] = self.distancia_mas_cercana('metro')
+        features['dist_colegio'] = self.distancia_mas_cercana('colegio')
+        features['dist_hospital'] = self.distancia_mas_cercana('hospital')
+        features['dist_parque'] = self.distancia_mas_cercana('parque')
+        
+        # Densidades
+        features['restaurantes_500m'] = self.densidad_en_radio('restaurant', 500)
+        features['colegios_1km'] = self.densidad_en_radio('colegio', 1000)
+        features['parques_1km'] = self.densidad_en_radio('parque', 1000)
+        
+        # Índices compuestos
+        features['indice_accesibilidad'] = self.indice_accesibilidad()
+        features['precio_lag'] = self.lag_espacial_precio()
+        
+        # Coordenadas (para capturar tendencias espaciales)
+        features['lat'] = [p.y for p in self.propiedades.geometry]
+        features['lon'] = [p.x for p in self.propiedades.geometry]
+        
+        return features
+
+# Uso
+# fe = FeatureEngineerEspacial(propiedades_gdf, amenidades_dict)
+# features_espaciales = fe.crear_features()
+\end{lstlisting}
+
+\subsection{Modelo de Machine Learning}
+
+\begin{lstlisting}[language=Python]
+from sklearn.model_selection import KFold
+from sklearn.ensemble import RandomForestRegressor
+from xgboost import XGBRegressor
+from sklearn.metrics import mean_absolute_error, r2_score
+import numpy as np
+
+class ModeloValoracion:
+    """
+    Modelo de valoración inmobiliaria con validación espacial
+    """
+    
+    def __init__(self):
+        self.modelos = {
+            'rf': RandomForestRegressor(
+                n_estimators=200,
+                max_depth=15,
+                min_samples_split=5,
+                random_state=42
+            ),
+            'xgb': XGBRegressor(
+                n_estimators=200,
+                max_depth=8,
+                learning_rate=0.05,
+                random_state=42
+            )
+        }
+        self.mejor_modelo = None
+        self.features_importance = None
+        
+    def validacion_espacial(self, X, y, coords, n_splits=5):
+        """
+        Validación por bloques espaciales, no aleatoria
+        """
+        from sklearn.cluster import KMeans
+        
+        # Crear clusters espaciales
+        kmeans = KMeans(n_clusters=n_splits, random_state=42)
+        clusters = kmeans.fit_predict(coords)
+        
+        scores = {nombre: [] for nombre in self.modelos.keys()}
+        
+        for cluster_test in range(n_splits):
+            # Split espacial
+            mask_test = clusters == cluster_test
+            mask_train = ~mask_test
+            
+            X_train, X_test = X[mask_train], X[mask_test]
+            y_train, y_test = y[mask_train], y[mask_test]
+            
+            # Entrenar y evaluar cada modelo
+            for nombre, modelo in self.modelos.items():
+                modelo.fit(X_train, y_train)
+                y_pred = modelo.predict(X_test)
+                score = r2_score(y_test, y_pred)
+                scores[nombre].append(score)
+        
+        # Promediar scores
+        mean_scores = {nombre: np.mean(s) for nombre, s in scores.items()}
+        
+        # Seleccionar mejor modelo
+        mejor_nombre = max(mean_scores, key=mean_scores.get)
+        self.mejor_modelo = self.modelos[mejor_nombre]
+        
+        print("=== Resultados Validación Espacial ===")
+        for nombre, score in mean_scores.items():
+            print(f"{nombre}: R² = {score:.3f}")
+        print(f"\nMejor modelo: {mejor_nombre}")
+        
+        return mean_scores
+    
+    def entrenar_modelo_final(self, X, y):
+        """Entrenar modelo final con todos los datos"""
+        self.mejor_modelo.fit(X, y)
+        
+        # Feature importance
+        if hasattr(self.mejor_modelo, 'feature_importances_'):
+            self.features_importance = self.mejor_modelo.feature_importances_
+            
+        return self
+    
+    def predecir(self, X):
+        """Hacer predicciones"""
+        return self.mejor_modelo.predict(X)
+    
+    def explicar_prediccion(self, X_single, feature_names):
+        """
+        Explicar una predicción individual usando SHAP
+        """
+        import shap
+        
+        # Crear explicador SHAP
+        explainer = shap.TreeExplainer(self.mejor_modelo)
+        shap_values = explainer.shap_values(X_single)
+        
+        # Crear dataframe con contribuciones
+        contribuciones = pd.DataFrame({
+            'feature': feature_names,
+            'valor': X_single.flatten(),
+            'impacto': shap_values.flatten()
+        })
+        
+        contribuciones = contribuciones.sort_values('impacto', 
+                                                   key=abs, 
+                                                   ascending=False)
+        
+        return contribuciones
+
+# Uso
+# modelo = ModeloValoracion()
+# scores = modelo.validacion_espacial(X, y, coords)
+# modelo.entrenar_modelo_final(X, y)
+# predicciones = modelo.predecir(X_test)
+\end{lstlisting}
+
+\newpage
+
+\section{Implementación del Sistema}
+
+\subsection{Arquitectura Propuesta}
+
+\begin{tcolorbox}[colframe=usachblue,colback=blue!5]
+\begin{verbatim}
+┌─────────────────────────────────────────────────────────────┐
+│                     SISTEMA DE VALORACIÓN                    │
+├───────────────┬──────────────┬──────────────┬──────────────┤
+│  Data Layer   │ Process Layer│ Model Layer  │ Present Layer│
+├───────────────┼──────────────┼──────────────┼──────────────┤
+│ • Web Scraping│ • Limpieza   │ • RF/XGBoost │ • Dashboard  │
+│ • APIs        │ • Geocoding  │ • GWR        │ • API REST   │
+│ • Archivos    │ • Features   │ • Ensemble   │ • Reportes   │
+│ • PostgreSQL  │ • Validación │ • SHAP       │ • Mapas      │
+└───────────────┴──────────────┴──────────────┴──────────────┘
+\end{verbatim}
+\end{tcolorbox}
+
+\subsection{Dashboard Interactivo con Streamlit}
+
+\begin{lstlisting}[language=Python]
+import streamlit as st
+import pandas as pd
+import geopandas as gpd
+import folium
+from streamlit_folium import folium_static
+import plotly.express as px
+
+# Configuración de la página
+st.set_page_config(
+    page_title="Valoración Inmobiliaria Santiago",
+    page_icon="🏠",
+    layout="wide"
+)
+
+st.title("🏠 Sistema de Valoración Inmobiliaria")
+st.markdown("---")
+
+# Sidebar para inputs
+with st.sidebar:
+    st.header("Parámetros de Búsqueda")
+    
+    comuna = st.selectbox(
+        "Comuna",
+        ["Providencia", "Las Condes", "Vitacura", "Ñuñoa"]
+    )
+    
+    tipo_propiedad = st.selectbox(
+        "Tipo de Propiedad",
+        ["Departamento", "Casa", "Oficina"]
+    )
+    
+    superficie = st.slider(
+        "Superficie (m²)",
+        min_value=20,
+        max_value=500,
+        value=(50, 150)
+    )
+    
+    dormitorios = st.slider(
+        "Dormitorios",
+        min_value=1,
+        max_value=6,
+        value=2
+    )
+    
+    banos = st.slider(
+        "Baños",
+        min_value=1,
+        max_value=4,
+        value=1
+    )
+    
+    st.markdown("---")
+    st.header("Factores de Entorno")
+    
+    cerca_metro = st.checkbox("Cerca de Metro (<500m)")
+    cerca_parque = st.checkbox("Cerca de Parque (<300m)")
+    cerca_colegio = st.checkbox("Cerca de Colegio (<1km)")
+
+# Layout principal
+col1, col2 = st.columns([2, 1])
+
+with col1:
+    st.subheader("Mapa de Valoración")
+    
+    # Crear mapa base
+    m = folium.Map(
+        location=[-33.45, -70.65],
+        zoom_start=12,
+        tiles='OpenStreetMap'
+    )
+    
+    # Agregar capa de calor de precios
+    # (aquí irían los datos reales)
+    from folium.plugins import HeatMap
+    
+    # Datos de ejemplo
+    heat_data = [
+        [-33.42, -70.61, 0.9],  # Las Condes alto
+        [-33.43, -70.63, 0.7],  # Providencia
+        [-33.45, -70.65, 0.5],  # Santiago Centro
+        [-33.47, -70.67, 0.3],  # Estación Central
+    ]
+    
+    HeatMap(heat_data).add_to(m)
+    
+    # Agregar marcadores de propiedades
+    # (datos de ejemplo)
+    propiedades_ejemplo = [
+        {"lat": -33.425, "lon": -70.615, "precio": 6500, "dir": "Av. Apoquindo 3000"},
+        {"lat": -33.435, "lon": -70.625, "precio": 4500, "dir": "Providencia 1234"},
+        {"lat": -33.445, "lon": -70.635, "precio": 3500, "dir": "Manuel Montt 567"},
+    ]
+    
+    for prop in propiedades_ejemplo:
+        folium.Marker(
+            [prop["lat"], prop["lon"]],
+            popup=f"${prop['precio']} UF<br>{prop['dir']}",
+            icon=folium.Icon(color='green', icon='home')
+        ).add_to(m)
+    
+    # Mostrar mapa
+    folium_static(m)
+
+with col2:
+    st.subheader("Valoración Estimada")
+    
+    # Cálculo de precio (simulado)
+    precio_base = 3000  # UF
+    
+    # Ajustes por comuna
+    ajuste_comuna = {
+        "Las Condes": 1.3,
+        "Vitacura": 1.4,
+        "Providencia": 1.2,
+        "Ñuñoa": 1.0
+    }
+    
+    precio_estimado = precio_base * ajuste_comuna[comuna]
+    
+    # Ajustes por características
+    if cerca_metro:
+        precio_estimado *= 1.15
+    if cerca_parque:
+        precio_estimado *= 1.10
+    if cerca_colegio:
+        precio_estimado *= 1.05
+    
+    # Mostrar precio
+    st.metric(
+        label="Precio Estimado",
+        value=f"{precio_estimado:.0f} UF",
+        delta=f"{(precio_estimado/precio_base - 1)*100:.1f}% vs promedio"
+    )
+    
+    st.markdown("---")
+    
+    # Factores que influyen
+    st.subheader("Factores Principales")
+    
+    factores = pd.DataFrame({
+        'Factor': ['Ubicación', 'Metro', 'Superficie', 'Parques', 'Colegios'],
+        'Impacto': [35, 25, 20, 10, 10]
+    })
+    
+    fig = px.bar(
+        factores,
+        x='Impacto',
+        y='Factor',
+        orientation='h',
+        color='Impacto',
+        color_continuous_scale='RdYlGn'
+    )
+    
+    st.plotly_chart(fig, use_container_width=True)
+
+# Sección de comparación
+st.markdown("---")
+st.subheader("Comparación con Propiedades Similares")
+
+# Tabla de propiedades similares (datos de ejemplo)
+similares = pd.DataFrame({
+    'Dirección': ['Av. Providencia 123', 'Los Leones 456', 'Tobalaba 789'],
+    'Superficie': [85, 92, 78],
+    'Dormitorios': [2, 2, 2],
+    'Precio UF': [4200, 4500, 3900],
+    'Precio/m²': [49.4, 48.9, 50.0]
+})
+
+st.dataframe(similares, use_container_width=True)
+
+# Gráfico de tendencia
+st.markdown("---")
+st.subheader("Tendencia de Precios (Últimos 12 meses)")
+
+# Datos de ejemplo
+meses = pd.date_range('2024-01-01', periods=12, freq='M')
+precios_promedio = [3000, 3050, 3100, 3150, 3200, 3180, 
+                    3250, 3300, 3350, 3400, 3420, 3450]
+
+tendencia = pd.DataFrame({
+    'Mes': meses,
+    'Precio_UF': precios_promedio
+})
+
+fig_tendencia = px.line(
+    tendencia,
+    x='Mes',
+    y='Precio_UF',
+    title=f'Evolución Precio Promedio - {comuna}',
+    markers=True
+)
+
+st.plotly_chart(fig_tendencia, use_container_width=True)
+
+# Footer
+st.markdown("---")
+st.caption("Sistema desarrollado por Grupo de Valoración Inmobiliaria - Geoinformática 2025")
+\end{lstlisting}
+
+\subsection{API REST con FastAPI}
+
+\begin{lstlisting}[language=Python]
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from typing import Optional
+import pandas as pd
+import joblib
+
+app = FastAPI(title="API Valoración Inmobiliaria")
+
+# Cargar modelo entrenado
+modelo = joblib.load('modelo_valoracion.pkl')
+scaler = joblib.load('scaler.pkl')
+
+class PropiedadInput(BaseModel):
+    """Schema de entrada para valoración"""
+    comuna: str
+    superficie: float
+    dormitorios: int
+    banos: int
+    estacionamientos: Optional[int] = 0
+    piso: Optional[int] = 1
+    orientacion: Optional[str] = "Norte"
+    lat: float
+    lon: float
+
+class ValoracionOutput(BaseModel):
+    """Schema de salida con valoración"""
+    precio_estimado_uf: float
+    precio_estimado_clp: float
+    rango_min_uf: float
+    rango_max_uf: float
+    confianza: float
+    factores_principales: dict
+
+@app.get("/")
+def read_root():
+    return {
+        "mensaje": "API de Valoración Inmobiliaria",
+        "version": "1.0",
+        "endpoints": ["/valorar", "/comparar", "/tendencia"]
+    }
+
+@app.post("/valorar", response_model=ValoracionOutput)
+async def valorar_propiedad(propiedad: PropiedadInput):
+    """
+    Endpoint para valorar una propiedad
+    """
+    try:
+        # Preparar features
+        features = prepare_features(propiedad)
+        features_scaled = scaler.transform(features)
+        
+        # Predecir
+        precio_uf = modelo.predict(features_scaled)[0]
+        
+        # Calcular intervalo de confianza
+        if hasattr(modelo, 'predict_proba'):
+            std = modelo.predict_std(features_scaled)[0]
+            rango_min = precio_uf - 1.96 * std
+            rango_max = precio_uf + 1.96 * std
+            confianza = min(1.0, 1 / (1 + std/precio_uf))
+        else:
+            rango_min = precio_uf * 0.9
+            rango_max = precio_uf * 1.1
+            confianza = 0.85
+        
+        # Factores principales (simulado, idealmente con SHAP)
+        factores = {
+            "ubicacion": 0.35,
+            "superficie": 0.25,
+            "dormitorios": 0.15,
+            "amenidades": 0.15,
+            "otros": 0.10
+        }
+        
+        return ValoracionOutput(
+            precio_estimado_uf=round(precio_uf, 0),
+            precio_estimado_clp=round(precio_uf * 40000, 0),
+            rango_min_uf=round(rango_min, 0),
+            rango_max_uf=round(rango_max, 0),
+            confianza=round(confianza, 2),
+            factores_principales=factores
+        )
+        
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.get("/comparar/{comuna}")
+async def comparar_comuna(comuna: str, superficie_min: int = 50):
+    """
+    Comparar precios en una comuna
+    """
+    # Aquí iría la lógica real de comparación
+    return {
+        "comuna": comuna,
+        "precio_promedio_uf": 3500,
+        "precio_min_uf": 2000,
+        "precio_max_uf": 8000,
+        "total_propiedades": 1234,
+        "variacion_mensual": 2.3
+    }
+
+@app.get("/tendencia/{comuna}/{periodo}")
+async def obtener_tendencia(comuna: str, periodo: str = "12m"):
+    """
+    Obtener tendencia de precios
+    """
+    # Datos de ejemplo
+    return {
+        "comuna": comuna,
+        "periodo": periodo,
+        "tendencia": [
+            {"mes": "2024-01", "precio_promedio": 3000},
+            {"mes": "2024-02", "precio_promedio": 3050},
+            {"mes": "2024-03", "precio_promedio": 3100},
+        ],
+        "proyeccion_3m": 3250,
+        "crecimiento_anual": 8.5
+    }
+
+def prepare_features(propiedad: PropiedadInput):
+    """
+    Preparar features para el modelo
+    """
+    # Aquí iría la lógica real de preparación
+    features = pd.DataFrame([{
+        'superficie': propiedad.superficie,
+        'dormitorios': propiedad.dormitorios,
+        'banos': propiedad.banos,
+        'lat': propiedad.lat,
+        'lon': propiedad.lon,
+        # ... más features
+    }])
+    return features
+
+# Para ejecutar:
+# uvicorn main:app --reload
+\end{lstlisting}
+
+\newpage
+
+\section{Análisis de Resultados Esperados}
+
+\subsection{Métricas de Evaluación}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lll}
+\toprule
+\textbf{Métrica} & \textbf{Objetivo} & \textbf{Interpretación} \\
+\midrule
+R² Score & $> 0.75$ & Varianza explicada por el modelo \\
+MAE (UF) & $< 200$ & Error absoluto promedio \\
+MAPE (\%) & $< 10%$ & Error porcentual promedio \\
+RMSE (UF) & $< 300$ & Penaliza errores grandes \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\subsection{Visualizaciones Clave}
+
+\begin{enumerate}
+    \item \textbf{Mapa de calor de precios}: Identificar zonas premium y económicas
+    \item \textbf{Scatter plot predicción vs real}: Evaluar precisión del modelo
+    \item \textbf{Gráfico SHAP}: Explicar predicciones individuales
+    \item \textbf{Serie temporal}: Evolución de precios por zona
+    \item \textbf{Boxplot por comuna}: Distribución de precios
+\end{enumerate}
+
+\newpage
+
+\section{Cronograma Sugerido}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{llp{6cm}}
+\toprule
+\textbf{Semana} & \textbf{Fase} & \textbf{Actividades} \\
+\midrule
+1-2 & Recolección & • Web scraping inicial\\
+    &             & • Descarga datos geoespaciales\\
+    &             & • Configuración ambiente\\
+\midrule
+3-4 & Preparación & • Limpieza de datos\\
+    &             & • Geocodificación\\
+    &             & • Integración fuentes\\
+\midrule
+5-6 & Features    & • Cálculo distancias\\
+    &             & • Índices de accesibilidad\\
+    &             & • Variables de entorno\\
+\midrule
+7-8 & Modelado    & • Entrenamiento modelos\\
+    &             & • Validación espacial\\
+    &             & • Optimización hiperparámetros\\
+\midrule
+9-10 & Sistema    & • Desarrollo dashboard\\
+     &            & • Implementación API\\
+     &            & • Testing\\
+\midrule
+11-12 & Finalización & • Documentación\\
+      &              & • Presentación\\
+      &              & • Deployment\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Entregables Finales}
+
+\subsection{Código y Documentación}
+
+\begin{itemize}
+    \item \textbf{Repositorio GitHub} con:
+    \begin{itemize}
+        \item README completo
+        \item Requirements.txt
+        \item Notebooks documentados
+        \item Scripts modulares
+        \item Tests unitarios
+    \end{itemize}
+    
+    \item \textbf{Documentación técnica}:
+    \begin{itemize}
+        \item Descripción de features
+        \item Metodología de modelado
+        \item API documentation
+        \item Manual de usuario
+    \end{itemize}
+\end{itemize}
+
+\subsection{Aplicación Web}
+
+\begin{itemize}
+    \item Dashboard interactivo con:
+    \begin{itemize}
+        \item Mapa de valoraciones
+        \item Calculadora de precio
+        \item Comparador de propiedades
+        \item Tendencias del mercado
+    \end{itemize}
+    
+    \item API REST con endpoints para:
+    \begin{itemize}
+        \item Valoración individual
+        \item Comparación por zona
+        \item Tendencias históricas
+        \item Recomendaciones
+    \end{itemize}
+\end{itemize}
+
+\subsection{Presentación}
+
+\begin{itemize}
+    \item \textbf{Slides} (15-20) cubriendo:
+    \begin{itemize}
+        \item Problema y motivación
+        \item Datos y metodología
+        \item Resultados y métricas
+        \item Demo en vivo
+        \item Conclusiones y trabajo futuro
+    \end{itemize}
+    
+    \item \textbf{Poster científico} formato A1
+    \item \textbf{Video demo} (3-5 minutos)
+\end{itemize}
+
+\newpage
+
+\section{Referencias y Recursos Adicionales}
+
+\subsection{Papers Relevantes}
+
+\begin{enumerate}
+    \item Bourassa, S. C., Cantoni, E., \& Hoesli, M. (2007). \textit{Spatial dependence, housing submarkets, and house price prediction}. The Journal of Real Estate Finance and Economics.
+    
+    \item Yoo, S., Im, J., \& Wagner, J. E. (2012). \textit{Variable selection for hedonic model using machine learning approaches}. Landscape and Urban Planning.
+    
+    \item Čeh, M., Kilibarda, M., Lisec, A., \& Bajat, B. (2018). \textit{Estimating the performance of random forest versus multiple regression for predicting prices of the apartments}. ISPRS International Journal of Geo-Information.
+\end{enumerate}
+
+\subsection{Bibliotecas Python Especializadas}
+
+\begin{itemize}
+    \item \textbf{PySAL}: Análisis espacial avanzado
+    \item \textbf{GeoPy}: Geocodificación
+    \item \textbf{OSMnx}: Datos de OpenStreetMap
+    \item \textbf{Folium}: Mapas interactivos
+    \item \textbf{SHAP}: Explicabilidad de modelos
+    \item \textbf{Prophet}: Series temporales
+\end{itemize}
+
+\subsection{Datasets Públicos de Referencia}
+
+\begin{itemize}
+    \item \textbf{Boston Housing}: Dataset clásico para practicar
+    \item \textbf{King County}: Casas en Seattle con componente espacial
+    \item \textbf{Ames Housing}: Dataset detallado de Iowa
+\end{itemize}
+
+\subsection{Herramientas Complementarias}
+
+\begin{itemize}
+    \item \textbf{QGIS}: Para análisis espacial visual
+    \item \textbf{PostgreSQL + PostGIS}: Base de datos espacial
+    \item \textbf{Apache Superset}: Dashboards empresariales
+    \item \textbf{MLflow}: Tracking de experimentos
+    \item \textbf{DVC}: Versionado de datos
+\end{itemize}
+
+\begin{tcolorbox}[colframe=usachblue,colback=blue!5]
+\centering
+\textbf{CONTACTO Y SOPORTE}\\[0.3cm]
+Para dudas específicas sobre implementación, pueden contactar:\\
+francisco.parra.o@usach.cl\\[0.2cm]
+Horario de consulta: Jueves 14:00-16:00\\
+Office Hours virtuales: Previa coordinación
+\end{tcolorbox}
+
+\end{document}

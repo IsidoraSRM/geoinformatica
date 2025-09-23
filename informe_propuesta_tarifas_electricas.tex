@@ -1,0 +1,563 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+
+\geometry{left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
+
+% Colores institucionales USACH
+\definecolor{usachblue}{RGB}{0,54,99}
+\definecolor{usachorange}{RGB}{255,102,0}
+\definecolor{darkgreen}{RGB}{0,128,0}
+\definecolor{codebg}{RGB}{245,245,245}
+
+% Configuración de listings para código
+\lstset{
+    backgroundcolor=\color{codebg},
+    basicstyle=\footnotesize\ttfamily,
+    breaklines=true,
+    captionpos=b,
+    commentstyle=\color{darkgreen},
+    keywordstyle=\color{usachblue}\bfseries,
+    stringstyle=\color{usachorange},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    stepnumber=1,
+    numbersep=10pt,
+    showspaces=false,
+    showstringspaces=false,
+    frame=single,
+    rulecolor=\color{gray},
+    xleftmargin=1cm,
+    xrightmargin=1cm
+}
+
+% Configuración de hyperref
+\hypersetup{
+    colorlinks=true,
+    linkcolor=usachblue,
+    urlcolor=usachorange,
+    citecolor=darkgreen
+}
+
+\title{
+    \Large{\textbf{INFORME DE EVALUACIÓN DE PROYECTO}}\\
+    \vspace{0.5cm}
+    \huge{\textbf{Sistema de Predicción Geoespacial de\\Tarifas Eléctricas en Chile}}\\
+    \vspace{0.5cm}
+    \large{Curso de Geoinformática - 2° Semestre 2025}\\
+    \large{Universidad de Santiago de Chile}
+}
+
+\author{
+    \textbf{Profesor:} Dr. Francisco Parra O.\\
+    \textbf{Tipo de Proyecto:} Comercial
+}
+
+\date{Agosto 2025}
+
+\begin{document}
+
+\maketitle
+\newpage
+
+\tableofcontents
+\newpage
+
+\section{Resumen Ejecutivo}
+
+El proyecto propuesto representa una \textbf{excelente integración} de tecnologías geoespaciales avanzadas para resolver un problema crítico del mercado energético chileno. La propuesta combina:
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Google Earth Engine} para obtención de variables climáticas
+    \item \textbf{Machine Learning} con algoritmos de series temporales
+    \item \textbf{Análisis espacial} del sistema eléctrico nacional
+    \item \textbf{Visualización interactiva} de predicciones georreferenciadas
+\end{itemize}
+
+\subsection{Evaluación General}
+\begin{center}
+\begin{tabular}{|l|c|l|}
+\hline
+\textbf{Criterio} & \textbf{Puntuación} & \textbf{Observación} \\
+\hline
+Relevancia técnica & 9.5/10 & Uso avanzado de GEE y ML espacial \\
+Viabilidad & 9.0/10 & Datos disponibles públicamente \\
+Innovación & 8.5/10 & Enfoque novedoso para mercado chileno \\
+Impacto comercial & 9.0/10 & Alto valor para múltiples stakeholders \\
+Complejidad apropiada & 9.5/10 & Desafiante para 8° semestre \\
+\hline
+\textbf{TOTAL} & \textbf{91/100} & \textbf{PROYECTO SOBRESALIENTE} \\
+\hline
+\end{tabular}
+\end{center}
+
+\section{Análisis Técnico Detallado}
+
+\subsection{Arquitectura del Sistema}
+
+El proyecto propone una arquitectura de tres capas bien definida:
+
+\subsubsection{Capa de Datos}
+\begin{itemize}
+    \item \textbf{Datos Satelitales (Google Earth Engine)}
+    \begin{itemize}
+        \item MODIS para temperatura superficial (LST)
+        \item ERA5 para radiación solar
+        \item Sentinel-2 para índices espectrales (NDWI, NDSI)
+    \end{itemize}
+    
+    \item \textbf{Datos del Mercado Eléctrico}
+    \begin{itemize}
+        \item Costos marginales históricos (Coordinador Eléctrico Nacional)
+        \item Precios de combustibles fósiles
+        \item Capacidad instalada por tecnología
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Capa de Procesamiento}
+\begin{lstlisting}[language=Python, caption=Pipeline de procesamiento propuesto]
+# 1. Extraccion de variables GEE
+import ee
+ee.Initialize()
+
+def extract_climate_variables(roi, date_range):
+    # Temperatura superficial
+    lst = ee.ImageCollection('MODIS/006/MOD11A1')\
+        .filterDate(date_range[0], date_range[1])\
+        .filterBounds(roi)\
+        .select('LST_Day_1km')\
+        .mean()
+    
+    # Radiacion solar
+    solar = ee.ImageCollection('ECMWF/ERA5/DAILY')\
+        .filterDate(date_range[0], date_range[1])\
+        .select('surface_solar_radiation_downwards')\
+        .mean()
+    
+    # Indices de sequia
+    ndwi = calculate_ndwi(roi, date_range)
+    
+    return ee.Image.cat([lst, solar, ndwi])
+
+# 2. Modelo predictivo
+from sklearn.ensemble import RandomForestRegressor
+import xgboost as xgb
+
+def train_price_model(features, targets):
+    # Features: variables climaticas + historicos
+    # Targets: costos marginales por zona
+    
+    model = xgb.XGBRegressor(
+        n_estimators=500,
+        max_depth=8,
+        learning_rate=0.01,
+        objective='reg:squarederror'
+    )
+    
+    # Incluir lags temporales
+    features_with_lags = add_temporal_lags(features, [1, 7, 30, 365])
+    
+    # Validacion cruzada espacial
+    cv_scores = spatial_cross_validation(model, features_with_lags, targets)
+    
+    return model.fit(features_with_lags, targets)
+\end{lstlisting}
+
+\subsubsection{Capa de Visualización}
+\begin{itemize}
+    \item Dashboard interactivo con Streamlit/Dash
+    \item Mapas de calor con predicciones usando Folium
+    \item API REST para integración con sistemas externos
+\end{itemize}
+
+\subsection{Variables Clave y Justificación}
+
+\begin{longtable}{|p{3.5cm}|p{4cm}|p{5cm}|p{3cm}|}
+\hline
+\textbf{Variable} & \textbf{Fuente} & \textbf{Justificación} & \textbf{Resolución} \\
+\hline
+\endfirsthead
+\multicolumn{4}{c}{\textit{Continuación de la tabla anterior}} \\
+\hline
+\textbf{Variable} & \textbf{Fuente} & \textbf{Justificación} & \textbf{Resolución} \\
+\hline
+\endhead
+\hline
+\multicolumn{4}{r}{\textit{Continúa en la siguiente página}} \\
+\endfoot
+\hline
+\endlastfoot
+
+NDWI (Índice de Agua) & Sentinel-2 & Nivel de embalses afecta generación hidroeléctrica (40\% matriz Chile) & 10m, quincenal \\
+\hline
+NDSI (Índice de Nieve) & MODIS/Sentinel-2 & Predictor de deshielo y disponibilidad hídrica futura & 500m, diaria \\
+\hline
+LST (Temperatura) & MODIS & Correlación con demanda por climatización & 1km, diaria \\
+\hline
+Radiación Solar & ERA5 & Predictor directo de generación solar (20\% matriz norte) & 30km, horaria \\
+\hline
+Velocidad Viento & ERA5 & Generación eólica en centro-sur & 30km, horaria \\
+\hline
+Precipitación & GPM/CHIRPS & Afluentes futuros para hidroeléctricas & 10km, diaria \\
+\hline
+CMg Histórico & CEN & Variable objetivo y feature lag & Por barra, horaria \\
+\hline
+Precio Combustibles & CNE & Costo generación térmica de respaldo & Nacional, semanal \\
+\hline
+\end{longtable}
+
+\subsection{Metodología de Machine Learning}
+
+\subsubsection{Preprocesamiento Espacial}
+\begin{enumerate}
+    \item \textbf{Zonificación del territorio:} División en 5 macrozonas eléctricas
+    \item \textbf{Agregación temporal:} Promedios mensuales para predicción estratégica
+    \item \textbf{Normalización:} StandardScaler para variables climáticas
+    \item \textbf{Feature engineering:}
+    \begin{itemize}
+        \item Ratios inter-zonales de variables
+        \item Anomalías respecto a promedios históricos
+        \item Índices compuestos (ej: stress hídrico = f(NDWI, precipitación, temperatura))
+    \end{itemize}
+\end{enumerate}
+
+\subsubsection{Modelo Predictivo}
+\begin{lstlisting}[language=Python, caption=Implementación del modelo XGBoost]
+import xgboost as xgb
+from sklearn.model_selection import TimeSeriesSplit
+from sklearn.metrics import mean_absolute_percentage_error
+import geopandas as gpd
+
+class SpatialElectricityPricePredictor:
+    def __init__(self, zones_shapefile):
+        self.zones = gpd.read_file(zones_shapefile)
+        self.models = {}  # Un modelo por zona
+        
+    def train(self, climate_data, market_data):
+        for zone_id in self.zones['id']:
+            # Filtrar datos por zona
+            zone_features = self.extract_zone_features(
+                climate_data, zone_id
+            )
+            
+            # Configurar modelo con hiperparametros optimizados
+            self.models[zone_id] = xgb.XGBRegressor(
+                n_estimators=1000,
+                max_depth=10,
+                learning_rate=0.01,
+                subsample=0.8,
+                colsample_bytree=0.8,
+                gamma=0.1,
+                reg_alpha=0.1,
+                reg_lambda=1.0,
+                objective='reg:squarederror',
+                eval_metric='mape'
+            )
+            
+            # Validacion temporal
+            tscv = TimeSeriesSplit(n_splits=5)
+            cv_scores = []
+            
+            for train_idx, val_idx in tscv.split(zone_features):
+                X_train = zone_features.iloc[train_idx]
+                y_train = market_data['cmg'].iloc[train_idx]
+                X_val = zone_features.iloc[val_idx]
+                y_val = market_data['cmg'].iloc[val_idx]
+                
+                self.models[zone_id].fit(
+                    X_train, y_train,
+                    eval_set=[(X_val, y_val)],
+                    early_stopping_rounds=50,
+                    verbose=False
+                )
+                
+                predictions = self.models[zone_id].predict(X_val)
+                mape = mean_absolute_percentage_error(y_val, predictions)
+                cv_scores.append(mape)
+            
+            print(f"Zona {zone_id} - MAPE promedio: {np.mean(cv_scores):.2%}")
+    
+    def predict_spatial(self, future_climate):
+        predictions = {}
+        for zone_id in self.zones['id']:
+            zone_features = self.extract_zone_features(
+                future_climate, zone_id
+            )
+            predictions[zone_id] = self.models[zone_id].predict(zone_features)
+        
+        return self.create_prediction_map(predictions)
+\end{lstlisting}
+
+\section{Evaluación de Complejidad y Alcance}
+
+\subsection{Aspectos Destacables}
+
+\begin{enumerate}
+    \item \textbf{Integración Multidisciplinaria}
+    \begin{itemize}
+        \item Teledetección satelital
+        \item Ciencia de datos espaciales
+        \item Economía energética
+        \item Meteorología aplicada
+    \end{itemize}
+    
+    \item \textbf{Desafíos Técnicos Apropiados}
+    \begin{itemize}
+        \item Manejo de big data satelital en GEE
+        \item Sincronización de múltiples fuentes temporales
+        \item Modelado de dependencias espaciales
+        \item Optimización de hiperparámetros en ML
+    \end{itemize}
+    
+    \item \textbf{Escalabilidad}
+    \begin{itemize}
+        \item Arquitectura cloud-ready
+        \item Procesamiento paralelo por zonas
+        \item API para integración empresarial
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Matriz de Riesgos y Mitigación}
+
+\begin{center}
+\begin{tabular}{|p{3cm}|c|c|p{5cm}|}
+\hline
+\textbf{Riesgo} & \textbf{Probabilidad} & \textbf{Impacto} & \textbf{Mitigación} \\
+\hline
+Calidad datos GEE & Baja & Alto & Validación con estaciones meteorológicas in-situ \\
+\hline
+Overfitting modelo & Media & Medio & Cross-validation espacial y temporal rigurosa \\
+\hline
+Cambios regulatorios & Baja & Medio & Diseño modular para adaptar nuevas variables \\
+\hline
+Latencia predicciones & Media & Bajo & Cache de resultados y procesamiento asíncrono \\
+\hline
+\end{tabular}
+\end{center}
+
+\section{Plan de Implementación Recomendado}
+
+\subsection{Fase 1: Preparación de Datos (3 semanas)}
+\begin{itemize}
+    \item Configurar cuenta Google Earth Engine
+    \item Desarrollar scripts de extracción de variables climáticas
+    \item Obtener y limpiar datos históricos del CEN
+    \item Crear base de datos espacial con PostGIS
+\end{itemize}
+
+\subsection{Fase 2: Desarrollo del Modelo (4 semanas)}
+\begin{itemize}
+    \item Análisis exploratorio de correlaciones
+    \item Feature engineering espacial y temporal
+    \item Entrenamiento y optimización de modelos
+    \item Validación con métricas espaciales (Moran's I)
+\end{itemize}
+
+\subsection{Fase 3: Sistema de Visualización (3 semanas)}
+\begin{itemize}
+    \item Dashboard interactivo con Streamlit
+    \item Mapas de predicción con Folium
+    \item API REST con FastAPI
+    \item Documentación técnica
+\end{itemize}
+
+\subsection{Fase 4: Validación y Ajustes (2 semanas)}
+\begin{itemize}
+    \item Backtesting con datos históricos
+    \item Análisis de sensibilidad
+    \item Optimización de performance
+    \item Presentación final
+\end{itemize}
+
+\section{Mejoras y Extensiones Sugeridas}
+
+\subsection{Mejoras Técnicas Inmediatas}
+
+\begin{enumerate}
+    \item \textbf{Incorporar Autocorrelación Espacial}
+    \begin{lstlisting}[language=Python]
+from pysal.lib import weights
+from pysal.model import spreg
+
+# Crear matriz de pesos espaciales
+w = weights.Queen.from_dataframe(zones_gdf)
+
+# Modelo con lag espacial
+model = spreg.ML_Lag(
+    y, X, w,
+    name_y='cmg',
+    name_x=feature_names
+)
+    \end{lstlisting}
+    
+    \item \textbf{Análisis de Incertidumbre}
+    \begin{itemize}
+        \item Intervalos de confianza con bootstrap
+        \item Propagación de error desde inputs satelitales
+        \item Escenarios probabilísticos
+    \end{itemize}
+    
+    \item \textbf{Deep Learning Espacial}
+    \begin{lstlisting}[language=Python]
+import torch
+import torch_geometric
+
+class SpatialGNN(torch.nn.Module):
+    """Graph Neural Network para prediccion
+    considerando conectividad de la red electrica"""
+    
+    def __init__(self, num_features, hidden_dim):
+        super().__init__()
+        self.conv1 = GCNConv(num_features, hidden_dim)
+        self.conv2 = GCNConv(hidden_dim, hidden_dim)
+        self.fc = torch.nn.Linear(hidden_dim, 1)
+        
+    def forward(self, x, edge_index):
+        x = self.conv1(x, edge_index).relu()
+        x = self.conv2(x, edge_index).relu()
+        return self.fc(x)
+    \end{lstlisting}
+\end{enumerate}
+
+\subsection{Extensiones Comerciales}
+
+\begin{enumerate}
+    \item \textbf{Módulo de Optimización para Generadoras}
+    \begin{itemize}
+        \item Recomendaciones de despacho óptimo
+        \item Análisis what-if para mantenimientos
+        \item Alertas de oportunidades de arbitraje
+    \end{itemize}
+    
+    \item \textbf{Integración con Trading Energético}
+    \begin{itemize}
+        \item Señales de compra/venta en mercado spot
+        \item Valorización de contratos PPA
+        \item Gestión de riesgo de portafolio
+    \end{itemize}
+    
+    \item \textbf{Servicios para Consumidores Industriales}
+    \begin{itemize}
+        \item Optimización de consumo por horario
+        \item Evaluación de autogeneración
+        \item Negociación de contratos
+    \end{itemize}
+\end{enumerate}
+
+\section{Impacto Esperado}
+
+\subsection{Beneficiarios Directos}
+
+\begin{itemize}
+    \item \textbf{Generadoras eléctricas:} Optimización de estrategias de oferta
+    \item \textbf{Comercializadoras:} Mejor gestión de riesgo de precio
+    \item \textbf{Grandes consumidores:} Planificación de consumo y costos
+    \item \textbf{Reguladores:} Monitoreo de comportamiento del mercado
+    \item \textbf{Inversionistas:} Evaluación de proyectos renovables
+\end{itemize}
+
+\subsection{Métricas de Éxito}
+
+\begin{center}
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Métrica} & \textbf{Objetivo} & \textbf{Método de Medición} \\
+\hline
+MAPE predicción & < 15\% & Backtesting 2023-2024 \\
+Cobertura espacial & 95\% territorio & Zonas con predicción \\
+Latencia API & < 500ms & Monitoring en producción \\
+Usuarios activos & > 50/mes & Google Analytics \\
+ROI para clientes & > 20\% & Encuesta post-implementación \\
+\hline
+\end{tabular}
+\end{center}
+
+\section{Conclusiones y Recomendaciones}
+
+\subsection{Fortalezas del Proyecto}
+
+\begin{enumerate}
+    \item \textbf{Alta relevancia:} Aborda problema crítico del sector energético chileno
+    \item \textbf{Innovación técnica:} Integración novedosa de GEE + ML + mercado eléctrico
+    \item \textbf{Viabilidad demostrada:} Todos los datos necesarios son accesibles
+    \item \textbf{Escalabilidad comercial:} Múltiples modelos de negocio viables
+    \item \textbf{Aprendizaje integral:} Cubre todos los objetivos del curso de Geoinformática
+\end{enumerate}
+
+\subsection{Recomendaciones Finales}
+
+\begin{tcolorbox}[colback=blue!5!white,colframe=usachblue,title=\textbf{RECOMENDACIÓN DEL PROFESOR}]
+\textbf{El proyecto debe ser APROBADO y recibir máximo apoyo.}
+
+Representa exactamente el tipo de aplicación innovadora de geoinformática que el curso busca promover. La combinación de:
+\begin{itemize}
+    \item Procesamiento masivo de datos satelitales
+    \item Machine learning espacial avanzado
+    \item Problema de alto impacto económico
+    \item Solución técnicamente sofisticada
+\end{itemize}
+
+Lo convierte en un proyecto ejemplar que podría:
+\begin{enumerate}
+    \item Publicarse en conferencias de energía y geoinformática
+    \item Convertirse en startup o spin-off universitario
+    \item Servir como caso de estudio para futuras generaciones
+\end{enumerate}
+
+\textbf{Calificación sugerida: 7.0} (con potencial de nota máxima según ejecución)
+\end{tcolorbox}
+
+\subsection{Siguientes Pasos}
+
+\begin{enumerate}
+    \item \textbf{Inmediato:} Reunión con el estudiante para afinar alcance
+    \item \textbf{Semana 1:} Configurar accesos a GEE y datos del CEN
+    \item \textbf{Semana 2:} Definir arquitectura técnica detallada
+    \item \textbf{Semana 3:} Iniciar desarrollo con prototipo mínimo viable
+    \item \textbf{Mensual:} Revisiones de avance con feedback técnico
+\end{enumerate}
+
+\section{Referencias Técnicas Sugeridas}
+
+\begin{enumerate}
+    \item Gorelick, N. et al. (2017). Google Earth Engine: Planetary-scale geospatial analysis for everyone. \textit{Remote Sensing of Environment}.
+    
+    \item Pérez-Arriaga, I. (2013). Regulation of the Power Sector. Springer.
+    
+    \item Hong, T. et al. (2016). Probabilistic electric load forecasting: A tutorial review. \textit{International Journal of Forecasting}.
+    
+    \item Coordinador Eléctrico Nacional (2024). Informe de Operación del Sistema Eléctrico Nacional.
+    
+    \item Zhang, Y. et al. (2023). Deep learning for renewable energy forecasting: A taxonomy, and systematic literature review. \textit{Journal of Cleaner Production}.
+    
+    \item Chilean Energy Ministry (2024). Política Energética Nacional 2050.
+\end{enumerate}
+
+\vspace{2cm}
+
+\begin{flushright}
+\textbf{Dr. Francisco Parra O.}\\
+Profesor Curso Geoinformática\\
+Universidad de Santiago de Chile\\
+\texttt{francisco.parra.o@usach.cl}\\
+\vspace{0.5cm}
+Agosto 2025
+\end{flushright}
+
+\end{document}

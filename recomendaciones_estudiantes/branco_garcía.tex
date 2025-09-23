@@ -1,0 +1,145 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{fontawesome5}
+\usepackage{multicol}
+
+% Colores personalizados
+\definecolor{usachblue}{RGB}{0,121,192}
+\definecolor{usachred}{RGB}{239,51,64}
+\definecolor{darkgreen}{RGB}{0,100,0}
+\definecolor{darkorange}{RGB}{255,140,0}
+
+% Configuración de página
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Geoinformática 2025-2}
+\fancyhead[R]{\small USACH}
+\fancyfoot[C]{\thepage}
+
+\begin{document}
+
+\begin{center}
+    {\Huge \textbf{Recomendaciones de Proyecto}}\\[0.5cm]
+    {\Large \textcolor{usachblue}{Geoinformática - Semestre 2, 2025}}\\[0.3cm]
+    \rule{\textwidth}{0.5pt}\\[0.3cm]
+    {\LARGE \textbf{Branco García}}\\[0.2cm]
+    {\large Fecha: \today}
+\end{center}
+
+\vspace{0.5cm}
+
+\section*{\faIcon{user-circle} Perfil del Estudiante}
+
+\begin{tcolorbox}[colback=blue!5,colframe=usachblue,title=Resumen de tu Perfil]
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Nivel de experiencia:} Avanzado
+    \item \textbf{Lenguajes dominados:} R, Python, Javascript, SQL
+    \item \textbf{Áreas de interés:} Urbanismo, negocios, transporte
+    \item \textbf{Stack tecnológico recomendado:} GeoPandas, Folium, Rasterio + sf, terra, tmap + Leaflet, Mapbox, Turf.js + PostGIS
+\end{itemize}
+\end{tcolorbox}
+
+
+\section*{\faIcon{lightbulb} Tu Idea de Proyecto}
+
+\begin{tcolorbox}[colback=yellow!10,colframe=darkorange,title=Idea Original]
+\textit{"Analizar las zonas urbanas donde se acumula más gente o haya más densidad poblacional, que requiere tener acceso a transporte público rápido."}
+
+\vspace{0.3cm}
+\textbf{Comentario del profesor:} Esta es una excelente idea que puedes desarrollar. Te sugiero considerar los siguientes aspectos técnicos:
+\begin{itemize}
+    \item Fuentes de datos disponibles (INE, municipalidades, APIs públicas)
+    \item Metodología de análisis espacial apropiada
+    \item Herramientas específicas de tu stack tecnológico
+\end{itemize}
+\end{tcolorbox}
+
+\section*{\faIcon{flask} Proyectos Científicos Recomendados}
+
+Basándome en tus intereses y experiencia, estos proyectos científicos serían ideales para ti:
+
+
+\begin{tcolorbox}[colback=green!5,colframe=darkgreen,title={\small Proyecto Científico \#1}]
+\textbf{Detección de Asentamientos Informales}\\[0.2cm]
+\textcolor{gray}{\small Área: Urbanismo}\\[0.2cm]
+Usar deep learning en imágenes satelitales para identificar campamentos
+\end{tcolorbox}
+
+
+\begin{tcolorbox}[colback=green!5,colframe=darkgreen,title={\small Proyecto Científico \#2}]
+\textbf{Análisis de Gentrificación}\\[0.2cm]
+\textcolor{gray}{\small Área: Urbanismo}\\[0.2cm]
+Detectar cambios socioeconómicos usando datos de arriendo y censo
+\end{tcolorbox}
+
+
+\begin{tcolorbox}[colback=green!5,colframe=darkgreen,title={\small Proyecto Científico \#3}]
+\textbf{Planificación de Áreas Verdes}\\[0.2cm]
+\textcolor{gray}{\small Área: Urbanismo}\\[0.2cm]
+Optimizar ubicación de parques según déficit y densidad poblacional
+\end{tcolorbox}
+
+
+\begin{tcolorbox}[colback=green!5,colframe=darkgreen,title={\small Proyecto Científico \#4}]
+\textbf{Optimización de Rutas de Transporte Público}\\[0.2cm]
+\textcolor{gray}{\small Área: Transporte}\\[0.2cm]
+Mejorar recorridos usando datos de demanda y análisis de redes
+\end{tcolorbox}
+
+
+\section*{\faIcon{building} Proyectos Comerciales Recomendados}
+
+Si te interesa un enfoque más aplicado a la industria, considera estos proyectos:
+
+
+\begin{tcolorbox}[colback=orange!5,colframe=darkorange,title={\small Proyecto Comercial \#1}]
+\textbf{Geomarketing para Retail}\\[0.2cm]
+\textcolor{gray}{\small Área: Negocios}\\[0.2cm]
+Identificar ubicaciones óptimas para nuevas tiendas usando análisis de competencia y demografía
+\end{tcolorbox}
+
+
+\begin{tcolorbox}[colback=orange!5,colframe=darkorange,title={\small Proyecto Comercial \#2}]
+\textbf{Segmentación Espacial de Clientes}\\[0.2cm]
+\textcolor{gray}{\small Área: Negocios}\\[0.2cm]
+Crear perfiles de clientes por zona geográfica para marketing dirigido
+\end{tcolorbox}
+
+
+\begin{tcolorbox}[colback=orange!5,colframe=darkorange,title={\small Proyecto Comercial \#3}]
+\textbf{Análisis de Competencia}\\[0.2cm]
+\textcolor{gray}{\small Área: Negocios}\\[0.2cm]
+Mapear competidores y analizar áreas de influencia usando polígonos de Voronoi
+\end{tcolorbox}
+
+
+\section*{\faIcon{graduation-cap} Recursos Recomendados}
+
+\subsection*{Recursos según tu nivel}
+
+\begin{itemize}[leftmargin=*]
+    \item Libro: Geocomputation with Python/R
+    \item Paper: Recent advances in GeoAI
+    \item Google Earth Engine tutorials
+    \item Kaggle competitions geoespaciales
+\end{itemize}
+
+
+\vspace{0.5cm}
+
+\begin{tcolorbox}[colback=gray!10,colframe=gray!50]
+\centering
+\textbf{Contacto}\\[0.2cm]
+\faIcon{envelope} francisco.parra.o@usach.cl
+\end{tcolorbox}
+
+\end{document}

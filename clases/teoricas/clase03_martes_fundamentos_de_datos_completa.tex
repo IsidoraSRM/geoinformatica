@@ -1,0 +1,1064 @@
+\documentclass[10pt]{beamer}
+\usetheme{metropolis}
+\usepackage[utf8]{inputenc}
+\usepackage{FiraSans}
+\usefonttheme{professionalfonts}
+
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage[spanish]{babel}
+\usepackage{tcolorbox}
+\usepackage{ragged2e}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{fontawesome5}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{booktabs}
+
+\usetikzlibrary{shapes.geometric, arrows, positioning, calc}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\definecolor{usachblue}{RGB}{0,54,99}
+\definecolor{usachorange}{RGB}{255,102,0}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\tiny,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+% Personalización del pie de página
+\setbeamertemplate{footline}{%
+  \begin{beamercolorbox}[wd=\paperwidth,sep=2ex]{footline}%
+    \usebeamerfont{structure}\textbf{Geoinformática - Clase 3} \hfill Prof. Francisco Parra O. \hfill \textbf{USACH 2025}
+  \end{beamercolorbox}%
+}
+
+\title{Clase 03: Fundamentos de Datos Geoespaciales}
+\subtitle{Modelos Vectorial y Raster}
+\author{Profesor: Francisco Parra O.}
+\institute{USACH - Ingeniería Civil en Informática}
+\date{20 de agosto, 2025}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{Objetivos de Aprendizaje}
+    \begin{itemize}
+        \item \textbf{Comprender} los modelos fundamentales de datos espaciales
+        \item \textbf{Diferenciar} entre representaciones vectorial y raster
+        \item \textbf{Identificar} formatos de archivos y sus aplicaciones
+        \item \textbf{Manipular} datos geoespaciales con Python
+        \item \textbf{Seleccionar} el modelo apropiado según el problema
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Agenda}
+    \tableofcontents
+\end{frame}
+
+\section{Introducción a los Modelos de Datos}
+
+\begin{frame}{¿Cómo representamos el mundo real?}
+    \begin{columns}
+        \column{0.5\textwidth}
+        \textbf{El desafío:}
+        \begin{itemize}
+            \item Mundo continuo e infinito
+            \item Computadores discretos y finitos
+            \item Múltiples fenómenos simultáneos
+            \item Diferentes escalas y precisiones
+        \end{itemize}
+        
+        \column{0.5\textwidth}
+        \begin{tikzpicture}[scale=0.8]
+            % Mundo real
+            \node[draw, circle, fill=blue!20, minimum size=2cm] at (0,3) {Mundo Real};
+            % Flecha
+            \draw[->, thick] (0,1.5) -- (0,0.5);
+            % Modelos
+            \node[draw, rectangle, fill=green!20] at (-1.5,-0.5) {Vector};
+            \node[draw, rectangle, fill=orange!20] at (1.5,-0.5) {Raster};
+        \end{tikzpicture}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Los Dos Paradigmas Fundamentales}
+    \begin{columns}
+        \column{0.5\textwidth}
+        \textbf{Modelo Vectorial}
+        \begin{itemize}
+            \item Objetos discretos
+            \item Fronteras definidas
+            \item Coordenadas exactas
+            \item Ejemplos: calles, edificios, límites
+        \end{itemize}
+        
+        \column{0.5\textwidth}
+        \textbf{Modelo Raster}
+        \begin{itemize}
+            \item Campos continuos
+            \item Grilla regular
+            \item Valores en celdas
+            \item Ejemplos: temperatura, elevación, NDVI
+        \end{itemize}
+    \end{columns}
+    
+    \vspace{0.5cm}
+    \begin{tcolorbox}[colframe=usachblue,colback=blue!5]
+        \centering
+        \small
+        "La elección del modelo determina las operaciones posibles"
+    \end{tcolorbox}
+\end{frame}
+
+\section{Datos Vectoriales: Puntos, Líneas, Polígonos}
+
+\begin{frame}{Geometrías Vectoriales Básicas}
+    \begin{tikzpicture}[scale=0.9]
+        % Punto
+        \node[circle, fill=red, minimum size=0.3cm] at (0,0) {};
+        \node at (0,-0.5) {\textbf{Punto}};
+        \node at (0,-0.9) {\tiny (x, y)};
+        
+        % Línea
+        \draw[thick, blue] (3,0) -- (4,0.5) -- (5,0) -- (5.5,0.3);
+        \node at (4.25,-0.5) {\textbf{Línea}};
+        \node at (4.25,-0.9) {\tiny [(x₁,y₁), (x₂,y₂), ...]};
+        
+        % Polígono
+        \draw[thick, fill=green!30] (7,0) -- (8,0.5) -- (8.5,0) -- (7.5,-0.3) -- cycle;
+        \node at (7.75,-0.7) {\textbf{Polígono}};
+        \node at (7.75,-1.1) {\tiny Anillo cerrado};
+    \end{tikzpicture}
+    
+    \vspace{0.3cm}
+    
+    \begin{tabular}{|l|l|l|}
+        \hline
+        \textbf{Geometría} & \textbf{Dimensión} & \textbf{Ejemplo en Chile} \\
+        \hline
+        Punto & 0D & Estaciones de Metro \\
+        Línea & 1D & Red vial, ríos \\
+        Polígono & 2D & Comunas, lagos \\
+        \hline
+    \end{tabular}
+\end{frame}
+
+\begin{frame}[fragile]{Puntos: Localización Exacta}
+    \begin{columns}
+        \column{0.5\textwidth}
+        \textbf{Características:}
+        \begin{itemize}
+            \item Coordenadas (x, y) o (lon, lat)
+            \item Opcionalmente coordenada z
+            \item Sin área ni longitud
+            \item Atributos asociados
+        \end{itemize}
+        
+        \textbf{Aplicaciones:}
+        \begin{itemize}
+            \item Ubicación de sensores
+            \item Puntos de interés (POI)
+            \item Eventos (delitos, accidentes)
+            \item Muestras de campo
+        \end{itemize}
+        
+        \column{0.5\textwidth}
+        \begin{lstlisting}[language=Python, caption=Puntos en GeoPandas]
+import geopandas as gpd
+from shapely.geometry import Point
+
+# Crear puntos de estaciones
+estaciones = [
+    Point(-70.6693, -33.4489),  # Santiago
+    Point(-70.6483, -33.4372),  # La Moneda
+    Point(-70.6506, -33.4183),  # Santa Ana
+]
+
+# Crear GeoDataFrame
+gdf = gpd.GeoDataFrame(
+    {'nombre': ['Santiago', 'La Moneda', 
+                'Santa Ana'],
+     'linea': [1, 1, 2]},
+    geometry=estaciones,
+    crs='EPSG:4326'
+)
+
+# Operaciones
+print(gdf.distance(gdf.iloc[0].geometry))
+buffer = gdf.buffer(0.001)  # 100m aprox
+        \end{lstlisting}
+    \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Líneas: Conectividad y Redes}
+    \begin{columns}
+        \column{0.5\textwidth}
+        \textbf{Características:}
+        \begin{itemize}
+            \item Secuencia ordenada de puntos
+            \item Longitud medible
+            \item Dirección (opcional)
+            \item Topología de red
+        \end{itemize}
+        
+        \textbf{Aplicaciones:}
+        \begin{itemize}
+            \item Redes de transporte
+            \item Hidrografía
+            \item Límites lineales
+            \item Trayectorias GPS
+        \end{itemize}
+        
+        \column{0.5\textwidth}
+        \begin{lstlisting}[language=Python, caption=Líneas y redes]
+from shapely.geometry import LineString
+import osmnx as ox
+
+# Crear línea simple
+ruta = LineString([
+    (-70.669, -33.449),
+    (-70.665, -33.445),
+    (-70.660, -33.440)
+])
+
+# Propiedades
+print(f"Longitud: {ruta.length}")
+print(f"Punto medio: {ruta.centroid}")
+
+# Red vial con OSMnx
+G = ox.graph_from_place(
+    'Providencia, Chile',
+    network_type='drive'
+)
+
+# Análisis de red
+centrality = ox.betweenness_centrality(G)
+shortest_path = ox.shortest_path(
+    G, orig, dest, weight='length'
+)
+        \end{lstlisting}
+    \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Polígonos: Áreas y Regiones}
+    \begin{columns}
+        \column{0.5\textwidth}
+        \textbf{Características:}
+        \begin{itemize}
+            \item Anillo exterior cerrado
+            \item Posibles huecos internos
+            \item Área y perímetro
+            \item Relaciones topológicas
+        \end{itemize}
+        
+        \textbf{Aplicaciones:}
+        \begin{itemize}
+            \item Límites administrativos
+            \item Parcelas/predios
+            \item Zonas de cobertura
+            \item Áreas de influencia
+        \end{itemize}
+        
+        \column{0.5\textwidth}
+        \begin{lstlisting}[language=Python, caption=Polígonos y análisis]
+from shapely.geometry import Polygon
+
+# Crear polígono
+manzana = Polygon([
+    (-70.650, -33.440),
+    (-70.648, -33.440),
+    (-70.648, -33.438),
+    (-70.650, -33.438),
+    (-70.650, -33.440)
+])
+
+# Propiedades geométricas
+print(f"Área: {manzana.area}")
+print(f"Perímetro: {manzana.length}")
+
+# Operaciones espaciales
+edificio = Point(-70.649, -33.439)
+print(manzana.contains(edificio))  # True
+
+# Overlay de polígonos
+interseccion = poligono1.intersection(poligono2)
+union = poligono1.union(poligono2)
+diferencia = poligono1.difference(poligono2)
+        \end{lstlisting}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Topología Vectorial}
+    \begin{center}
+    \begin{tikzpicture}[scale=1.2]
+        % Polígonos adyacentes
+        \draw[thick, fill=blue!20] (0,0) rectangle (2,2);
+        \draw[thick, fill=green!20] (2,0) rectangle (4,2);
+        \draw[thick, fill=red!20] (0,2) rectangle (2,4);
+        \draw[thick, fill=yellow!20] (2,2) rectangle (4,4);
+        
+        % Nodos
+        \node[circle, fill=black, minimum size=0.2cm] at (0,0) {};
+        \node[circle, fill=black, minimum size=0.2cm] at (2,0) {};
+        \node[circle, fill=black, minimum size=0.2cm] at (4,0) {};
+        \node[circle, fill=black, minimum size=0.2cm] at (0,2) {};
+        \node[circle, fill=black, minimum size=0.2cm] at (2,2) {};
+        \node[circle, fill=black, minimum size=0.2cm] at (4,2) {};
+        \node[circle, fill=black, minimum size=0.2cm] at (0,4) {};
+        \node[circle, fill=black, minimum size=0.2cm] at (2,4) {};
+        \node[circle, fill=black, minimum size=0.2cm] at (4,4) {};
+        
+        % Labels
+        \node at (1,1) {A};
+        \node at (3,1) {B};
+        \node at (1,3) {C};
+        \node at (3,3) {D};
+        
+        % Leyenda
+        \node at (6,3) {\textbf{Reglas topológicas:}};
+        \node[align=left] at (7.5,2.3) {\small • Sin gaps};
+        \node[align=left] at (7.5,1.8) {\small • Sin overlaps};
+        \node[align=left] at (7.5,1.3) {\small • Nodos compartidos};
+        \node[align=left] at (7.5,0.8) {\small • Arcos compartidos};
+    \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\section{Datos Raster: Grillas y Resolución}
+
+\begin{frame}{Modelo Raster: Campos Continuos}
+    \begin{columns}
+        \column{0.5\textwidth}
+        \textbf{Estructura de grilla:}
+        \begin{itemize}
+            \item Matriz de celdas regulares
+            \item Cada celda = un valor
+            \item Posición implícita
+            \item Resolución espacial fija
+        \end{itemize}
+        
+        \vspace{0.3cm}
+        \textbf{Componentes:}
+        \begin{itemize}
+            \item Origen (x₀, y₀)
+            \item Tamaño de celda (res)
+            \item Dimensiones (rows, cols)
+            \item Sistema de referencia
+        \end{itemize}
+        
+        \column{0.5\textwidth}
+        \begin{tikzpicture}[scale=0.35]
+            % Grilla raster
+            \foreach \x in {0,...,7} {
+                \foreach \y in {0,...,7} {
+                    \pgfmathparse{20+int(rand*60)}
+                    \edef\val{\pgfmathresult}
+                    \definecolor{cellcolor}{rgb}{\val/100,\val/120,0.2}
+                    \fill[cellcolor] (\x,\y) rectangle (\x+1,\y+1);
+                    \draw[gray, thin] (\x,\y) rectangle (\x+1,\y+1);
+                }
+            }
+            
+            % Ejes
+            \draw[thick, ->] (-0.5,0) -- (8.5,0) node[right] {x};
+            \draw[thick, ->] (0,-0.5) -- (0,8.5) node[above] {y};
+            
+            % Etiquetas
+            \node at (4,-1.5) {\small Columnas};
+            \node[rotate=90] at (-1.5,4) {\small Filas};
+        \end{tikzpicture}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Resolución Espacial}
+    \begin{center}
+    \begin{tikzpicture}[scale=0.6]
+        % Alta resolución
+        \node at (0,4) {\textbf{Alta Resolución}};
+        \foreach \x in {0,...,15} {
+            \foreach \y in {0,...,15} {
+                \pgfmathparse{int(rand*2)}
+                \ifnum\pgfmathresult=0
+                    \fill[green!60] (\x*0.2,\y*0.2) rectangle (\x*0.2+0.2,\y*0.2+0.2);
+                \else
+                    \fill[brown!40] (\x*0.2,\y*0.2) rectangle (\x*0.2+0.2,\y*0.2+0.2);
+                \fi
+            }
+        }
+        \node at (1.5,-0.5) {\tiny 1m/píxel};
+        
+        % Media resolución
+        \node at (5,4) {\textbf{Media Resolución}};
+        \foreach \x in {0,...,7} {
+            \foreach \y in {0,...,7} {
+                \pgfmathparse{int(rand*3)}
+                \ifnum\pgfmathresult=0
+                    \fill[green!60] (5+\x*0.4,\y*0.4) rectangle (5+\x*0.4+0.4,\y*0.4+0.4);
+                \else
+                    \fill[brown!40] (5+\x*0.4,\y*0.4) rectangle (5+\x*0.4+0.4,\y*0.4+0.4);
+                \fi
+            }
+        }
+        \node at (6.5,-0.5) {\tiny 10m/píxel};
+        
+        % Baja resolución
+        \node at (10,4) {\textbf{Baja Resolución}};
+        \foreach \x in {0,...,3} {
+            \foreach \y in {0,...,3} {
+                \pgfmathparse{int(rand*3)}
+                \ifnum\pgfmathresult=0
+                    \fill[green!60] (10+\x*0.8,\y*0.8) rectangle (10+\x*0.8+0.8,\y*0.8+0.8);
+                \else
+                    \fill[brown!40] (10+\x*0.8,\y*0.8) rectangle (10+\x*0.8+0.8,\y*0.8+0.8);
+                \fi
+            }
+        }
+        \node at (11.5,-0.5) {\tiny 30m/píxel};
+    \end{tikzpicture}
+    \end{center}
+    
+    \vspace{0.3cm}
+    
+    \begin{tabular}{|l|c|c|c|}
+        \hline
+        \textbf{Satélite} & \textbf{Resolución} & \textbf{Cobertura} & \textbf{Aplicación} \\
+        \hline
+        WorldView-3 & 0.3m & Local & Catastro urbano \\
+        Sentinel-2 & 10m & Regional & Agricultura \\
+        MODIS & 250-1000m & Global & Clima \\
+        \hline
+    \end{tabular}
+\end{frame}
+
+\begin{frame}[fragile]{Bandas Espectrales}
+    \begin{columns}
+        \column{0.5\textwidth}
+        \textbf{Raster Multibanda:}
+        \begin{itemize}
+            \item Cada banda = longitud de onda
+            \item Stack de matrices
+            \item Información espectral
+            \item Índices derivados
+        \end{itemize}
+        
+        \vspace{0.3cm}
+        \textbf{Bandas comunes:}
+        \begin{itemize}
+            \item Azul (450-520 nm)
+            \item Verde (520-600 nm)
+            \item Rojo (630-690 nm)
+            \item NIR (760-900 nm)
+            \item SWIR (1550-2300 nm)
+        \end{itemize}
+        
+        \column{0.5\textwidth}
+        \begin{lstlisting}[language=Python, caption=Trabajo con rasters]
+import rasterio
+import numpy as np
+
+# Abrir imagen multiespectral
+with rasterio.open('sentinel2.tif') as src:
+    # Metadatos
+    print(f"CRS: {src.crs}")
+    print(f"Res: {src.res}")
+    print(f"Bandas: {src.count}")
+    
+    # Leer bandas
+    red = src.read(4)   # B4
+    nir = src.read(8)   # B8
+    
+    # Calcular NDVI
+    ndvi = (nir - red) / (nir + red + 0.0001)
+    
+    # Estadísticas
+    print(f"NDVI medio: {ndvi.mean():.3f}")
+    
+    # Guardar resultado
+    profile = src.profile
+    profile.update(count=1, dtype='float32')
+    
+    with rasterio.open('ndvi.tif', 'w', 
+                       **profile) as dst:
+        dst.write(ndvi, 1)
+        \end{lstlisting}
+    \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Operaciones Raster}
+    \begin{columns}
+        \column{0.5\textwidth}
+        \textbf{Álgebra de mapas:}
+        \begin{itemize}
+            \item Operaciones celda a celda
+            \item Funciones locales
+            \item Funciones focales (kernel)
+            \item Funciones zonales
+            \item Funciones globales
+        \end{itemize}
+        
+        \vspace{0.3cm}
+        \textbf{Aplicaciones:}
+        \begin{itemize}
+            \item Análisis de terreno
+            \item Detección de cambios
+            \item Clasificación
+            \item Modelado hidrológico
+        \end{itemize}
+        
+        \column{0.5\textwidth}
+        \begin{lstlisting}[language=Python, caption=Análisis de terreno]
+import richdem as rd
+from scipy.ndimage import generic_filter
+
+# Cargar DEM
+dem = rd.LoadGDAL("srtm_chile.tif")
+
+# Derivados del terreno
+slope = rd.TerrainAttribute(dem, 'slope_degrees')
+aspect = rd.TerrainAttribute(dem, 'aspect')
+curvature = rd.TerrainAttribute(dem, 'curvature')
+
+# Hillshade
+hillshade = rd.hillshade(dem, azimuth=315)
+
+# Filtro focal (media móvil 3x3)
+kernel_size = 3
+dem_smooth = generic_filter(
+    dem, np.mean, size=kernel_size
+)
+
+# Detección de crestas
+def detect_ridges(dem):
+    # Laplaciano
+    laplacian = generic_filter(
+        dem, lambda x: x[4] - x.mean(), 
+        size=(3,3)
+    )
+    return laplacian > threshold
+        \end{lstlisting}
+    \end{columns}
+\end{frame}
+
+\section{Formatos de Archivos Comunes}
+
+\begin{frame}{Formatos Vectoriales}
+    \begin{tabular}{|l|p{3cm}|p{3cm}|p{3cm}|}
+        \hline
+        \textbf{Formato} & \textbf{Características} & \textbf{Ventajas} & \textbf{Limitaciones} \\
+        \hline
+        \textbf{Shapefile} (.shp) & 
+        Múltiples archivos, estándar ESRI & 
+        Universal, compatible & 
+        Límite 2GB, sin topología \\
+        \hline
+        \textbf{GeoJSON} & 
+        Texto JSON, web-friendly & 
+        Legible, simple & 
+        Gran tamaño, sin índices \\
+        \hline
+        \textbf{GeoPackage} (.gpkg) & 
+        SQLite, OGC estándar & 
+        Un archivo, con índices & 
+        Menos compatible \\
+        \hline
+        \textbf{KML/KMZ} & 
+        XML, Google Earth & 
+        Visualización, estilos & 
+        Solo WGS84 \\
+        \hline
+        \textbf{PostGIS} & 
+        PostgreSQL extensión & 
+        Consultas SQL, multiusuario & 
+        Requiere servidor \\
+        \hline
+    \end{tabular}
+    
+    \vspace{0.3cm}
+    
+    \begin{tcolorbox}[colframe=usachblue,colback=blue!5]
+        \small
+        \textbf{Recomendación 2025:} GeoPackage para archivos locales, PostGIS para producción
+    \end{tcolorbox}
+\end{frame}
+
+\begin{frame}{Formatos Raster}
+    \begin{tabular}{|l|p{3cm}|p{3cm}|p{3cm}|}
+        \hline
+        \textbf{Formato} & \textbf{Características} & \textbf{Ventajas} & \textbf{Uso típico} \\
+        \hline
+        \textbf{GeoTIFF} & 
+        TIFF con georreferencia & 
+        Estándar, compresión & 
+        Imágenes satelitales \\
+        \hline
+        \textbf{NetCDF} & 
+        Multidimensional, científico & 
+        Series temporales & 
+        Datos climáticos \\
+        \hline
+        \textbf{HDF5} & 
+        Jerárquico, big data & 
+        Eficiente, metadatos & 
+        MODIS, Sentinel \\
+        \hline
+        \textbf{COG} & 
+        Cloud Optimized GeoTIFF & 
+        Streaming, web & 
+        Servicios cloud \\
+        \hline
+        \textbf{Zarr} & 
+        Array comprimido, chunks & 
+        Paralelo, cloud-native & 
+        Big data analysis \\
+        \hline
+    \end{tabular}
+    
+    \vspace{0.3cm}
+    
+    \begin{tcolorbox}[colframe=usachorange,colback=orange!5]
+        \small
+        \textbf{Tendencia:} Formatos cloud-native (COG, Zarr) para análisis escalable
+    \end{tcolorbox}
+\end{frame}
+
+\begin{frame}[fragile]{Conversión entre Formatos}
+    \begin{lstlisting}[language=Python, caption=Conversión de formatos con Python]
+import geopandas as gpd
+import rasterio
+from osgeo import gdal, ogr
+
+# VECTORIAL
+# Shapefile a GeoPackage
+gdf = gpd.read_file('comunas.shp')
+gdf.to_file('comunas.gpkg', driver='GPKG')
+
+# GeoJSON a PostGIS
+gdf = gpd.read_file('puntos.geojson')
+gdf.to_postgis('puntos', con=engine, if_exists='replace')
+
+# RASTER
+# GeoTIFF a COG (Cloud Optimized GeoTIFF)
+gdal.Translate('output_cog.tif', 'input.tif',
+               format='GTiff',
+               creationOptions=['COMPRESS=LZW', 'TILED=YES',
+                               'COPY_SRC_OVERVIEWS=YES'])
+
+# NetCDF a GeoTIFF
+ds = gdal.Open('NETCDF:"climate.nc":temperature')
+gdal.Translate('temperature.tif', ds)
+
+# Raster a Vector (poligonizar)
+src_ds = gdal.Open('classified.tif')
+srs = osr.SpatialReference()
+srs.ImportFromWkt(src_ds.GetProjection())
+gdal.Polygonize(src_ds.GetRasterBand(1), None, dst_layer)
+    \end{lstlisting}
+\end{frame}
+
+\section{Atributos y Geometrías}
+
+\begin{frame}{Relación Atributos-Geometría}
+    \begin{center}
+    \begin{tikzpicture}[scale=0.8]
+        % Tabla de atributos
+        \node[draw, rectangle] at (0,2) {
+            \begin{tabular}{|c|c|c|}
+                \hline
+                \textbf{ID} & \textbf{Nombre} & \textbf{Población} \\
+                \hline
+                1 & Santiago & 404,495 \\
+                2 & Providencia & 142,079 \\
+                3 & Las Condes & 294,838 \\
+                \hline
+            \end{tabular}
+        };
+        \node at (0,0.5) {\textbf{Atributos}};
+        
+        % Geometrías
+        \draw[thick, fill=blue!20] (6,3) -- (7,3.5) -- (7.5,2.5) -- (6.5,2) -- cycle;
+        \node at (6.75,2.75) {1};
+        
+        \draw[thick, fill=green!20] (8,3) -- (9,3.2) -- (8.8,2) -- (8,2.2) -- cycle;
+        \node at (8.5,2.6) {2};
+        
+        \draw[thick, fill=red!20] (7,1) -- (8,1.2) -- (8.2,0.2) -- (7.2,0) -- cycle;
+        \node at (7.6,0.6) {3};
+        
+        \node at (7.5,-0.5) {\textbf{Geometrías}};
+        
+        % Flecha de relación
+        \draw[<->, thick, dashed] (2.5,2) -- (5,2);
+        \node at (3.75,2.3) {\small 1:1};
+    \end{tikzpicture}
+    \end{center}
+    
+    \vspace{0.3cm}
+    
+    \begin{columns}
+        \column{0.5\textwidth}
+        \textbf{Atributos:}
+        \begin{itemize}
+            \item Datos tabulares
+            \item Tipos: texto, número, fecha
+            \item Operaciones SQL
+        \end{itemize}
+        
+        \column{0.5\textwidth}
+        \textbf{Geometrías:}
+        \begin{itemize}
+            \item Representación espacial
+            \item Coordenadas
+            \item Operaciones geométricas
+        \end{itemize}
+    \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Consultas Espaciales vs Atributos}
+    \begin{lstlisting}[language=Python, caption=Tipos de consultas]
+import geopandas as gpd
+from shapely.geometry import Point
+
+# Cargar datos
+comunas = gpd.read_file('comunas_chile.gpkg')
+hospitales = gpd.read_file('hospitales.gpkg')
+
+# CONSULTAS POR ATRIBUTOS
+# Filtrar por poblacion
+comunas_grandes = comunas[comunas['poblacion'] > 100000]
+
+# Filtrar por nombre
+providencia = comunas[comunas['nombre'] == 'Providencia']
+
+# CONSULTAS ESPACIALES
+# Buffer de 2km alrededor de hospitales
+areas_cobertura = hospitales.geometry.buffer(2000)
+
+# Comunas que intersectan con areas de cobertura
+comunas_cubiertas = comunas[
+    comunas.intersects(areas_cobertura.unary_union)
+]
+
+# CONSULTAS MIXTAS
+# Comunas grandes sin hospital cercano
+grandes_sin_hospital = comunas_grandes[
+    ~comunas_grandes.intersects(areas_cobertura.unary_union)
+]
+
+print(f"Comunas sin cobertura hospitalaria: {len(grandes_sin_hospital)}")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{Índices Espaciales}
+    \begin{columns}
+        \column{0.5\textwidth}
+        \textbf{Problema:}
+        \begin{itemize}
+            \item Búsquedas O(n²) sin índice
+            \item Lento con muchas geometrías
+        \end{itemize}
+        
+        \vspace{0.3cm}
+        \textbf{Solución - R-tree:}
+        \begin{itemize}
+            \item Divide el espacio en rectángulos
+            \item Estructura jerárquica
+            \item Búsquedas O(log n)
+            \item Filtra candidatos rápidamente
+        \end{itemize}
+        
+        \column{0.5\textwidth}
+        \begin{tikzpicture}[scale=0.6]
+            % R-tree visualization
+            \draw[thick] (0,0) rectangle (6,6);
+            
+            % Level 1
+            \draw[dashed, blue] (0,0) rectangle (3,3);
+            \draw[dashed, blue] (3,0) rectangle (6,3);
+            \draw[dashed, blue] (0,3) rectangle (3,6);
+            \draw[dashed, blue] (3,3) rectangle (6,6);
+            
+            % Geometrías
+            \fill[red!50] (0.5,0.5) circle (0.2);
+            \fill[red!50] (1.5,1) circle (0.2);
+            \fill[red!50] (4,1) circle (0.2);
+            \fill[red!50] (5,2) circle (0.2);
+            \fill[red!50] (1,4) circle (0.2);
+            \fill[red!50] (2,5) circle (0.2);
+            \fill[red!50] (4.5,4.5) circle (0.2);
+            
+            % Query
+            \draw[thick, green] (3.5,0.5) rectangle (5.5,2.5);
+            \node at (4.5,-0.5) {\small Query};
+        \end{tikzpicture}
+        
+        \vspace{0.3cm}
+        \small
+        Solo examina geometrías en rectángulos que intersectan con la consulta
+    \end{columns}
+\end{frame}
+
+\section{Vector vs Raster: ¿Cuándo usar cada uno?}
+
+\begin{frame}{Criterios de Selección}
+    \begin{center}
+    \begin{tabular}{|l|c|c|}
+        \hline
+        \textbf{Criterio} & \textbf{Vector} & \textbf{Raster} \\
+        \hline
+        Fenómenos discretos & \checkmark & \\
+        Fenómenos continuos & & \checkmark \\
+        Precisión geométrica & \checkmark & \\
+        Análisis de superficies & & \checkmark \\
+        Topología/redes & \checkmark & \\
+        Imágenes/teledetección & & \checkmark \\
+        Almacenamiento eficiente & \checkmark & \\
+        Álgebra de mapas & & \checkmark \\
+        Consultas por atributos & \checkmark & \\
+        Modelado 3D terreno & & \checkmark \\
+        \hline
+    \end{tabular}
+    \end{center}
+    
+    \vspace{0.3cm}
+    
+    \begin{columns}
+        \column{0.5\textwidth}
+        \begin{tcolorbox}[colframe=blue!50,colback=blue!5,title=Usa Vector]
+            \small
+            \begin{itemize}
+                \item Catastro
+                \item Redes de transporte
+                \item Límites administrativos
+                \item POIs
+            \end{itemize}
+        \end{tcolorbox}
+        
+        \column{0.5\textwidth}
+        \begin{tcolorbox}[colframe=orange!50,colback=orange!5,title=Usa Raster]
+            \small
+            \begin{itemize}
+                \item Elevación (DEM)
+                \item Temperatura
+                \item Precipitación
+                \item NDVI/cobertura
+            \end{itemize}
+        \end{tcolorbox}
+    \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Integración Vector-Raster}
+    \begin{lstlisting}[language=Python, caption=Análisis combinado]
+import geopandas as gpd
+import rasterio
+from rasterio import features
+from rasterstats import zonal_stats
+
+# Escenario: Analizar NDVI promedio por comuna
+
+# 1. Cargar vector (comunas)
+comunas = gpd.read_file('comunas.gpkg')
+
+# 2. Cargar raster (NDVI)
+with rasterio.open('ndvi_santiago.tif') as src:
+    ndvi = src.read(1)
+    transform = src.transform
+
+# 3. Estadisticas zonales (raster -> vector)
+stats = zonal_stats(
+    comunas.geometry, 
+    ndvi, 
+    transform=transform,
+    stats=['mean', 'std', 'min', 'max']
+)
+
+# 4. Agregar resultados al GeoDataFrame
+comunas['ndvi_mean'] = [s['mean'] for s in stats]
+comunas['ndvi_std'] = [s['std'] for s in stats]
+
+# 5. Rasterizar vector (vector -> raster)
+comunas['zone_id'] = range(len(comunas))
+zones = features.rasterize(
+    [(geom, value) for geom, value in zip(comunas.geometry, comunas.zone_id)],
+    out_shape=ndvi.shape,
+    transform=transform
+)
+    \end{lstlisting}
+\end{frame}
+
+\section{Ejercicio Práctico}
+
+\begin{frame}{Caso de Estudio: Análisis de Accesibilidad}
+    \textbf{Problema:} Evaluar accesibilidad a áreas verdes en Santiago
+    
+    \vspace{0.3cm}
+    
+    \textbf{Datos disponibles:}
+    \begin{itemize}
+        \item Vector: Parques (polígonos), Población por manzana (polígonos)
+        \item Raster: Imagen Sentinel-2, Modelo Digital de Elevación
+    \end{itemize}
+    
+    \vspace{0.3cm}
+    
+    \textbf{Pasos del análisis:}
+    \begin{enumerate}
+        \item Calcular NDVI desde Sentinel-2 (raster)
+        \item Identificar áreas verdes: NDVI > 0.4 (raster → vector)
+        \item Combinar con parques oficiales (vector)
+        \item Crear buffers de 300m, 500m, 1000m (vector)
+        \item Calcular población con acceso (overlay vectorial)
+        \item Generar mapa de calor de accesibilidad (vector → raster)
+    \end{enumerate}
+    
+    \begin{tcolorbox}[colframe=green!50,colback=green!5]
+        \centering
+        Este ejercicio combina ambos modelos de datos
+    \end{tcolorbox}
+\end{frame}
+
+\begin{frame}[fragile]{Implementación del Ejercicio}
+    \begin{lstlisting}[language=Python, caption=Solución integrada]
+# 1. Calcular NDVI
+red = rasterio.open('B04.tif').read(1)
+nir = rasterio.open('B08.tif').read(1)
+ndvi = (nir - red) / (nir + red + 0.0001)
+
+# 2. Vectorizar areas verdes
+mask = ndvi > 0.4
+shapes = features.shapes(mask.astype(np.int16), transform=transform)
+verde_detectado = gpd.GeoDataFrame.from_features(shapes)
+
+# 3. Combinar con parques oficiales
+parques = gpd.read_file('parques_oficiales.gpkg')
+areas_verdes = gpd.GeoDataFrame(
+    pd.concat([parques, verde_detectado], ignore_index=True)
+)
+
+# 4. Buffers de accesibilidad
+buffers = {
+    300: areas_verdes.buffer(300),
+    500: areas_verdes.buffer(500),
+    1000: areas_verdes.buffer(1000)
+}
+
+# 5. Poblacion con acceso
+manzanas = gpd.read_file('manzanas_censo.gpkg')
+for dist, buffer in buffers.items():
+    acceso = manzanas[manzanas.intersects(buffer.unary_union)]
+    print(f"Poblacion con parque a {dist}m: {acceso['poblacion'].sum():,}")
+    \end{lstlisting}
+\end{frame}
+
+\section{Resumen y Próximos Pasos}
+
+\begin{frame}{Conceptos Clave de Hoy}
+    \begin{columns}
+        \column{0.5\textwidth}
+        \textbf{Modelo Vectorial:}
+        \begin{itemize}
+            \item Puntos, líneas, polígonos
+            \item Geometrías explícitas
+            \item Topología
+            \item GeoPackage, PostGIS
+            \item GeoPandas, Shapely
+        \end{itemize}
+        
+        \column{0.5\textwidth}
+        \textbf{Modelo Raster:}
+        \begin{itemize}
+            \item Grillas regulares
+            \item Resolución espacial
+            \item Bandas espectrales
+            \item GeoTIFF, COG
+            \item Rasterio, GDAL
+        \end{itemize}
+    \end{columns}
+    
+    \vspace{0.5cm}
+    
+    \begin{center}
+    \begin{tikzpicture}[scale=0.8]
+        % Vector
+        \node[draw, circle, fill=blue!20] at (0,0) {Vector};
+        % Raster
+        \node[draw, circle, fill=orange!20] at (4,0) {Raster};
+        % Intersección
+        \draw (0,0) circle (1.5);
+        \draw (4,0) circle (1.5);
+        \node at (2,0) {\small Integración};
+    \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Para Profundizar}
+    \textbf{Lecturas recomendadas:}
+    \begin{itemize}
+        \item Geocomputation with Python - Cap. 2 y 3
+        \item PostGIS in Action - Cap. 1-3
+        \item Remote Sensing and GIS - Cap. 4
+    \end{itemize}
+    
+    \vspace{0.3cm}
+    
+    \textbf{Ejercicios para practicar:}
+    \begin{enumerate}
+        \item Descargar comunas de Chile desde el IDE
+        \item Calcular área y perímetro con GeoPandas
+        \item Descargar Sentinel-2 y calcular NDVI
+        \item Convertir Shapefile a GeoPackage
+        \item Hacer overlay de dos capas vectoriales
+    \end{enumerate}
+    
+    \vspace{0.3cm}
+    
+    \textbf{Próxima clase:} 
+    \begin{tcolorbox}[colframe=usachblue,colback=blue!5]
+        Jueves: Sistemas de Referencia Espacial (CRS) + Lab 1
+    \end{tcolorbox}
+\end{frame}
+
+\begin{frame}{Cierre}
+    \begin{center}
+        \Large{¿Preguntas?}
+        
+        \vspace{1cm}
+        
+        \faIcon{envelope} francisco.parra.o@usach.cl
+        
+        \vspace{0.5cm}
+        
+        \faIcon{clock} Horario de consulta: Jueves después del lab
+        
+        \vspace{1cm}
+        
+        \textbf{¡Nos vemos el jueves con el primer laboratorio!}
+    \end{center}
+\end{frame}
+
+\end{document}

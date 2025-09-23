@@ -1,0 +1,300 @@
+\documentclass[10pt]{beamer}
+\usetheme{metropolis}
+\usepackage{FiraSans}
+\usefonttheme{professionalfonts}
+
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage[spanish]{babel}
+\usepackage{tcolorbox}
+\usepackage{ragged2e}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+\newcommand{\examplebox}[2]{
+\begin{tcolorbox}[colframe=darkcardinal,colback=boxgray,title=#1]
+#2
+\end{tcolorbox}
+}
+
+% Personalización del pie de página
+\setbeamertemplate{footline}{%
+  \begin{beamercolorbox}[wd=\paperwidth,sep=2ex]{footline}%
+    \usebeamerfont{structure}\textbf{I+E - Introducción} \hfill Profesor: Francisco Parra O. \hfill \textbf{Semestre 2, 2025}
+  \end{beamercolorbox}%
+}
+
+% Definir cómo mostrar las secciones con bulletpoints
+\setbeamertemplate{section in toc}{\leavevmode\leftskip=2em\rlap{\hskip-2em\textbullet}\inserttocsection\par}
+\setbeamertemplate{subsection in toc}{\leavevmode\leftskip=4em\rlap{\hskip-4em\textbullet}\inserttocsubsection\par}
+
+\title{Clase 01: Introducción}
+\subtitle{Curso: Innovación y emprendimiento con casos reales}
+\author{Profesor: Francisco Parra O.}
+\institute{USACH}
+\date{\today}
+
+\titlegraphic{%
+  \begin{tikzpicture}[overlay, remember picture]
+    \node[anchor=north east, yshift=0cm] at (current page.north east) {
+      \includegraphics[width=1.5cm]{Logo-Color-Usach-Web.jpg}
+    };
+  \end{tikzpicture}
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{Contenido de la clase}
+    \begin{itemize}
+        \item Bienvenida y presentación del nuevo formato
+        \item Contextualización del modelo de trabajo con casos reales
+        \item Metodología y planificación del curso
+        \item Mini-taller de preparación
+        \item Próximos pasos
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Evolución del curso}
+  \begin{columns}
+    \column{0.5\textwidth}
+    \textbf{Formato anterior}
+    \begin{itemize}
+        \item Construcción de ideas desde cero
+        \item Desarrollo teórico de emprendimientos
+        \item Énfasis en cada etapa del proceso
+        \item Evaluación de conceptos hipotéticos
+    \end{itemize}
+    
+    \column{0.5\textwidth}
+    \textbf{Nuevo formato}
+    \begin{itemize}
+        \item Resolución de problemas reales
+        \item Desafíos basados en casos de industria
+        \item Enfoque práctico y aplicado
+        \item Soluciones implementables
+    \end{itemize}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Beneficios del nuevo enfoque}
+    \begin{itemize}
+        \item Experiencia práctica con problemas empresariales reales
+        \item Desarrollo de habilidades valoradas en el mercado laboral
+        \item Exploración de múltiples sectores e industrias
+        \item Comprensión de restricciones y desafíos reales
+        \item Flexibilidad para adaptarse a diferentes contextos
+        \item Portfolio diversificado de soluciones
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Contextualización: Casos de estudio}
+    \begin{itemize}
+        \item Los desafíos estarán basados en casos reales de empresas chilenas e internacionales
+        \item Sectores diversos: tecnología, retail, servicios, manufactura, etc.
+        \item Problemas actuales que enfrentan las organizaciones
+        \item Adaptación de casos exitosos y análisis de fracasos
+    \end{itemize}
+    
+    \vspace{1cm}
+    \begin{center}
+    \textbf{El profesor y ayudante presentarán los desafíos específicos a lo largo del semestre}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Modelo de trabajo académico-práctico}
+    \begin{enumerate}
+        \item Identificación de problemas inspirados en casos reales
+        \item Análisis profundo del contexto empresarial
+        \item Aplicación de metodologías de innovación
+        \item Desarrollo de soluciones creativas y factibles
+        \item Evaluación crítica y mejora continua
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Tipos de desafíos que abordaremos}
+    \begin{description}
+        \item[Optimización] Mejora de procesos existentes
+        \item[Desarrollo] Nuevos productos o servicios
+        \item[Expansión] Estrategias para nuevos mercados
+        \item[Transformación] Digitalización y modernización
+        \item[Sostenibilidad] Soluciones con impacto social/ambiental
+    \end{description}
+\end{frame}
+
+\begin{frame}{Expectativas del curso}
+    \begin{itemize}
+        \item Compromiso con el análisis riguroso de problemas
+        \item Aplicación sistemática de metodologías de innovación
+        \item Trabajo colaborativo en equipos interdisciplinarios
+        \item Propuestas viables y fundamentadas
+        \item Comunicación profesional de ideas y soluciones
+        \item Documentación completa del proceso creativo
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Planificación del semestre}
+    \begin{enumerate}
+        \item \textbf{Semanas 1-3:} Contextualización y herramientas de análisis
+        \item \textbf{Semanas 4-5:} Presentación del primer desafío
+        \item \textbf{Semanas 6-8:} Investigación y definición del problema
+        \item \textbf{Semanas 9-11:} Ideación y prototipado de soluciones
+        \item \textbf{Semanas 12-14:} Validación y refinamiento
+        \item \textbf{Semanas 15-16:} Presentación final y entrega
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Entregables principales}
+    \begin{itemize}
+        \item \textbf{E1:} Análisis del contexto y definición de problema (20\%)
+        \item \textbf{E2:} Propuesta de solución y prototipo inicial (20\%)
+        \item \textbf{E3:} Validación y resultados de pruebas (20\%)
+        \item \textbf{E4:} Presentación y documentación final (30\%)
+        \item \textbf{Participación:} Contribuciones en clase y actividades (10\%)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Sistema de evaluación}
+    \begin{itemize}
+        \item Evaluación por parte del profesor (70\%)
+        \item Evaluación por parte del ayudante (15\%)
+        \item Coevaluación entre pares del equipo (15\%)
+    \end{itemize}
+    
+    \vspace{0.5cm}
+    \textbf{Criterios de evaluación:}
+    \begin{itemize}
+        \item Comprensión del problema y contexto
+        \item Aplicación de metodologías vistas en clase
+        \item Originalidad y factibilidad de las soluciones
+        \item Calidad de la investigación y validación
+        \item Presentación y comunicación profesional
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Formación de equipos}
+    \begin{itemize}
+        \item Equipos de 4-5 estudiantes
+        \item Interdisciplinariedad recomendada
+        \item Distribución de roles sugeridos:
+        \begin{itemize}
+            \item Coordinador/a de equipo
+            \item Investigador/a y analista
+            \item Desarrollador/a de conceptos
+            \item Comunicador/a y visualizador/a
+        \end{itemize}
+        \item Proceso de formación: durante esta semana
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Recursos disponibles}
+    \begin{itemize}
+        \item Mentoría directa por parte de profesores y ayudantes
+        \item Acceso a casos de estudio y material de investigación
+        \item Espacios de trabajo colaborativo
+        \item Plataformas digitales para investigación y desarrollo
+        \item Biblioteca de metodologías y herramientas
+        \item Sesiones de retroalimentación periódicas
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Mini-taller: Abordando problemas empresariales reales}
+    \textbf{Actividad en grupos (20 minutos):}
+    \begin{enumerate}
+        \item Formen grupos de 4-5 personas
+        \item Discutan las siguientes preguntas:
+        \begin{itemize}
+            \item ¿Cómo se aborda un problema real vs. uno teórico?
+            \item ¿Qué habilidades serán cruciales para este formato?
+            \item ¿Cuáles son las ventajas de trabajar con casos basados en situaciones reales?
+        \end{itemize}
+        \item Cada grupo compartirá brevemente sus principales conclusiones
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Estrategias para abordar problemas empresariales}
+    \begin{itemize}
+        \item Comprender el contexto completo del negocio
+        \item Identificar a todos los stakeholders involucrados
+        \item Evaluar impactos en diferentes áreas de la organización
+        \item Considerar restricciones reales (tiempo, recursos, regulaciones)
+        \item Buscar soluciones viables y escalables
+        \item Priorizar según impacto y factibilidad
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Habilidades clave para el éxito}
+    \begin{columns}
+        \column{0.5\textwidth}
+        \textbf{Habilidades técnicas}
+        \begin{itemize}
+            \item Análisis de datos
+            \item Metodologías de innovación
+            \item Prototipado rápido
+            \item Gestión de proyectos
+            \item Evaluación financiera
+        \end{itemize}
+        
+        \column{0.5\textwidth}
+        \textbf{Habilidades blandas}
+        \begin{itemize}
+            \item Comunicación efectiva
+            \item Trabajo en equipo
+            \item Resolución de problemas
+            \item Adaptabilidad
+            \item Pensamiento crítico
+        \end{itemize}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Ventajas del trabajo con casos reales}
+    \begin{columns}
+        \column{0.5\textwidth}
+        \textbf{Aprendizaje}
+        \begin{itemize}
+            \item Experiencia práctica aplicable
+            \item Exposición a múltiples industrias
+            \item Desarrollo de criterio empresarial
+            \item Comprensión de complejidades reales
+        \end{itemize}
+        
+        \column{0.5\textwidth}
+        \textbf{Desarrollo profesional}
+        \begin{itemize}
+            \item Portfolio diversificado
+            \item Habilidades transferibles
+            \item Preparación para el mundo laboral
+            \item Pensamiento estratégico
+        \end{itemize}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Próximos pasos}
+    \begin{enumerate}
+        \item \textbf{Para la próxima clase:}
+        \begin{itemize}
+            \item Revisar casos de innovación exitosos en Chile
+            \item Identificar sectores de interés personal
+            \item Formar equipos preliminares
+        \end{itemize}
+        
+        \item \textbf{Preparación para los desafíos:}
+        \begin{itemize}
+            \item Familiarizarse con herramientas de análisis
+            \item Practicar técnicas de investigación
+            \item Desarrollar habilidades de trabajo en equipo
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Reflexión final}
+    \begin{center}
+    \large{\textbf{"La innovación real no ocurre en el vacío, sino en la intersección entre los problemas reales y las soluciones creativas"}}
+    \end{center}
+    
+    \vspace{1cm}
+    ¿Preguntas?
+\end{frame}
+
+\end{document}

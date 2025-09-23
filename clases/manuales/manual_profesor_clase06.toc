@@ -1,0 +1,62 @@
+\babel@toc {spanish}{}\relax 
+\contentsline {section}{\numberline {1}Introducción y Filosofía de la Geoestadística}{4}{section.1}%
+\contentsline {subsection}{\numberline {1.1}¿Qué es la Geoestadística y Por Qué Importa?}{4}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}La Intuición Detrás de la Dependencia Espacial}{4}{subsection.1.2}%
+\contentsline {subsection}{\numberline {1.3}Implicaciones Profundas de la Ley de Tobler}{4}{subsection.1.3}%
+\contentsline {subsubsection}{\numberline {1.3.1}1. El Espacio Como Información}{4}{subsubsection.1.3.1}%
+\contentsline {subsubsection}{\numberline {1.3.2}2. El Problema de la Pseudo-replicación}{5}{subsubsection.1.3.2}%
+\contentsline {subsubsection}{\numberline {1.3.3}3. La Falacia Ecológica y el MAUP}{5}{subsubsection.1.3.3}%
+\contentsline {section}{\numberline {2}Conceptos Fundamentales de Autocorrelación Espacial}{5}{section.2}%
+\contentsline {subsection}{\numberline {2.1}¿Qué es la Autocorrelación Espacial?}{5}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Tipos de Patrones Espaciales}{6}{subsection.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.1}Autocorrelación Positiva}{6}{subsubsection.2.2.1}%
+\contentsline {subsubsection}{\numberline {2.2.2}Autocorrelación Negativa}{6}{subsubsection.2.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.3}Patrón Aleatorio}{6}{subsubsection.2.2.3}%
+\contentsline {section}{\numberline {3}Matrices de Pesos Espaciales: El Corazón del Análisis}{7}{section.3}%
+\contentsline {subsection}{\numberline {3.1}¿Qué Son y Por Qué Importan?}{7}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Tipos de Vecindad y Sus Implicaciones}{7}{subsection.3.2}%
+\contentsline {subsubsection}{\numberline {3.2.1}Contigüidad: Los Vecinos que se Tocan}{7}{subsubsection.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.2}Distancia: Cuando el Espacio es Continuo}{7}{subsubsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.3}La Importancia de la Estandarización}{8}{subsection.3.3}%
+\contentsline {section}{\numberline {4}El Índice de Moran: Midiendo la Autocorrelación Global}{8}{section.4}%
+\contentsline {subsection}{\numberline {4.1}La Intuición del Índice de Moran}{8}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Interpretación Matemática y Práctica}{8}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Significancia Estadística: ¿Es Real el Patrón?}{9}{subsection.4.3}%
+\contentsline {section}{\numberline {5}LISA: Descomponiendo Patrones Globales en Locales}{9}{section.5}%
+\contentsline {subsection}{\numberline {5.1}La Necesidad del Análisis Local}{9}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Los Cuatro Tipos de Asociación Local}{10}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Significancia vs Magnitud}{10}{subsection.5.3}%
+\contentsline {section}{\numberline {6}Interpolación Espacial: Prediciendo lo Desconocido}{10}{section.6}%
+\contentsline {subsection}{\numberline {6.1}El Problema Fundamental}{10}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Métodos Determinísticos vs Geoestadísticos}{11}{subsection.6.2}%
+\contentsline {subsubsection}{\numberline {6.2.1}Métodos Determinísticos}{11}{subsubsection.6.2.1}%
+\contentsline {subsubsection}{\numberline {6.2.2}Métodos Geoestadísticos (Kriging)}{11}{subsubsection.6.2.2}%
+\contentsline {section}{\numberline {7}El Semivariograma: La Huella Digital de la Variabilidad Espacial}{11}{section.7}%
+\contentsline {subsection}{\numberline {7.1}¿Qué es un Semivariograma?}{11}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Componentes Clave del Semivariograma}{12}{subsection.7.2}%
+\contentsline {section}{\numberline {8}Análisis de Patrones de Puntos}{12}{section.8}%
+\contentsline {subsection}{\numberline {8.1}La Naturaleza de los Patrones Puntuales}{12}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Función K de Ripley: Analizando a Múltiples Escalas}{13}{subsection.8.2}%
+\contentsline {subsection}{\numberline {8.3}Getis-Ord G*: Identificando Hot y Cold Spots}{13}{subsection.8.3}%
+\contentsline {section}{\numberline {9}Regresión Espacial: Cuando el Espacio Afecta las Relaciones}{14}{section.9}%
+\contentsline {subsection}{\numberline {9.1}Por Qué OLS Falla con Datos Espaciales}{14}{subsection.9.1}%
+\contentsline {subsection}{\numberline {9.2}Modelos Espaciales: Incorporando la Geografía}{14}{subsection.9.2}%
+\contentsline {subsubsection}{\numberline {9.2.1}Spatial Lag Model (SAR)}{14}{subsubsection.9.2.1}%
+\contentsline {subsubsection}{\numberline {9.2.2}Spatial Error Model (SEM)}{14}{subsubsection.9.2.2}%
+\contentsline {subsection}{\numberline {9.3}GWR: Cuando las Relaciones Varían en el Espacio}{15}{subsection.9.3}%
+\contentsline {section}{\numberline {10}Aplicaciones Prácticas y Casos de Estudio}{15}{section.10}%
+\contentsline {subsection}{\numberline {10.1}Caso 1: Epidemiología Espacial}{15}{subsection.10.1}%
+\contentsline {subsection}{\numberline {10.2}Caso 2: Valoración Inmobiliaria}{16}{subsection.10.2}%
+\contentsline {section}{\numberline {11}Guía Pedagógica para el Profesor}{16}{section.11}%
+\contentsline {subsection}{\numberline {11.1}Estrategias de Enseñanza}{16}{subsection.11.1}%
+\contentsline {subsubsection}{\numberline {11.1.1}Secuencia Recomendada}{16}{subsubsection.11.1.1}%
+\contentsline {subsubsection}{\numberline {11.1.2}Actividades Interactivas}{16}{subsubsection.11.1.2}%
+\contentsline {subsection}{\numberline {11.2}Errores Conceptuales Comunes}{17}{subsection.11.2}%
+\contentsline {subsection}{\numberline {11.3}Evaluación del Aprendizaje}{17}{subsection.11.3}%
+\contentsline {subsubsection}{\numberline {11.3.1}Evaluación Conceptual}{17}{subsubsection.11.3.1}%
+\contentsline {subsubsection}{\numberline {11.3.2}Evaluación Práctica}{18}{subsubsection.11.3.2}%
+\contentsline {section}{\numberline {12}Recursos y Referencias}{18}{section.12}%
+\contentsline {subsection}{\numberline {12.1}Lecturas Esenciales}{18}{subsection.12.1}%
+\contentsline {subsection}{\numberline {12.2}Herramientas de Software}{19}{subsection.12.2}%
+\contentsline {subsection}{\numberline {12.3}Datasets de Práctica}{19}{subsection.12.3}%
+\contentsline {section}{\numberline {13}Reflexiones Finales}{19}{section.13}%
