@@ -7,7 +7,6 @@
 \usepackage{float}
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{enumerate}
-\usepackage{listings}
 \usepackage{xcolor}
 \usepackage{hyperref}
 \usepackage{tcolorbox}
@@ -19,21 +18,6 @@
 \usepackage{tikz}
 \usepackage{fontawesome5}
 \usetikzlibrary{shapes,arrows,positioning,calc}
-
-% Configuración de código
-\lstset{
-    language=Python,
-    basicstyle=\small\ttfamily,
-    keywordstyle=\color{blue!80!black},
-    commentstyle=\color{green!60!black},
-    stringstyle=\color{red!80!black},
-    numbers=left,
-    numberstyle=\tiny\color{gray},
-    breaklines=true,
-    frame=single,
-    backgroundcolor=\color{gray!10},
-    captionpos=b
-}
 
 % Configuración de encabezados
 \pagestyle{fancy}
@@ -189,7 +173,7 @@ Criterios para elegir su comuna:
 
 Deben crear un \texttt{docker-compose.yml} que incluya:
 
-\begin{lstlisting}[language=bash,caption=Estructura Docker Compose]
+\begin{verbatim}
 version: '3.8'
 
 services:
@@ -228,7 +212,7 @@ services:
 
 volumes:
   postgres_data:
-\end{lstlisting}
+\end{verbatim}
 
 \subsection{Parte 2: Adquisición y Procesamiento de Datos (20\%)}
 
@@ -266,7 +250,7 @@ Uso del suelo & IDE Minvu & Planificación territorial \\
 
 Crear \texttt{scripts/download\_data.py}:
 
-\begin{lstlisting}[language=Python]
+\begin{verbatim}
 import os
 import requests
 import geopandas as gpd
@@ -302,7 +286,7 @@ class DataDownloader:
         """Descarga DEM de ALOS PALSAR"""
         # Implementar descarga
         pass
-\end{lstlisting}
+\end{verbatim}
 
 \subsection{Parte 3: Análisis Espacial Exploratorio (20\%)}
 
@@ -320,7 +304,7 @@ class DataDownloader:
 
 Crear \texttt{notebooks/01\_exploratory\_analysis.ipynb}:
 
-\begin{lstlisting}[language=Python]
+\begin{verbatim}
 # Análisis de Autocorrelación Espacial
 import pysal
 from pysal.explore import esda
@@ -346,7 +330,7 @@ splot.esda.moran_scatterplot(mi, ax=axes[0])
 
 # LISA Cluster Map
 splot.esda.lisa_cluster(lisa, gdf, ax=axes[1])
-\end{lstlisting}
+\end{verbatim}
 
 \subsection{Parte 4: Geoestadística y Análisis Avanzado (15\%)}
 
@@ -362,7 +346,7 @@ splot.esda.lisa_cluster(lisa, gdf, ax=axes[1])
 
 \subsubsection{Análisis de Semivariogramas}
 
-\begin{lstlisting}[language=Python]
+\begin{verbatim}
 import skgstat as skg
 from pykrige.ordinary_kriging import OrdinaryKriging
 
@@ -394,7 +378,7 @@ ok = OrdinaryKriging(coords[:, 0], coords[:, 1], values,
 grid_x = np.linspace(coords[:, 0].min(), coords[:, 0].max(), 100)
 grid_y = np.linspace(coords[:, 1].min(), coords[:, 1].max(), 100)
 z_pred, var_pred = ok.execute('grid', grid_x, grid_y)
-\end{lstlisting}
+\end{verbatim}
 
 \subsection{Parte 5: Machine Learning Geoespacial (20\%)}
 
@@ -411,7 +395,7 @@ z_pred, var_pred = ok.execute('grid', grid_x, grid_y)
 
 \subsubsection{Ejemplo: Predicción de Valores de Suelo}
 
-\begin{lstlisting}[language=Python]
+\begin{verbatim}
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import GroupKFold
 import shap
@@ -466,7 +450,7 @@ print(f"R2 Score (Spatial CV): {scores.mean():.3f} (+/- {scores.std():.3f})")
 explainer = shap.TreeExplainer(rf_model)
 shap_values = explainer.shap_values(X_test)
 shap.summary_plot(shap_values, X_test)
-\end{lstlisting}
+\end{verbatim}
 
 \subsection{Parte 6: Aplicación Web Interactiva (15\%)}
 
@@ -484,7 +468,7 @@ shap.summary_plot(shap_values, X_test)
 
 Crear \texttt{app/main.py}:
 
-\begin{lstlisting}[language=Python]
+\begin{verbatim}
 import streamlit as st
 import folium
 from streamlit_folium import folium_static
@@ -563,7 +547,7 @@ elif page == "Modelos ML":
                                    center={"lat": lat_center,
                                           "lon": lon_center})
         st.plotly_chart(fig)
-\end{lstlisting}
+\end{verbatim}
 
 %==============================================================================
 \section{Estructura del Proyecto}
@@ -575,56 +559,56 @@ elif page == "Modelos ML":
 Es \textbf{obligatorio} seguir esta estructura de carpetas para facilitar la evaluación:
 \end{alertbox}
 
-\begin{lstlisting}[language=bash,caption=Estructura de carpetas requerida]
+\begin{verbatim}
 laboratorio_integrador/
-├── README.md                    # Documentación principal
-├── requirements.txt             # Dependencias Python
-├── docker-compose.yml          # Configuración Docker
-├── .env                        # Variables de entorno (no subir!)
-├── .gitignore                  # Archivos a ignorar en Git
-│
-├── docker/                     # Configuraciones Docker
-│   ├── jupyter/
-│   │   └── Dockerfile
-│   ├── postgis/
-│   │   └── init.sql
-│   └── web/
-│       └── Dockerfile
-│
-├── data/                       # Datos (incluir sample data)
-│   ├── raw/                   # Datos originales
-│   ├── processed/             # Datos procesados
-│   └── README.md              # Descripción de los datos
-│
-├── notebooks/                  # Análisis en Jupyter
-│   ├── 01_data_acquisition.ipynb
-│   ├── 02_exploratory_analysis.ipynb
-│   ├── 03_geostatistics.ipynb
-│   ├── 04_machine_learning.ipynb
-│   └── 05_results_synthesis.ipynb
-│
-├── scripts/                    # Scripts Python
-│   ├── download_data.py
-│   ├── process_data.py
-│   ├── spatial_analysis.py
-│   └── utils.py
-│
-├── app/                        # Aplicación web
-│   ├── main.py
-│   ├── pages/
-│   ├── components/
-│   └── static/
-│
-├── outputs/                    # Resultados
-│   ├── figures/               # Gráficos y mapas
-│   ├── models/                # Modelos entrenados
-│   └── reports/               # Informes generados
-│
-└── docs/                       # Documentación
-    ├── guia_usuario.md
-    ├── arquitectura.md
-    └── api_reference.md
-\end{lstlisting}
+|-- README.md                    # Documentación principal
+|-- requirements.txt             # Dependencias Python
+|-- docker-compose.yml          # Configuración Docker
+|-- .env                        # Variables de entorno (no subir!)
+|-- .gitignore                  # Archivos a ignorar en Git
+|
+|-- docker/                     # Configuraciones Docker
+|   |-- jupyter/
+|   |   +-- Dockerfile
+|   |-- postgis/
+|   |   +-- init.sql
+|   +-- web/
+|       +-- Dockerfile
+|
+|-- data/                       # Datos (incluir sample data)
+|   |-- raw/                   # Datos originales
+|   |-- processed/             # Datos procesados
+|   +-- README.md              # Descripción de los datos
+|
+|-- notebooks/                  # Análisis en Jupyter
+|   |-- 01_data_acquisition.ipynb
+|   |-- 02_exploratory_analysis.ipynb
+|   |-- 03_geostatistics.ipynb
+|   |-- 04_machine_learning.ipynb
+|   +-- 05_results_synthesis.ipynb
+|
+|-- scripts/                    # Scripts Python
+|   |-- download_data.py
+|   |-- process_data.py
+|   |-- spatial_analysis.py
+|   +-- utils.py
+|
+|-- app/                        # Aplicación web
+|   |-- main.py
+|   |-- pages/
+|   |-- components/
+|   +-- static/
+|
+|-- outputs/                    # Resultados
+|   |-- figures/               # Gráficos y mapas
+|   |-- models/                # Modelos entrenados
+|   +-- reports/               # Informes generados
+|
++-- docs/                       # Documentación
+    |-- guia_usuario.md
+    |-- arquitectura.md
+    +-- api_reference.md
+\end{verbatim}
 
 %==============================================================================
 \section{Criterios de Evaluación}
@@ -639,7 +623,7 @@ laboratorio_integrador/
 \textbf{Componente} & \textbf{Peso} & \textbf{Criterios} \\
 \midrule
 Configuración del entorno & 10\% &
-\begin{itemize}[leftmargin=*,topsep=0pt,itemsep=0pt]
+\begin{itemize}
     \item Docker funcional (3\%)
     \item PostGIS configurado (3\%)
     \item Jupyter con librerías (2\%)
@@ -647,7 +631,7 @@ Configuración del entorno & 10\% &
 \end{itemize} \\
 \midrule
 Adquisición de datos & 20\% &
-\begin{itemize}[leftmargin=*,topsep=0pt,itemsep=0pt]
+\begin{itemize}
     \item Variedad de fuentes (5\%)
     \item Calidad del procesamiento (5\%)
     \item Integración en PostGIS (5\%)
@@ -655,7 +639,7 @@ Adquisición de datos & 20\% &
 \end{itemize} \\
 \midrule
 Análisis espacial & 20\% &
-\begin{itemize}[leftmargin=*,topsep=0pt,itemsep=0pt]
+\begin{itemize}
     \item ESDA completo (5\%)
     \item Autocorrelación espacial (5\%)
     \item Visualizaciones (5\%)
@@ -663,14 +647,14 @@ Análisis espacial & 20\% &
 \end{itemize} \\
 \midrule
 Geoestadística & 15\% &
-\begin{itemize}[leftmargin=*,topsep=0pt,itemsep=0pt]
+\begin{itemize}
     \item Semivariogramas (5\%)
     \item Interpolación (5\%)
     \item Validación (5\%)
 \end{itemize} \\
 \midrule
 Machine Learning & 20\% &
-\begin{itemize}[leftmargin=*,topsep=0pt,itemsep=0pt]
+\begin{itemize}
     \item Feature engineering (5\%)
     \item Modelos apropiados (5\%)
     \item Validación espacial (5\%)
@@ -678,7 +662,7 @@ Machine Learning & 20\% &
 \end{itemize} \\
 \midrule
 Aplicación web & 15\% &
-\begin{itemize}[leftmargin=*,topsep=0pt,itemsep=0pt]
+\begin{itemize}
     \item Funcionalidad (5\%)
     \item Interfaz (5\%)
     \item Interactividad (5\%)
@@ -715,7 +699,7 @@ Para optar a nota máxima (7.0), además de cumplir todos los requisitos, deben 
 \textbf{Semana} & \textbf{Hito} & \textbf{Entregable} \\
 \midrule
 1 & Formación y Setup &
-\begin{itemize}[leftmargin=*,topsep=0pt,itemsep=0pt]
+\begin{itemize}
     \item Grupos formados
     \item Comuna seleccionada
     \item Ambiente Docker funcionando
@@ -723,14 +707,14 @@ Para optar a nota máxima (7.0), además de cumplir todos los requisitos, deben 
 \end{itemize} \\
 \midrule
 2 & Datos y Análisis &
-\begin{itemize}[leftmargin=*,topsep=0pt,itemsep=0pt]
+\begin{itemize}
     \item Todos los datos descargados
     \item ESDA completado
     \item Primeros modelos ML
 \end{itemize} \\
 \midrule
 3 & Finalización &
-\begin{itemize}[leftmargin=*,topsep=0pt,itemsep=0pt]
+\begin{itemize}[
     \item Aplicación web funcional
     \item Documentación completa
     \item Video de presentación (5 min)
@@ -809,7 +793,7 @@ Para optar a nota máxima (7.0), además de cumplir todos los requisitos, deben 
 
 Crear archivo \texttt{setup.sh}:
 
-\begin{lstlisting}[language=bash]
+\begin{verbatim}
 #!/bin/bash
 # Script de configuración inicial del proyecto
 
@@ -923,13 +907,13 @@ EOF
 
 echo "Configuración completada!"
 echo "Siguiente paso: docker-compose up -d"
-\end{lstlisting}
+\end{verbatim}
 
 \subsection{Notebook de Ejemplo}
 
 Crear \texttt{notebooks/00\_template.ipynb}:
 
-\begin{lstlisting}[language=Python]
+\begin{verbatim}
 # Celda 1: Configuración inicial
 import warnings
 warnings.filterwarnings('ignore')
@@ -990,7 +974,7 @@ def save_map(fig, name):
 comuna_boundary = load_geodata('comuna_boundary')
 print(f"Área de la comuna: {comuna_boundary.area[0] / 1e6:.2f} km²")
 print(f"Sistema de coordenadas: {comuna_boundary.crs}")
-\end{lstlisting}
+\end{verbatim}
 
 %==============================================================================
 \section{Conclusión}
