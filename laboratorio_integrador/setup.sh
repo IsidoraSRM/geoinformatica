@@ -46,8 +46,8 @@ else
 fi
 
 # Verificar Docker Compose
-if command -v docker-compose &> /dev/null; then
-    print_message "Docker Compose instalado: $(docker-compose --version)"
+if command -v docker compose &> /dev/null; then
+    print_message "Docker Compose instalado: $(docker compose --version)"
 else
     print_error "Docker Compose no está instalado."
     exit 1
@@ -1255,10 +1255,10 @@ echo "1. Editar el archivo .env con los valores de su proyecto:"
 echo -e "   ${YELLOW}nano .env${NC}"
 echo ""
 echo "2. Iniciar los servicios Docker:"
-echo -e "   ${YELLOW}docker-compose up -d${NC}"
+echo -e "   ${YELLOW}docker compose up -d${NC}"
 echo ""
 echo "3. Verificar que los servicios estén corriendo:"
-echo -e "   ${YELLOW}docker-compose ps${NC}"
+echo -e "   ${YELLOW}docker compose ps${NC}"
 echo ""
 echo "4. Acceder a Jupyter Lab:"
 echo -e "   ${YELLOW}http://localhost:8888${NC}"
@@ -1270,6 +1270,6 @@ echo "   Email: admin@geoinformatica.cl"
 echo "   Password: admin"
 echo ""
 echo "6. Para detener los servicios:"
-echo -e "   ${YELLOW}docker-compose down${NC}"
+echo -e "   ${YELLOW}docker compose down${NC}"
 echo ""
 echo -e "${GREEN}¡Buena suerte con su proyecto!${NC} 🚀"
